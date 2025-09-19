@@ -10,6 +10,10 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: Preview
+    env:
+      MICROCMS_SERVICE_DOMAIN: ${{ secrets.MICROCMS_SERVICE_DOMAIN }}
+      MICROCMS_API_KEY: ${{ secrets.MICROCMS_API_KEY }}
 
     steps:
       - name: Checkout
@@ -18,7 +22,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: '20'
           cache: 'npm'
 
       - name: Install dependencies
@@ -29,9 +33,6 @@ jobs:
 
       - name: Build application
         run: npm run build
-        env:
-          MICROCMS_SERVICE_DOMAIN: ${{ secrets.MICROCMS_SERVICE_DOMAIN }}
-          MICROCMS_API_KEY: ${{ secrets.MICROCMS_API_KEY }}
 
       - name: Deploy to Vercel
         uses: amondnet/vercel-action@v20
