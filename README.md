@@ -9,6 +9,7 @@ This is a [Next.js](https://nextjs.org) project for medical and dental professio
 - 🚀 Automated CI/CD pipeline with GitHub Actions
 - 📱 Responsive design
 - ⚡ Fast build with Turbopack
+- 🎯 Production ready
 
 ## Getting Started
 
