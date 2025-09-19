@@ -10,6 +10,7 @@ This is a [Next.js](https://nextjs.org) project for medical and dental professio
 - 📱 Responsive design
 - ⚡ Fast build with Turbopack
 - 🎯 Production ready
+- 🔄 Stable deployment
 
 ## Getting Started
 
