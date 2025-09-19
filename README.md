@@ -6,7 +6,7 @@ This is a [Next.js](https://nextjs.org) project for medical and dental professio
 
 - 📚 Article management with microCMS
 - 🎨 Modern UI with Tailwind CSS
-- 🚀 Automated CI/CD pipeline
+- 🚀 Automated CI/CD pipeline with GitHub Actions
 - 📱 Responsive design
 
 ## Getting Started
