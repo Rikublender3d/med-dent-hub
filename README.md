@@ -1,4 +1,19 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Med×Dent Hub
+
+This is a [Next.js](https://nextjs.org) project for medical and dental professionals, bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+
+## Features
+
+- 📚 Article management with microCMS
+- 🎨 Modern UI with Tailwind CSS
+- 🚀 Automated CI/CD pipeline with GitHub Actions
+- 📱 Responsive design
+- ⚡ Fast build with Turbopack
+- 🎯 Production ready
+- 🔄 Stable deployment
+- ✅ All secrets configured
+- 🎉 Ready for production
+- 🔧 Environment variables fixed
 
 ## Getting Started
 
