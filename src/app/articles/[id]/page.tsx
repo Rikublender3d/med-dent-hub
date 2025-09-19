@@ -10,9 +10,9 @@ export default async function ArticlePage({ params }: Props) {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <article className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold mb-4">{article.title}</h1>
-        <time className="text-gray-600 block mb-8">
+      <article className="mx-auto max-w-4xl">
+        <h1 className="mb-4 text-4xl font-bold">{article.title}</h1>
+        <time className="mb-8 block text-gray-600">
           {new Date(article.publishedAt).toLocaleDateString('ja-JP')}
         </time>
         <div

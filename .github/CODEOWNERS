@@ -1,0 +1,26 @@
+# Med×Dent Hub Code Owners
+
+# Global rules
+* @Rikublender3d
+
+# Frontend components
+/src/components/ @Rikublender3d
+/src/app/ @Rikublender3d
+
+# API and backend logic  
+/src/lib/ @Rikublender3d
+/src/types/ @Rikublender3d
+
+# Configuration files
+/.github/ @Rikublender3d
+/next.config.js @Rikublender3d
+/tailwind.config.js @Rikublender3d
+/package.json @Rikublender3d
+
+# Documentation
+/README.md @Rikublender3d
+/docs/ @Rikublender3d
+
+# Environment and deployment
+/.env.example @Rikublender3d
+/vercel.json @Rikublender3d
