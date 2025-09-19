@@ -13,6 +13,7 @@ This is a [Next.js](https://nextjs.org) project for medical and dental professio
 - 🔄 Stable deployment
 - ✅ All secrets configured
 - 🎉 Ready for production
+- 🔧 Environment variables fixed
 
 ## Getting Started
 
