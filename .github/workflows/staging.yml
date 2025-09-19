@@ -27,6 +27,14 @@ jobs:
       - name: Run tests
         run: npm run test
 
+      - name: Debug environment variables
+        run: |
+          echo "MICROCMS_SERVICE_DOMAIN is set: $([[ -n "$MICROCMS_SERVICE_DOMAIN" ]] && echo "YES" || echo "NO")"
+          echo "MICROCMS_API_KEY is set: $([[ -n "$MICROCMS_API_KEY" ]] && echo "YES" || echo "NO")"
+        env:
+          MICROCMS_SERVICE_DOMAIN: ${{ secrets.MICROCMS_SERVICE_DOMAIN }}
+          MICROCMS_API_KEY: ${{ secrets.MICROCMS_API_KEY }}
+
       - name: Build application
         run: npm run build
         env:
