@@ -16,7 +16,7 @@ export default async function Home() {
           priority
         />
         <div className="container mx-auto px-4 py-8">
-          <h1 className="mb-8 text-3xl font-bold">Med×Dent Hub</h1>
+          <h1 className="mb-8 text-3xl font-bold">医師と歯医者の交換日記</h1>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {contents.map((article) => (
               <ArticleCard key={article.id} article={article} />

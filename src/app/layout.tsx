@@ -9,8 +9,8 @@ const zenKakuGothicNew = Zen_Kaku_Gothic_New({
 })
 
 export const metadata: Metadata = {
-  title: 'Med×Dent Hub',
-  description: 'Med×Dent Hub',
+  title: '医師と歯医者の交換日記',
+  description: '医師と歯医者の交換日記',
 }
 
 export default function RootLayout({

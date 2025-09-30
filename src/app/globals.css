@@ -1,11 +1,23 @@
 @import 'tailwindcss';
 
 :root {
-  --background: #0f172a;
-  --foreground: #f8fafc;
+  --background: #f9f6f5;
+  --foreground: #24221e;
+  --frame: #dedad7;
+  --accent: #0645b0;
 }
 
 body {
-  background: #ffffff;
+  background: var(--background);
+  color: var(--foreground);
   min-height: 100vh;
+}
+
+a {
+  color: var(--accent);
+}
+
+hr,
+.border-frame {
+  border-color: var(--frame);
 }
