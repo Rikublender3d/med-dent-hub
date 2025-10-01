@@ -6,9 +6,18 @@ export const client = createClient({
   apiKey: process.env.MICROCMS_API_KEY!,
 })
 
-export const getArticles = async () => {
+export const getArticles = async (params?: {
+  q?: string
+  limit?: number
+  offset?: number
+}) => {
   const data = await client.get<ArticleResponse>({
     endpoint: 'articles',
+    queries: {
+      q: params?.q,
+      limit: params?.limit,
+      offset: params?.offset,
+    },
   })
   return data
 }
