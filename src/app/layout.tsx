@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { Zen_Kaku_Gothic_New } from 'next/font/google'
 import './globals.css'
+import { Header } from '@/components/layout/Header'
+import { Footer } from '@/components/layout/Footer'
 
 const zenKakuGothicNew = Zen_Kaku_Gothic_New({
   weight: ['400', '700'],
@@ -21,7 +23,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${zenKakuGothicNew.variable} antialiased`}>
-        {children}
+        <Header />
+        <main className="container mx-auto px-4">
+          {children}
+        </main>
+        <Footer />
       </body>
     </html>
   )
