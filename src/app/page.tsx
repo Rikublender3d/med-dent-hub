@@ -1,9 +1,13 @@
 import Image from 'next/image'
-import { getArticles } from '@/lib/microCMS/microcms'
+import { getArticles, getCategories } from '@/lib/microCMS/microcms'
 import { ArticleCard } from '@/components/ArticleCard'
 
 export default async function Home() {
-  const { contents } = await getArticles()
+  const [{ contents }, categoriesRes] = await Promise.all([
+    getArticles(),
+    getCategories(),
+  ])
+  const categories = categoriesRes.contents
   const sortedByNewest = [...contents].sort(
     (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
   )
@@ -60,14 +64,13 @@ export default async function Home() {
         {/* Sidebar */}
         <aside className="lg:col-span-4">
           <div className="mb-6 rounded-xl border border-frame bg-white p-4">
-            <h4 className="mb-3 text-sm font-semibold">トレンドトピック</h4>
+            <h4 className="mb-3 text-sm font-semibold">カテゴリー</h4>
             <ul className="space-y-3 text-sm">
-              {['診療報酬改定2024', '口腔機能管理', '糖尿病連携', '在宅歯科医療', '歯周病予防'].map((t) => (
-                <li key={t} className="flex items-center justify-between">
-                  <a href="#" className="hover:underline">
-                    {t}
+              {categories.map((c) => (
+                <li key={c.id} className="flex items-center justify-between">
+                  <a href={`/posts?category=${c.id}`} className="hover:underline">
+                    {c.name}
                   </a>
-                  <span className="text-[color:var(--frame)]">32件</span>
                 </li>
               ))}
             </ul>
