@@ -2,11 +2,15 @@ import { getArticles, getCategories } from '@/lib/microCMS/microcms'
 import { ArticleCard } from '@/components/ArticleCard'
 
 export default async function Home() {
-  const [{ contents }, categoriesRes] = await Promise.all([
+  const [{ contents }, categoriesRes, popularRes] = await Promise.all([
     getArticles(),
     getCategories(),
+    fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/popular-articles`, {
+      next: { revalidate: 3600 }, // Cache for 1 hour
+    }).then(res => res.json()).catch(() => ({ articles: [] })),
   ])
   const categories = categoriesRes.contents
+  const popularArticles = popularRes.articles || []
   const sortedByNewest = [...contents].sort(
     (a, b) =>
       new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
@@ -43,7 +47,7 @@ export default async function Home() {
         {/* Main column */}
         <div className="lg:col-span-8">
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-xl font-bold">注目の記事</h2>
+            <h2 className="text-xl font-bold">人気の記事</h2>
             <a
               href="/posts"
               className="text-sm text-[color:var(--accent)] hover:underline"
@@ -53,7 +57,7 @@ export default async function Home() {
           </div>
 
           <div className="mb-10 grid gap-6 md:grid-cols-2">
-            {sortedByNewest.slice(0, 4).map((article) => (
+            {popularArticles.slice(0, 4).map((article) => (
               <ArticleCard key={article.id} article={article} />
             ))}
           </div>

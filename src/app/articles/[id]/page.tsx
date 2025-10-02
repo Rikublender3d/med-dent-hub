@@ -1,4 +1,5 @@
 import { getArticleById } from '@/lib/microCMS/microcms'
+import { ArticleViewTracker } from '@/components/analytics/ArticleViewTracker'
 
 interface Props {
   params: { id: string }
@@ -10,6 +11,7 @@ export default async function ArticlePage({ params }: Props) {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      <ArticleViewTracker articleId={article.id} articleTitle={article.title} />
       <article className="mx-auto max-w-4xl">
         <h1 className="mb-4 text-4xl font-bold">{article.title}</h1>
         <time className="mb-8 block text-gray-600">
