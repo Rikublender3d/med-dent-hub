@@ -5,6 +5,9 @@ export interface Article {
   publishedAt: string
   createdAt: string
   updatedAt: string
+  eyecatch: {
+    url: string
+  }
 }
 
 export interface ArticleResponse {

@@ -1,18 +1,10 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
 
 function NavLink({ href, label }: { href: string; label: string }) {
-  const pathname = usePathname()
-  const isActive = href === '/' ? pathname === '/' : pathname.startsWith(href)
   return (
-    <Link
-      href={href}
-      className={`rounded px-2 py-1 text-sm hover:underline ${
-        isActive ? 'text-[color:var(--accent)]' : ''
-      }`}
-    >
+    <Link href={href} className="rounded px-2 py-1 text-sm hover:underline">
       {label}
     </Link>
   )
@@ -20,7 +12,7 @@ function NavLink({ href, label }: { href: string; label: string }) {
 
 export function Header() {
   return (
-    <header className="border-frame/80 sticky top-0 z-30 border-b bg-[color:var(--background)]/90 backdrop-blur supports-[backdrop-filter]:bg-[color:var(--background)]/70">
+    <header className="sticky top-0 z-30 bg-[color:var(--background)]/95 shadow-md backdrop-blur supports-[backdrop-filter]:bg-[color:var(--background)]/70">
       <div className="container mx-auto flex items-center justify-between gap-4 px-4 py-3">
         <Link
           href="/"
