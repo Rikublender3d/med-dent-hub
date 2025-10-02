@@ -18,7 +18,9 @@ export const getArticles = async (params?: {
       q: params?.q,
       limit: params?.limit,
       offset: params?.offset,
-      filters: params?.categoryId ? `category[equals]${params.categoryId}` : undefined,
+      filters: params?.categoryId
+        ? `category[equals]${params.categoryId}`
+        : undefined,
     },
   })
   return data
