@@ -33,7 +33,7 @@ export function Header() {
         <Link href="/" className="flex items-center gap-3">
           <div className="h-10 w-10">
             <Image
-              src="/logo.svg"
+              src="/2.png"
               alt="医師と歯医者の交換日記"
               width={40}
               height={40}
