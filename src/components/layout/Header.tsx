@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 
 function NavLink({ href, label, hasDropdown }: { href: string; label: string; hasDropdown?: boolean }) {
@@ -29,9 +30,21 @@ export function Header() {
     <header className="sticky top-0 z-50 bg-white shadow-sm">
       <div className="container mx-auto flex items-center justify-between px-4 py-4">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2">
-          <div className="text-xl font-bold text-[color:var(--foreground)]">
-            医師と歯医者の交換日記
+        <Link href="/" className="flex items-center gap-3">
+          <div className="h-10 w-10">
+            <Image
+              src="/logo.svg"
+              alt="医師と歯医者の交換日記"
+              width={40}
+              height={40}
+              className="h-full w-full object-contain"
+              priority
+            />
+          </div>
+          <div className="hidden sm:block">
+            <div className="text-lg font-bold text-[color:var(--foreground)] leading-tight">
+              医師と歯医者の交換日記
+            </div>
           </div>
         </Link>
 
