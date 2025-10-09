@@ -46,7 +46,7 @@ export default async function Home() {
 
             {/* Right: Featured Article */}
             <div className="relative">
-              <div className="aspect-[4/3] overflow-hidden rounded-xl bg-gray-100">
+              <div className="aspect-video overflow-hidden rounded-xl bg-gray-100">
                 <Image
                   src="/undraw_medicine_hqqg.png"
                   alt="医療と歯科の連携"
@@ -82,40 +82,33 @@ export default async function Home() {
               const categoryNames = ['医療連携', '症例研究', 'well-working', '診療技術', '患者ケア', '医学教育']
 
               return (
-                <article key={article.id} className="group overflow-hidden rounded-xl bg-white shadow-sm transition-shadow hover:shadow-lg">
-                  {article.eyecatch && (
-                    <div className="relative h-48 overflow-hidden">
-                      <Image
-                        src={article.eyecatch.url}
-                        alt={article.title}
-                        fill
-                        className="object-cover transition-transform group-hover:scale-105"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      />
+                <Link key={article.id} href={`/articles/${article.id}`} className="block">
+                  <article className="group overflow-hidden rounded-xl bg-white shadow-sm transition-shadow hover:shadow-lg h-full">
+                    {article.eyecatch && (
+                      <div className="relative aspect-video overflow-hidden">
+                        <Image
+                          src={article.eyecatch.url}
+                          alt={article.title}
+                          fill
+                          className="object-cover transition-transform group-hover:scale-105"
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        />
+                      </div>
+                    )}
+                    <div className="p-6">
+                      <div className="mb-3 flex items-center gap-2">
+                        <span className={`inline-block h-2 w-2 rounded-full ${categoryColors[index % categoryColors.length]}`}></span>
+                        <span className="text-sm font-medium text-gray-600">{categoryNames[index % categoryNames.length]}</span>
+                      </div>
+                      <h3 className="mb-3 text-lg font-semibold leading-tight text-[color:var(--foreground)] line-clamp-2">
+                        {article.title}
+                      </h3>
+                      <p className="text-sm text-gray-600">
+                        {new Date(article.publishedAt).toLocaleDateString('ja-JP')}
+                      </p>
                     </div>
-                  )}
-                  <div className="p-6">
-                    <div className="mb-3 flex items-center gap-2">
-                      <span className={`inline-block h-2 w-2 rounded-full ${categoryColors[index % categoryColors.length]}`}></span>
-                      <span className="text-sm font-medium text-gray-600">{categoryNames[index % categoryNames.length]}</span>
-                    </div>
-                    <h3 className="mb-3 text-lg font-semibold leading-tight text-[color:var(--foreground)] line-clamp-2">
-                      {article.title}
-                    </h3>
-                    <p className="mb-4 text-sm text-gray-600">
-                      {new Date(article.publishedAt).toLocaleDateString('ja-JP')}
-                    </p>
-                    <Link
-                      href={`/articles/${article.id}`}
-                      className="inline-flex items-center gap-1 text-sm font-medium text-[color:var(--accent)] hover:underline"
-                    >
-                      続きを読む
-                      <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                    </Link>
-                  </div>
-                </article>
+                  </article>
+                </Link>
               )
             })}
           </div>
