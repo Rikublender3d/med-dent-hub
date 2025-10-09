@@ -9,11 +9,10 @@ function NavLink({ href, label, hasDropdown }: { href: string; label: string; ha
   return (
     <Link
       href={href}
-      className={`flex items-center gap-1 px-3 py-2 text-sm font-medium transition-colors ${
-        isActive
-          ? 'text-[color:var(--accent)]'
-          : 'text-[color:var(--foreground)] hover:text-[color:var(--accent)]'
-      }`}
+      className={`flex items-center gap-1 px-3 py-2 text-sm font-medium transition-colors ${isActive
+        ? 'text-[color:var(--accent)]'
+        : 'text-[color:var(--foreground)] hover:text-[color:var(--accent)]'
+        }`}
     >
       {label}
       {hasDropdown && (
