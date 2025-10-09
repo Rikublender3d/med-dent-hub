@@ -77,10 +77,7 @@ export default async function Home() {
           </div>
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {sortedByNewest.slice(0, 6).map((article, index) => {
-              const categoryColors = ['bg-green-500', 'bg-orange-500', 'bg-purple-500', 'bg-blue-500', 'bg-pink-500', 'bg-indigo-500']
-              const categoryNames = ['医療連携', '症例研究', 'well-working', '診療技術', '患者ケア', '医学教育']
-
+            {sortedByNewest.slice(0, 6).map((article) => {
               return (
                 <Link key={article.id} href={`/articles/${article.id}`} className="block">
                   <article className="group overflow-hidden rounded-xl bg-white shadow-sm transition-shadow hover:shadow-lg h-full">
@@ -96,10 +93,11 @@ export default async function Home() {
                       </div>
                     )}
                     <div className="p-6">
-                      <div className="mb-3 flex items-center gap-2">
-                        <span className={`inline-block h-2 w-2 rounded-full ${categoryColors[index % categoryColors.length]}`}></span>
-                        <span className="text-sm font-medium text-gray-600">{categoryNames[index % categoryNames.length]}</span>
-                      </div>
+                      {article.category && (
+                        <div className="mb-3">
+                          <span className="text-sm font-medium text-gray-600">{article.category.name}</span>
+                        </div>
+                      )}
                       <h3 className="mb-3 text-lg font-semibold leading-tight text-[color:var(--foreground)] line-clamp-2">
                         {article.title}
                       </h3>
