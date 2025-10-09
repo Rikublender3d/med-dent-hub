@@ -80,7 +80,7 @@ export default async function Home() {
             {sortedByNewest.slice(0, 6).map((article, index) => {
               const categoryColors = ['bg-green-500', 'bg-orange-500', 'bg-purple-500', 'bg-blue-500', 'bg-pink-500', 'bg-indigo-500']
               const categoryNames = ['医療連携', '症例研究', 'well-working', '診療技術', '患者ケア', '医学教育']
-              
+
               return (
                 <article key={article.id} className="group overflow-hidden rounded-xl bg-white shadow-sm transition-shadow hover:shadow-lg">
                   {article.eyecatch && (
