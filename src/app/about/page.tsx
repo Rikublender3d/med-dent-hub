@@ -9,7 +9,7 @@ export default function AboutPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-gray-50 to-white py-16">
+      <section className=" py-16">
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-4xl text-center">
             <h1 className="mb-6 text-4xl font-bold text-[color:var(--foreground)] lg:text-5xl">
@@ -56,7 +56,7 @@ export default function AboutPage() {
                 <p className="mb-8 text-lg leading-relaxed">
                   医師と歯科医師が本音で語り合い、現場の知見を共有し、患者・社会に還元していく"対話の場"です。
                 </p>
-                
+
                 {/* Goals Grid */}
                 <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
                   <div className="rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 p-6">
@@ -122,7 +122,7 @@ export default function AboutPage() {
                 <p className="mb-8 text-lg leading-relaxed">
                   「こんなテーマを取り上げてほしい」「取材を受けたい」など、ぜひお気軽にご意見をお寄せください。
                 </p>
-                
+
                 {/* Contact Cards */}
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                   <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
