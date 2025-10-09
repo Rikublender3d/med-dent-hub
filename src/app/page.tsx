@@ -20,7 +20,7 @@ export default async function Home() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-gray-50 to-white py-16">
+      <section className="bg-white py-16">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
             {/* Left: Main Message */}
@@ -152,7 +152,7 @@ export default async function Home() {
       </section>
 
       {/* Latest Articles Sidebar */}
-      <section className="bg-gray-50 py-16">
+      <section className="bg-white py-16">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
             {/* Latest Articles */}
