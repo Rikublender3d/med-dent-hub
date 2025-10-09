@@ -44,23 +44,40 @@ export function Header() {
         </Link>
 
         {/* Navigation */}
-        <nav className="hidden items-center gap-1 md:flex">
+        <nav className="hidden items-center gap-5 md:flex">
           <NavLink href="/" label="ホーム" />
           <NavLink href="/posts" label="記事一覧" hasDropdown />
           <NavLink href="/categories" label="カテゴリー" hasDropdown />
-          <NavLink href="/case-studies" label="症例研究" hasDropdown />
           <NavLink href="/about" label="サイトについて" />
         </nav>
 
+        {/* Search Bar */}
+        <div className="hidden md:block flex-1 max-w-md mx-8">
+          <form action="/search" method="get" className="relative">
+            <input
+              type="text"
+              name="q"
+              placeholder="記事を検索..."
+              className="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-2 pr-10 text-sm text-[color:var(--foreground)] placeholder-gray-500 focus:border-[color:var(--accent)] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[color:var(--accent)]/20"
+            />
+            <button
+              type="submit"
+              className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md p-1 text-gray-500 hover:text-[color:var(--accent)] focus:outline-none"
+            >
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </button>
+          </form>
+        </div>
+
         {/* Actions */}
         <div className="flex items-center gap-3">
-          <button className="hidden rounded-md bg-gray-100 px-4 py-2 text-sm font-medium text-[color:var(--foreground)] transition-colors hover:bg-gray-200 md:block">
-            お役立ち資料
-          </button>
-          <button className="hidden rounded-md bg-gray-100 px-4 py-2 text-sm font-medium text-[color:var(--foreground)] transition-colors hover:bg-gray-200 md:block">
+          <button className="hidden rounded-md bg-gray-100 px-4 py-2 text-sm font-medium text-[color:var(--foreground)] transition-colors hover:bg-gray-200 lg:block">
             メルマガ登録
           </button>
-          <Link href="/search" className="rounded-md p-2 text-[color:var(--foreground)] hover:bg-gray-100">
+          {/* Mobile search button */}
+          <Link href="/search" className="rounded-md p-2 text-[color:var(--foreground)] hover:bg-gray-100 md:hidden">
             <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
