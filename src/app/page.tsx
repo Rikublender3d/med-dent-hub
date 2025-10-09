@@ -45,46 +45,17 @@ export default async function Home() {
             </div>
 
             {/* Right: Featured Article */}
-            {featuredArticle && (
-              <div className="relative">
-                <div className="aspect-[4/3] overflow-hidden rounded-xl bg-gray-100">
-                  {featuredArticle.eyecatch ? (
-                    <Image
-                      src={featuredArticle.eyecatch.url}
-                      alt={featuredArticle.title}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 768px) 100vw, 50vw"
-                    />
-                  ) : (
-                    <div className="flex h-full items-center justify-center bg-gradient-to-br from-[color:var(--accent)]/20 to-[color:var(--accent)]/40">
-                      <div className="text-center text-white">
-                        <div className="mb-2 text-4xl">📚</div>
-                        <div className="text-sm">記事画像</div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-6 text-white">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="inline-block h-2 w-2 rounded-full bg-green-400"></span>
-                    <span className="text-sm font-medium">注目記事</span>
-                  </div>
-                  <h2 className="mb-2 text-xl font-bold line-clamp-2">
-                    {featuredArticle.title}
-                  </h2>
-                  <Link
-                    href={`/articles/${featuredArticle.id}`}
-                    className="inline-flex items-center gap-1 text-sm font-medium text-blue-300 hover:text-blue-200"
-                  >
-                    記事を読む
-                    <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </Link>
-                </div>
+            <div className="relative">
+              <div className="aspect-[4/3] overflow-hidden rounded-xl bg-gray-100">
+                <Image
+                  src="/undraw_medicine_hqqg.png"
+                  alt="医療と歯科の連携"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
               </div>
-            )}
+            </div>
           </div>
         </div>
       </section>
