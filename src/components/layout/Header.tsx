@@ -31,12 +31,12 @@ export function Header() {
       <div className="container mx-auto flex items-center justify-between px-4 py-2">
         {/* Logo */}
         <Link href="/" className="flex items-center">
-          <div className="h-16 w-auto">
+          <div className="h-20 w-auto">
             <Image
               src="/2.png"
               alt="医師と歯医者の交換日記"
-              width={120}
-              height={64}
+              width={200}
+              height={80}
               className="h-full w-auto object-contain"
               priority
             />
