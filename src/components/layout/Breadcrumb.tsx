@@ -24,16 +24,16 @@ export function Breadcrumb() {
 
     // パスを分割して処理
     const paths = pathname.split('/').filter(Boolean)
-    
+
     // パスに基づいてパンくずリストを生成
     let currentPath = ''
-    
+
     paths.forEach((path, index) => {
       currentPath += `/${path}`
-      
+
       // ラベルの決定
       let label = path
-      
+
       // 特定のパスに対してカスタムラベルを設定
       const pathLabels: Record<string, string> = {
         'posts': '記事一覧',
@@ -43,14 +43,14 @@ export function Breadcrumb() {
         'categories': 'カテゴリー',
         'profile': 'プロフィール',
       }
-      
+
       if (pathLabels[path]) {
         label = pathLabels[path]
       } else if (index === paths.length - 1 && paths[0] === 'articles') {
         // 記事詳細ページの場合は「記事詳細」と表示
         label = '記事詳細'
       }
-      
+
       items.push({
         label,
         href: currentPath,
@@ -66,7 +66,7 @@ export function Breadcrumb() {
   }
 
   return (
-    <nav aria-label="パンくずリスト" className="bg-gray-50 py-3">
+    <nav aria-label="パンくずリスト" className="bg-white py-3 border-b border-gray-100">
       <div className="container mx-auto px-4">
         <ol className="flex flex-wrap items-center gap-2 text-sm">
           {breadcrumbs.map((item, index) => {
