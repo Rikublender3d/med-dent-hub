@@ -28,16 +28,16 @@ function NavLink({ href, label, hasDropdown }: { href: string; label: string; ha
 export function Header() {
   return (
     <header className="sticky top-0 z-50 bg-white shadow-sm">
-      <div className="container mx-auto flex items-center justify-between px-4 py-4">
+      <div className="container mx-auto flex items-center justify-between px-4 py-2">
         {/* Logo */}
         <Link href="/" className="flex items-center">
-          <div className="h-30 w-30">
+          <div className="h-16 w-auto">
             <Image
               src="/2.png"
               alt="医師と歯医者の交換日記"
-              width={70}
-              height={70}
-              className="h-full w-full object-contain"
+              width={120}
+              height={64}
+              className="h-full w-auto object-contain"
               priority
             />
           </div>
