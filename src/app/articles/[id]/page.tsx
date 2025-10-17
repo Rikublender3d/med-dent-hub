@@ -35,39 +35,45 @@ export default async function ArticlePage({ params }: Props) {
 
   return (
     <div className="min-h-screen bg-white">
+      {/* ヒーロー画像セクション（全幅） */}
+      {article.eyecatch && (
+        <div className="relative aspect-video w-full overflow-hidden">
+          <Image
+            src={article.eyecatch.url}
+            alt={article.title}
+            fill
+            className="object-cover"
+            sizes="100vw"
+            priority
+          />
+        </div>
+      )}
+
       <div className="container mx-auto px-4 py-8">
+        {/* 記事ヘッダー（全幅） */}
+        <div className="mb-8">
+          {article.category && (
+            <div className="mb-4">
+              <Link
+                href={`/posts?category=${article.category.id}`}
+                className="inline-block rounded-full bg-[color:var(--accent)]/10 px-3 py-1 text-sm font-medium text-[color:var(--accent)] hover:bg-[color:var(--accent)]/20"
+              >
+                {article.category.name}
+              </Link>
+            </div>
+          )}
+          <h1 className="mb-4 text-4xl leading-tight font-bold text-[color:var(--foreground)]">
+            {article.title}
+          </h1>
+          <time className="text-gray-600">
+            {new Date(article.publishedAt).toLocaleDateString('ja-JP')}
+          </time>
+        </div>
+
+        {/* メインコンテンツとサイドバー */}
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
           {/* メインコンテンツ */}
           <article className="lg:col-span-3">
-            {article.eyecatch && (
-              <Image
-                src={article.eyecatch.url}
-                alt={article.title}
-                className="mb-6 aspect-video w-full rounded-lg bg-slate-50 object-cover shadow-md"
-                width={1200}
-                height={640}
-              />
-            )}
-
-            <div className="mb-6">
-              {article.category && (
-                <div className="mb-4">
-                  <Link
-                    href={`/posts?category=${article.category.id}`}
-                    className="inline-block rounded-full bg-[color:var(--accent)]/10 px-3 py-1 text-sm font-medium text-[color:var(--accent)] hover:bg-[color:var(--accent)]/20"
-                  >
-                    {article.category.name}
-                  </Link>
-                </div>
-              )}
-              <h1 className="mb-4 text-4xl leading-tight font-bold text-[color:var(--foreground)]">
-                {article.title}
-              </h1>
-              <time className="text-gray-600">
-                {new Date(article.publishedAt).toLocaleDateString('ja-JP')}
-              </time>
-            </div>
-
             {/* 記事本文 */}
             <div className="prose prose-lg max-w-none text-[color:var(--foreground)]">
               <SafeHTML html={article.content} />
