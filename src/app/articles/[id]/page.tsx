@@ -191,7 +191,7 @@ export default async function ArticlePage({ params }: Props) {
 
           {/* サイドバー */}
           <aside className="lg:col-span-1">
-            <div className="space-y-6">
+            <div className="sticky top-24 space-y-6">
               {/* プロモーションバナー */}
               <div className="rounded-xl bg-gradient-to-br from-teal-500 to-teal-600 p-6 text-white">
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-white/20">
