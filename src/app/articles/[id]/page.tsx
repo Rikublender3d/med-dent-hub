@@ -37,15 +37,17 @@ export default async function ArticlePage({ params }: Props) {
     <div className="min-h-screen bg-white">
       {/* ヒーロー画像セクション（全幅） */}
       {article.eyecatch && (
-        <div className="relative aspect-video w-full overflow-hidden">
-          <Image
-            src={article.eyecatch.url}
-            alt={article.title}
-            fill
-            className="object-cover"
-            sizes="100vw"
-            priority
-          />
+        <div className="container mx-auto px-4 py-8">
+          <div className="relative aspect-video w-full overflow-hidden rounded-3xl">
+            <Image
+              src={article.eyecatch.url}
+              alt={article.title}
+              fill
+              className="object-cover"
+              sizes="100vw"
+              priority
+            />
+          </div>
         </div>
       )}
 
