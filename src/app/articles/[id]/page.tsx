@@ -35,24 +35,8 @@ export default async function ArticlePage({ params }: Props) {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* ヒーロー画像セクション（全幅） */}
-      {article.eyecatch && (
-        <div className="container mx-auto px-4 py-8">
-          <div className="relative aspect-video w-full overflow-hidden rounded-3xl">
-            <Image
-              src={article.eyecatch.url}
-              alt={article.title}
-              fill
-              className="object-cover"
-              sizes="100vw"
-              priority
-            />
-          </div>
-        </div>
-      )}
-
       <div className="container mx-auto px-4 py-8">
-        {/* 記事ヘッダー（全幅） */}
+        {/* 記事ヘッダー（画像より上） */}
         <div className="mb-8">
           {article.category && (
             <div className="mb-4">
@@ -71,6 +55,22 @@ export default async function ArticlePage({ params }: Props) {
             {new Date(article.publishedAt).toLocaleDateString('ja-JP')}
           </time>
         </div>
+
+        {/* ヒーロー画像セクション */}
+        {article.eyecatch && (
+          <div className="mb-8">
+            <div className="relative aspect-video w-full overflow-hidden rounded-3xl">
+              <Image
+                src={article.eyecatch.url}
+                alt={article.title}
+                fill
+                className="object-cover"
+                sizes="100vw"
+                priority
+              />
+            </div>
+          </div>
+        )}
 
         {/* メインコンテンツとサイドバー */}
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
