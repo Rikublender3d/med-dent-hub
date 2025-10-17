@@ -14,8 +14,8 @@ export default async function Home() {
       new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
   )
 
-  const featuredArticle = sortedByNewest[0]
-  const secondaryArticles = sortedByNewest.slice(1, 3)
+  // const featuredArticle = sortedByNewest[0]
+  // const secondaryArticles = sortedByNewest.slice(1, 3)
 
   return (
     <div className="min-h-screen bg-white">
@@ -25,8 +25,9 @@ export default async function Home() {
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
             {/* Left: Main Message */}
             <div className="flex flex-col justify-center">
-              <h1 className="mb-6 text-4xl font-bold leading-tight text-[color:var(--foreground)] lg:text-5xl">
-                医療の明日が、<br />
+              <h1 className="mb-6 text-4xl leading-tight font-bold text-[color:var(--foreground)] lg:text-5xl">
+                医療の明日が、
+                <br />
                 もっとよくなる
               </h1>
               <p className="mb-8 text-lg leading-relaxed text-gray-600">
@@ -38,9 +39,6 @@ export default async function Home() {
                 className="inline-flex w-fit items-center gap-2 rounded-lg bg-[color:var(--accent)] px-6 py-3 text-white transition-colors hover:bg-[color:var(--accent)]/90"
               >
                 サイトについて
-                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
               </Link>
             </div>
 
@@ -64,23 +62,26 @@ export default async function Home() {
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="mb-8 flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-[color:var(--foreground)]">注目の記事</h2>
+            <h2 className="text-2xl font-bold text-[color:var(--foreground)]">
+              注目の記事
+            </h2>
             <Link
               href="/posts"
-              className="flex items-center gap-1 text-sm text-[color:var(--accent)] hover:underline"
+              className="text-sm text-[color:var(--accent)] hover:underline"
             >
               すべて見る
-              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
             </Link>
           </div>
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {sortedByNewest.slice(0, 6).map((article) => {
               return (
-                <Link key={article.id} href={`/articles/${article.id}`} className="block">
-                  <article className="group overflow-hidden rounded-xl bg-white shadow-sm transition-shadow hover:shadow-lg h-full">
+                <Link
+                  key={article.id}
+                  href={`/articles/${article.id}`}
+                  className="block"
+                >
+                  <article className="group h-full overflow-hidden rounded-xl bg-white shadow-sm transition-shadow hover:shadow-lg">
                     {article.eyecatch && (
                       <div className="relative aspect-video overflow-hidden">
                         <Image
@@ -95,14 +96,18 @@ export default async function Home() {
                     <div className="p-6">
                       {article.category && (
                         <div className="mb-3">
-                          <span className="text-sm font-medium text-gray-600">{article.category.name}</span>
+                          <span className="text-sm font-medium text-gray-600">
+                            {article.category.name}
+                          </span>
                         </div>
                       )}
-                      <h3 className="mb-3 text-lg font-semibold leading-tight text-[color:var(--foreground)] line-clamp-2">
+                      <h3 className="mb-3 line-clamp-2 text-lg leading-tight font-semibold text-[color:var(--foreground)]">
                         {article.title}
                       </h3>
                       <p className="text-sm text-gray-600">
-                        {new Date(article.publishedAt).toLocaleDateString('ja-JP')}
+                        {new Date(article.publishedAt).toLocaleDateString(
+                          'ja-JP'
+                        )}
                       </p>
                     </div>
                   </article>
@@ -119,7 +124,9 @@ export default async function Home() {
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
             {/* Latest Articles */}
             <div className="lg:col-span-3">
-              <h2 className="mb-8 text-2xl font-bold text-[color:var(--foreground)]">最新記事</h2>
+              <h2 className="mb-8 text-2xl font-bold text-[color:var(--foreground)]">
+                最新記事
+              </h2>
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {sortedByNewest.slice(0, 9).map((article) => (
                   <ArticleCard key={article.id} article={article} />
@@ -132,7 +139,7 @@ export default async function Home() {
               <div className="space-y-6">
                 {/* Categories */}
                 <div className="rounded-xl bg-white p-6 shadow-sm">
-                  <h3 className="mb-4 text-lg font-semibold text-[color:var(--foreground)]">カテゴリー</h3>
+                  {/* カテゴリーヘッダーを非表示に */}
                   <ul className="space-y-3">
                     {categories.map((category) => (
                       <li key={category.id}>
@@ -141,7 +148,9 @@ export default async function Home() {
                           className="flex items-center justify-between rounded-lg p-2 text-sm hover:bg-gray-50"
                         >
                           <span>{category.name}</span>
-                          <span className="text-xs text-gray-500">({Math.floor(Math.random() * 20) + 1})</span>
+                          <span className="text-xs text-gray-500">
+                            ({Math.floor(Math.random() * 20) + 1})
+                          </span>
                         </Link>
                       </li>
                     ))}
@@ -150,7 +159,9 @@ export default async function Home() {
 
                 {/* Popular Articles */}
                 <div className="rounded-xl bg-white p-6 shadow-sm">
-                  <h3 className="mb-4 text-lg font-semibold text-[color:var(--foreground)]">人気記事</h3>
+                  <h3 className="mb-4 text-lg font-semibold text-[color:var(--foreground)]">
+                    人気記事
+                  </h3>
                   <ul className="space-y-4">
                     {sortedByNewest.slice(0, 5).map((article, index) => (
                       <li key={article.id} className="flex items-start gap-3">
@@ -159,7 +170,7 @@ export default async function Home() {
                         </span>
                         <Link
                           href={`/articles/${article.id}`}
-                          className="text-sm font-medium text-[color:var(--foreground)] hover:text-[color:var(--accent)] line-clamp-2"
+                          className="line-clamp-2 text-sm font-medium text-[color:var(--foreground)] hover:text-[color:var(--accent)]"
                         >
                           {article.title}
                         </Link>

@@ -9,7 +9,7 @@ interface Props {
 export const ArticleCard = ({ article }: Props) => {
   return (
     <Link href={`/articles/${article.id}`} className="block">
-      <article className="group overflow-hidden rounded-xl bg-white shadow-sm transition-shadow hover:shadow-lg h-full">
+      <article className="group h-full overflow-hidden rounded-xl bg-white shadow-sm transition-shadow hover:shadow-lg">
         {article.eyecatch && (
           <div className="relative aspect-video overflow-hidden">
             <Image
@@ -22,7 +22,7 @@ export const ArticleCard = ({ article }: Props) => {
           </div>
         )}
         <div className="p-6">
-          <h2 className="mb-3 text-lg font-semibold leading-tight text-[color:var(--foreground)] line-clamp-2">
+          <h2 className="mb-3 line-clamp-2 text-lg leading-tight font-semibold text-[color:var(--foreground)]">
             {article.title}
           </h2>
           <p className="text-sm text-gray-600">

@@ -2,21 +2,22 @@ import { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'このサイトについて - 医師と歯医者の交換日記',
-  description: '医科と歯科のあいだにある"見えないすきま"を埋めるために生まれたメディアです。医師と歯科医師の連携を通じて、よりよい診療の形を模索します。',
+  description:
+    '医科と歯科のあいだにある「見えないすきま」を埋めるために生まれたメディアです。医師と歯科医師の連携を通じて、よりよい診療の形を模索します。',
 }
 
 export default function AboutPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className=" py-16">
+      <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-4xl text-center">
             <h1 className="mb-6 text-4xl font-bold text-[color:var(--foreground)] lg:text-5xl">
               このサイトについて
             </h1>
             <p className="text-lg leading-relaxed text-gray-600">
-              医科と歯科のあいだにある"見えないすきま"を埋めるために生まれたメディア
+              医科と歯科のあいだにある「見えないすきま」を埋めるために生まれたメディア
             </p>
           </div>
         </div>
@@ -33,13 +34,13 @@ export default function AboutPage() {
               </h2>
               <div className="prose prose-lg max-w-none text-[color:var(--foreground)]">
                 <p className="mb-6 text-lg leading-relaxed">
-                  「医者と歯医者の交換日記」は、医科と歯科のあいだにある"見えないすきま"を埋めるために生まれたメディアです。
+                  「医者と歯医者の交換日記」は、医科と歯科のあいだにある「見えないすきま」を埋めるために生まれたメディアです。
                 </p>
                 <p className="mb-6 text-lg leading-relaxed">
                   診療報酬の改定や地域包括ケアの推進など、医療の現場が変化するなかで、医師と歯科医師の連携はますます重要になっています。
                 </p>
                 <p className="text-lg leading-relaxed">
-                  私たちは、両者の"対話"を通じて、よりよい診療・連携の形を模索していきます。
+                  私たちは、両者の「対話」を通じて、よりよい診療・連携の形を模索していきます。
                 </p>
               </div>
             </div>
@@ -54,15 +55,25 @@ export default function AboutPage() {
                   「医者と歯医者の交換日記」は、単なる情報発信メディアではありません。
                 </p>
                 <p className="mb-8 text-lg leading-relaxed">
-                  医師と歯科医師が本音で語り合い、現場の知見を共有し、患者・社会に還元していく"対話の場"です。
+                  医師と歯科医師が本音で語り合い、現場の知見を共有し、患者・社会に還元していく「対話の場」です。
                 </p>
 
                 {/* Goals Grid */}
                 <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
                   <div className="rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 p-6">
                     <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[color:var(--accent)] text-white">
-                      <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      <svg
+                        className="h-6 w-6"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                        />
                       </svg>
                     </div>
                     <h3 className="mb-3 text-lg font-semibold text-[color:var(--foreground)]">
@@ -75,8 +86,18 @@ export default function AboutPage() {
 
                   <div className="rounded-xl bg-gradient-to-br from-green-50 to-green-100 p-6">
                     <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[color:var(--accent)] text-white">
-                      <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                      <svg
+                        className="h-6 w-6"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                        />
                       </svg>
                     </div>
                     <h3 className="mb-3 text-lg font-semibold text-[color:var(--foreground)]">
@@ -89,8 +110,18 @@ export default function AboutPage() {
 
                   <div className="rounded-xl bg-gradient-to-br from-purple-50 to-purple-100 p-6">
                     <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[color:var(--accent)] text-white">
-                      <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                      <svg
+                        className="h-6 w-6"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                        />
                       </svg>
                     </div>
                     <h3 className="mb-3 text-lg font-semibold text-[color:var(--foreground)]">
@@ -104,7 +135,7 @@ export default function AboutPage() {
 
                 <div className="mt-8 rounded-xl bg-gradient-to-r from-[color:var(--accent)]/10 to-[color:var(--accent)]/5 p-8 text-center">
                   <p className="text-xl font-semibold text-[color:var(--foreground)]">
-                    専門と専門の間にある"すきま"を、言葉と想いでつないでいきます。
+                    専門と専門の間にある「すきま」を、言葉と想いでつないでいきます。
                   </p>
                 </div>
               </div>
@@ -128,8 +159,18 @@ export default function AboutPage() {
                   <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
                     <div className="mb-4 flex items-center gap-3">
                       <div className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-100">
-                        <svg className="h-5 w-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        <svg
+                          className="h-5 w-5 text-orange-600"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                          />
                         </svg>
                       </div>
                       <h3 className="text-lg font-semibold text-[color:var(--foreground)]">
@@ -147,8 +188,18 @@ export default function AboutPage() {
                   <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
                     <div className="mb-4 flex items-center gap-3">
                       <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100">
-                        <svg className="h-5 w-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        <svg
+                          className="h-5 w-5 text-blue-600"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                          />
                         </svg>
                       </div>
                       <h3 className="text-lg font-semibold text-[color:var(--foreground)]">
@@ -163,8 +214,18 @@ export default function AboutPage() {
                       className="inline-flex items-center gap-1 text-sm font-medium text-[color:var(--accent)] hover:underline"
                     >
                       info@tadashiiiryou.or.jp
-                      <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      <svg
+                        className="h-3 w-3"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                        />
                       </svg>
                     </a>
                   </div>
@@ -182,11 +243,21 @@ export default function AboutPage() {
               </p>
               <a
                 href="/posts"
-                className="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-[color:var(--accent)] font-semibold transition-colors hover:bg-gray-100"
+                className="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 font-semibold text-[color:var(--accent)] transition-colors hover:bg-gray-100"
               >
                 記事を読む
-                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                <svg
+                  className="h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
                 </svg>
               </a>
             </div>

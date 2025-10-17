@@ -18,9 +18,7 @@ export function Breadcrumb() {
       return []
     }
 
-    const items: BreadcrumbItem[] = [
-      { label: 'ホーム', href: '/' },
-    ]
+    const items: BreadcrumbItem[] = [{ label: 'ホーム', href: '/' }]
 
     // パスを分割して処理
     const paths = pathname.split('/').filter(Boolean)
@@ -36,12 +34,12 @@ export function Breadcrumb() {
 
       // 特定のパスに対してカスタムラベルを設定
       const pathLabels: Record<string, string> = {
-        'posts': '記事一覧',
-        'articles': '記事',
-        'about': 'サイトについて',
-        'search': '検索結果',
-        'categories': 'カテゴリー',
-        'profile': 'プロフィール',
+        posts: '記事一覧',
+        articles: '記事',
+        about: 'サイトについて',
+        search: '検索結果',
+        categories: 'カテゴリー',
+        profile: 'プロフィール',
       }
 
       if (pathLabels[path]) {
@@ -66,7 +64,7 @@ export function Breadcrumb() {
   }
 
   return (
-    <nav aria-label="パンくずリスト" className="bg-white py-3 border-gray-100">
+    <nav aria-label="パンくずリスト" className="border-gray-100 bg-white py-3">
       <div className="container mx-auto px-4">
         <ol className="flex flex-wrap items-center gap-2 text-sm">
           {breadcrumbs.map((item, index) => {
@@ -90,7 +88,10 @@ export function Breadcrumb() {
                   </svg>
                 )}
                 {isLast ? (
-                  <span className="font-medium text-[color:var(--foreground)]" aria-current="page">
+                  <span
+                    className="font-medium text-[color:var(--foreground)]"
+                    aria-current="page"
+                  >
                     {item.label}
                   </span>
                 ) : (
@@ -109,4 +110,3 @@ export function Breadcrumb() {
     </nav>
   )
 }
-
