@@ -5,6 +5,13 @@ export interface Article {
   publishedAt: string
   createdAt: string
   updatedAt: string
+  eyecatch?: {
+    url: string
+  }
+  category?: {
+    id: string
+    name: string
+  }
 }
 
 export interface ArticleResponse {

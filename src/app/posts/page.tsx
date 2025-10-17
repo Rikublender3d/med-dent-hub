@@ -4,7 +4,10 @@ import { ArticleCard } from '@/components/ArticleCard'
 export const revalidate = 60
 
 interface Props {
-  searchParams: { category?: string }
+  searchParams: {
+    category?: string
+    categoryName?: string
+  }
 }
 
 export default async function PostsPage({ searchParams }: Props) {

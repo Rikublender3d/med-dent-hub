@@ -1,7 +1,7 @@
 @import 'tailwindcss';
 
 :root {
-  --background: #f9f6f5;
+  --background: #ffffff;
   --foreground: #24221e;
   --frame: #dedad7;
   --accent: #0645b0;
@@ -13,11 +13,29 @@ body {
   min-height: 100vh;
 }
 
-a {
-  color: var(--accent);
-}
-
 hr,
 .border-frame {
   border-color: var(--frame);
+}
+
+/* Line clamp utilities */
+.line-clamp-1 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+
+.line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.line-clamp-3 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
 }
