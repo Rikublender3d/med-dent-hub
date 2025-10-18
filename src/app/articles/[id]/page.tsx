@@ -193,7 +193,7 @@ export default async function ArticlePage({ params }: Props) {
           <aside className="lg:col-span-1">
             <div className="sticky top-24 space-y-6">
               {/* プロモーションバナー */}
-              <div className="rounded-xl bg-gradient-to-br from-teal-500 to-teal-600 p-6 text-white">
+              <div className="rounded-xl bg-[color:var(--accent)] p-6 text-white">
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-white/20">
                   <svg
                     className="h-6 w-6"
@@ -215,7 +215,7 @@ export default async function ArticlePage({ params }: Props) {
                 </p>
                 <Link
                   href="/about"
-                  className="inline-block rounded-lg bg-white px-4 py-2 text-sm font-medium text-teal-600 hover:bg-gray-100"
+                  className="inline-block rounded-lg bg-white px-4 py-2 text-sm font-medium text-[color:var(--accent)] hover:bg-gray-100"
                 >
                   登録する
                 </Link>
