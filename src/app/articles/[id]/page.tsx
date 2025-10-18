@@ -73,6 +73,11 @@ export default async function ArticlePage({ params }: Props) {
           </div>
         )}
 
+        {/* 目次 */}
+        <div className="mb-8">
+          <TableOfContents html={article.content} />
+        </div>
+
         {/* メインコンテンツとサイドバー */}
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
           {/* メインコンテンツ */}
@@ -193,9 +198,6 @@ export default async function ArticlePage({ params }: Props) {
           {/* サイドバー */}
           <aside className="lg:col-span-1">
             <div className="sticky top-24 space-y-6">
-              {/* 目次 */}
-              <TableOfContents html={article.content} />
-
               {/* プロモーションバナー */}
               <div className="rounded-xl bg-[color:var(--accent)] p-6 text-white">
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-white/20">
