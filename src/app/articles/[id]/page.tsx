@@ -7,6 +7,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { SafeHTML } from '@/components/SafeHTML'
 import { ArticleCard } from '@/components/ArticleCard'
+import { TableOfContents } from '@/components/TableOfContents'
 
 interface Props {
   params: { id: string }
@@ -27,10 +28,10 @@ export default async function ArticlePage({ params }: Props) {
   // 関連記事（同じカテゴリーの記事、最大3件）
   const relatedArticles = article.category
     ? sortedByNewest
-      .filter(
-        (a) => a.id !== article.id && a.category?.id === article.category?.id
-      )
-      .slice(0, 3)
+        .filter(
+          (a) => a.id !== article.id && a.category?.id === article.category?.id
+        )
+        .slice(0, 3)
     : sortedByNewest.filter((a) => a.id !== article.id).slice(0, 3)
 
   return (
@@ -192,6 +193,9 @@ export default async function ArticlePage({ params }: Props) {
           {/* サイドバー */}
           <aside className="lg:col-span-1">
             <div className="sticky top-24 space-y-6">
+              {/* 目次 */}
+              <TableOfContents html={article.content} />
+
               {/* プロモーションバナー */}
               <div className="rounded-xl bg-[color:var(--accent)] p-6 text-white">
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-white/20">
