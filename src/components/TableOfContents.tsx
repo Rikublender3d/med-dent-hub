@@ -16,33 +16,31 @@ export function TableOfContents({ html }: Props) {
   const [tocItems, setTocItems] = useState<TocItem[]>([])
   const [activeId, setActiveId] = useState<string>('')
 
-  // HTMLから見出しを抽出して目次を生成
   useEffect(() => {
+    // HTMLから見出しタグを抽出
     const parser = new DOMParser()
     const doc = parser.parseFromString(html, 'text/html')
     const headings = doc.querySelectorAll('h1, h2, h3, h4, h5, h6')
 
     const items: TocItem[] = []
-    headings.forEach((heading) => {
-      const text = heading.textContent?.trim()
-      if (text) {
-        const level = parseInt(heading.tagName.charAt(1))
-        const id = `heading-${items.length + 1}`
+    headings.forEach((heading, index) => {
+      const level = parseInt(heading.tagName.charAt(1))
+      const text = heading.textContent || ''
+      const id = `heading-${index}`
 
-        // 見出しにIDを追加（実際のDOMには影響しない）
-        items.push({
-          id,
-          text,
-          level,
-        })
-      }
+      // 見出しにIDを設定（実際のDOMには反映されないが、目次用）
+      items.push({
+        id,
+        text,
+        level,
+      })
     })
 
     setTocItems(items)
   }, [html])
 
-  // スクロール位置に基づいてアクティブな見出しを更新
   useEffect(() => {
+    // スクロール位置に基づいてアクティブな見出しを更新
     const handleScroll = () => {
       const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6')
       let current = ''
@@ -51,7 +49,7 @@ export function TableOfContents({ html }: Props) {
         const rect = heading.getBoundingClientRect()
         if (rect.top <= 100) {
           current =
-            heading.id || `heading-${Array.from(headings).indexOf(heading) + 1}`
+            heading.id || `heading-${Array.from(headings).indexOf(heading)}`
         }
       })
 
@@ -62,20 +60,11 @@ export function TableOfContents({ html }: Props) {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // 見出しにIDを追加する関数
-  useEffect(() => {
+  const scrollToHeading = (index: number) => {
     const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6')
-    headings.forEach((heading, index) => {
-      if (!heading.id) {
-        heading.id = `heading-${index + 1}`
-      }
-    })
-  }, [])
-
-  const scrollToHeading = (id: string) => {
-    const element = document.getElementById(id)
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    const heading = headings[index]
+    if (heading) {
+      heading.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }
   }
 
@@ -89,10 +78,10 @@ export function TableOfContents({ html }: Props) {
         目次
       </h3>
       <nav className="space-y-2">
-        {tocItems.map((item) => (
+        {tocItems.map((item, index) => (
           <button
             key={item.id}
-            onClick={() => scrollToHeading(item.id)}
+            onClick={() => scrollToHeading(index)}
             className={`block w-full text-left text-sm transition-colors hover:text-[color:var(--accent)] ${
               activeId === item.id
                 ? 'font-medium text-[color:var(--accent)]'
