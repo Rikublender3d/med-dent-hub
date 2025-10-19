@@ -263,12 +263,9 @@ export default async function ArticlePage({ params }: Props) {
                     <li key={category.id}>
                       <Link
                         href={`/posts?category=${category.id}`}
-                        className="flex items-center justify-between rounded-lg p-2 text-sm hover:bg-gray-50"
+                        className="block rounded-lg p-2 text-sm hover:bg-gray-50"
                       >
-                        <span>{category.name}</span>
-                        <span className="text-xs text-gray-500">
-                          ({Math.floor(Math.random() * 20) + 1})
-                        </span>
+                        {category.name}
                       </Link>
                     </li>
                   ))}
