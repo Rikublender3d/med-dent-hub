@@ -14,11 +14,15 @@ export default function GoogleAnalytics() {
     if (!GA_ID) return
 
     // Define gtag immediately to avoid not-a-function errors
-    const w = window as any
+    type GAWindow = Window & {
+      dataLayer: unknown[]
+      gtag?: (...args: unknown[]) => void
+    }
+    const w = window as unknown as GAWindow
     if (typeof w.gtag !== 'function') {
       w.dataLayer = w.dataLayer || []
-      w.gtag = function () {
-        w.dataLayer.push(arguments)
+      w.gtag = (...args: unknown[]) => {
+        w.dataLayer.push(args)
       }
       w.gtag('js', new Date())
       w.gtag('config', GA_ID, { send_page_view: false })
@@ -38,7 +42,10 @@ export default function GoogleAnalytics() {
   useEffect(() => {
     if (!GA_ID || !pathname) return
     const url = `${pathname}${searchParams?.toString() ? `?${searchParams.toString()}` : ''}`
-    const w = window as any
+    type GAWindow = Window & {
+      gtag?: (...args: unknown[]) => void
+    }
+    const w = window as unknown as GAWindow
     if (typeof w.gtag === 'function') {
       w.gtag('event', 'page_view', { page_path: url })
     }
