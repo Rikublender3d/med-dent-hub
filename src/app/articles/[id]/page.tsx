@@ -7,6 +7,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { SafeHTML } from '@/components/SafeHTML'
 import { ArticleCard } from '@/components/ArticleCard'
+import { TableOfContents } from '@/components/TableOfContents'
+import ArticleAnalytics from '@/components/ArticleAnalytics'
 
 interface Props {
   params: { id: string }
@@ -27,15 +29,20 @@ export default async function ArticlePage({ params }: Props) {
   // 関連記事（同じカテゴリーの記事、最大3件）
   const relatedArticles = article.category
     ? sortedByNewest
-      .filter(
-        (a) => a.id !== article.id && a.category?.id === article.category?.id
-      )
-      .slice(0, 3)
+        .filter(
+          (a) => a.id !== article.id && a.category?.id === article.category?.id
+        )
+        .slice(0, 3)
     : sortedByNewest.filter((a) => a.id !== article.id).slice(0, 3)
 
   return (
     <div className="min-h-screen bg-white">
       <div className="container mx-auto px-4 py-8">
+        <ArticleAnalytics
+          id={article.id}
+          path={`/articles/${article.id}`}
+          title={article.title}
+        />
         {/* 記事ヘッダー（画像より上） */}
         <div className="mb-8">
           {article.category && (
@@ -72,12 +79,17 @@ export default async function ArticlePage({ params }: Props) {
           </div>
         )}
 
+        {/* 目次 */}
+        <div className="mb-8">
+          <TableOfContents html={article.content} />
+        </div>
+
         {/* メインコンテンツとサイドバー */}
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
           {/* メインコンテンツ */}
           <article className="lg:col-span-3">
             {/* 記事本文 */}
-            <div className="prose prose-lg max-w-none text-[color:var(--foreground)]">
+            <div className="prose prose-lg max-w-none">
               <SafeHTML html={article.content} />
             </div>
 
@@ -257,12 +269,9 @@ export default async function ArticlePage({ params }: Props) {
                     <li key={category.id}>
                       <Link
                         href={`/posts?category=${category.id}`}
-                        className="flex items-center justify-between rounded-lg p-2 text-sm hover:bg-gray-50"
+                        className="block rounded-lg p-2 text-sm hover:bg-gray-50"
                       >
-                        <span>{category.name}</span>
-                        <span className="text-xs text-gray-500">
-                          ({Math.floor(Math.random() * 20) + 1})
-                        </span>
+                        {category.name}
                       </Link>
                     </li>
                   ))}
