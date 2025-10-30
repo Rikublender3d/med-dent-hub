@@ -281,10 +281,10 @@ export default async function ArticlePage({ params }: Props) {
               {/* 人気記事 */}
               <div className="rounded-xl bg-white p-6 shadow-sm">
                 <h3 className="mb-4 text-lg font-semibold text-[color:var(--foreground)]">
-                  人気記事
+                  人気記事（注目）
                 </h3>
                 <ul className="space-y-4">
-                  {sortedByNewest.slice(0, 5).map((article, index) => (
+                  {sortedByNewest.slice(0, 3).map((article, index) => (
                     <li key={article.id} className="flex items-start gap-3">
                       <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[color:var(--accent)] text-xs font-bold text-white">
                         {index + 1}
