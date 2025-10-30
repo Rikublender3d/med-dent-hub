@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
 import { Zen_Kaku_Gothic_New } from 'next/font/google'
 import './globals.css'
 import { Header } from '@/components/layout/Header'
@@ -56,8 +57,10 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body className={`${zenKakuGothicNew.variable} antialiased`}>
-        <PageAnalytics />
-        <GoogleAnalytics />
+        <Suspense fallback={null}>
+          <PageAnalytics />
+          <GoogleAnalytics />
+        </Suspense>
         <Header />
         <Breadcrumb />
         <main className="container mx-auto px-4">{children}</main>
