@@ -4,6 +4,7 @@ import './globals.css'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { Breadcrumb } from '@/components/layout/Breadcrumb'
+import { Analytics } from '@vercel/analytics/next'
 
 const zenKakuGothicNew = Zen_Kaku_Gothic_New({
   weight: ['400', '700'],
@@ -57,6 +58,7 @@ export default function RootLayout({
         <Breadcrumb />
         <main className="container mx-auto px-4">{children}</main>
         <Footer />
+        <Analytics />
       </body>
     </html>
   )

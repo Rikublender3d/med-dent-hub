@@ -8,6 +8,7 @@ import Link from 'next/link'
 import { SafeHTML } from '@/components/SafeHTML'
 import { ArticleCard } from '@/components/ArticleCard'
 import { TableOfContents } from '@/components/TableOfContents'
+import ArticleAnalytics from '@/components/ArticleAnalytics'
 
 interface Props {
   params: { id: string }
@@ -37,6 +38,11 @@ export default async function ArticlePage({ params }: Props) {
   return (
     <div className="min-h-screen bg-white">
       <div className="container mx-auto px-4 py-8">
+        <ArticleAnalytics
+          id={article.id}
+          path={`/articles/${article.id}`}
+          title={article.title}
+        />
         {/* 記事ヘッダー（画像より上） */}
         <div className="mb-8">
           {article.category && (
@@ -83,7 +89,7 @@ export default async function ArticlePage({ params }: Props) {
           {/* メインコンテンツ */}
           <article className="lg:col-span-3">
             {/* 記事本文 */}
-            <div className="prose prose-lg max-w-none text-[color:var(--foreground)]">
+            <div className="prose prose-lg max-w-none">
               <SafeHTML html={article.content} />
             </div>
 

@@ -109,6 +109,7 @@ export function Header() {
           <NavLink href="/" label="ホーム" />
           <NavLink href="/posts" label="記事一覧" />
           <NavLink href="/about" label="サイトについて" />
+          <NavLink href="/newsletter" label="メルマガ" />
         </nav>
 
         {/* Desktop Search Bar */}
@@ -185,9 +186,12 @@ export function Header() {
 
         {/* Desktop action */}
         <div className="hidden flex-shrink-0 items-center gap-3 lg:flex">
-          <button className="hidden rounded-md bg-gray-100 px-3 py-2 text-sm font-medium text-[color:var(--foreground)] transition-colors hover:bg-gray-200 xl:block">
+          <Link
+            href="/newsletter"
+            className="hidden rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 xl:block"
+          >
             メルマガ登録
-          </button>
+          </Link>
         </div>
       </div>
 
@@ -202,6 +206,7 @@ export function Header() {
               <NavLink href="/" label="ホーム" />
               <NavLink href="/posts" label="記事一覧" />
               <NavLink href="/about" label="サイトについて" />
+              <NavLink href="/newsletter" label="メルマガ" />
             </nav>
             <form
               action="/search"

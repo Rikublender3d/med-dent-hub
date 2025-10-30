@@ -82,7 +82,7 @@ export function TableOfContents({ html }: Props) {
           <button
             key={item.id}
             onClick={() => scrollToHeading(index)}
-            className={`block w-full text-left text-sm transition-colors hover:text-[color:var(--accent)] ${
+            className={`block w-full cursor-pointer text-left text-sm transition-colors hover:text-[color:var(--accent)] ${
               activeId === item.id
                 ? 'font-medium text-[color:var(--accent)]'
                 : 'text-gray-600'
