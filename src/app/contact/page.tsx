@@ -2,9 +2,9 @@ import type { Metadata } from 'next'
 import ContactForm from '@/components/forms/ContactForm'
 
 export const metadata: Metadata = {
-  title: 'お問い合わせ - 医師と歯医者の交換日記',
+  title: 'お問い合わせ - 医者と歯医者の交換日記',
   description:
-    '医師と歯医者の交換日記へのお問い合わせページです。ご意見・ご要望・ご連絡はこちらからお寄せください。',
+    '医者と歯医者の交換日記へのお問い合わせページです。ご意見・ご要望・ご連絡はこちらからお寄せください。',
 }
 
 export default function ContactPage() {

@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: '利用規約',
-  description: '医師と歯医者の交換日記の利用規約です。',
+  description: '医者と歯医者の交換日記の利用規約です。',
 }
 
 export default function TermsPage() {
@@ -17,7 +17,7 @@ export default function TermsPage() {
         <section className="mb-10">
           <h2 className="mb-3 text-xl font-semibold">第1条（適用）</h2>
           <p className="leading-7 text-[color:var(--foreground)]">
-            本利用規約（以下「本規約」といいます。）は、医師と歯医者の交換日記（以下「当サイト」といいます。）がこのウェブサイト上で提供するサービス（以下「本サービス」といいます。）の利用条件を定めるものです。登録ユーザーの皆さま（以下「ユーザー」といいます。）には、本規約に従って、本サービスをご利用いただきます。
+            本利用規約（以下「本規約」といいます。）は、医者と歯医者の交換日記（以下「当サイト」といいます。）がこのウェブサイト上で提供するサービス（以下「本サービス」といいます。）の利用条件を定めるものです。登録ユーザーの皆さま（以下「ユーザー」といいます。）には、本規約に従って、本サービスをご利用いただきます。
           </p>
         </section>
 

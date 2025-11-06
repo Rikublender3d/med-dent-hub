@@ -4,7 +4,7 @@ import NewsletterForm from '@/components/forms/NewsletterForm'
 export const metadata: Metadata = {
   title: 'メルマガ申し込み',
   description:
-    '医師と歯医者の交換日記のメルマガにご登録ください。最新の医療情報や歯科情報をお届けします。',
+    '医者と歯医者の交換日記のメルマガにご登録ください。最新の医療情報や歯科情報をお届けします。',
 }
 
 export default function NewsletterPage() {
@@ -16,7 +16,7 @@ export default function NewsletterPage() {
         </h1>
 
         <p className="mb-8 text-sm text-gray-600">
-          医師と歯医者の交換日記の最新情報をお届けします
+          医者と歯医者の交換日記の最新情報をお届けします
         </p>
 
         <div className="mb-10">

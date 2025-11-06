@@ -17,10 +17,10 @@ const zenKakuGothicNew = Zen_Kaku_Gothic_New({
 
 export const metadata: Metadata = {
   title: {
-    default: '医師と歯医者の交換日記',
-    template: '%s - 医師と歯医者の交換日記',
+    default: '医者と歯医者の交換日記',
+    template: '%s - 医者と歯医者の交換日記',
   },
-  description: '医師と歯医者の交換日記',
+  description: '医者と歯医者の交換日記',
   icons: {
     icon: '/1.png',
     shortcut: '/1.png',
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://med-dent-hub.vercel.app'),
   openGraph: {
     type: 'website',
-    siteName: '医師と歯医者の交換日記',
+    siteName: '医者と歯医者の交換日記',
     url: 'https://med-dent-hub.vercel.app',
     locale: 'ja_JP',
     images: [
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
         url: '/1.png',
         width: 1200,
         height: 630,
-        alt: '医師と歯医者の交換日記',
+        alt: '医者と歯医者の交換日記',
       },
     ],
   },
