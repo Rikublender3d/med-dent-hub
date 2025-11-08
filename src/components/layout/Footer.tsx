@@ -3,7 +3,7 @@ export function Footer() {
     <footer className="border-frame/80 mt-12 bg-[color:var(--foreground)] shadow-sm">
       <div className="container mx-auto px-4 py-8 text-xs text-[color:var(--background)]">
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <p>© {new Date().getFullYear()} 医師と歯医者の交換日記</p>
+          <p>© {new Date().getFullYear()} 医者と歯医者の交換日記</p>
           <div className="flex items-center gap-4">
             <a href="/about" className="hover:underline">
               このサイトについて

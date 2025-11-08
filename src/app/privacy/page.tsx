@@ -1,9 +1,9 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'プライバシーポリシー - 医師と歯医者の交換日記',
+  title: 'プライバシーポリシー - 医者と歯医者の交換日記',
   description:
-    '医師と歯医者の交換日記のプライバシーポリシーです。個人情報の取り扱い方針について記載しています。',
+    '医者と歯医者の交換日記のプライバシーポリシーです。個人情報の取り扱い方針について記載しています。',
 }
 
 export default function PrivacyPage() {
@@ -21,7 +21,7 @@ export default function PrivacyPage() {
         <section className="mb-10">
           <h2 className="mb-3 text-xl font-semibold">1. 基本方針</h2>
           <p className="leading-7 text-[color:var(--foreground)]">
-            本サイト「医師と歯医者の交換日記」（以下「当サイト」）は、ユーザーの個人情報の保護を重要な責務と認識し、関連法令およびガイドラインを遵守し、適切な取扱い・保護に努めます。
+            本サイト「医者と歯医者の交換日記」（以下「当サイト」）は、ユーザーの個人情報の保護を重要な責務と認識し、関連法令およびガイドラインを遵守し、適切な取扱い・保護に努めます。
           </p>
         </section>
 

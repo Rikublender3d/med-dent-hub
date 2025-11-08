@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'このサイトについて - 医師と歯医者の交換日記',
+  title: 'このサイトについて - 医者と歯医者の交換日記',
   description:
     '医科と歯科のあいだにある「見えないすきま」を埋めるために生まれたメディアです。医師と歯科医師の連携を通じて、よりよい診療の形を模索します。',
 }

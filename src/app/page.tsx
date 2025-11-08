@@ -31,7 +31,7 @@ export default async function Home() {
                 もっとよくなる
               </h1>
               <p className="mb-8 text-lg leading-relaxed text-gray-600">
-                医師と歯医者の交換日記は、医科歯科連携にまつわるお役立ち情報をお届けし、
+                医者と歯医者の交換日記は、医科歯科連携にまつわるお役立ち情報をお届けし、
                 「医療の明日が、もっとよくなる」ための一歩を後押しするメディアです。
               </p>
               <Link
@@ -44,14 +44,16 @@ export default async function Home() {
 
             {/* Right: Featured Article */}
             <div className="relative">
-              <div className="aspect-video overflow-hidden rounded-xl bg-gray-100">
-                <Image
-                  src="/undraw_medicine_hqqg.png"
-                  alt="医療と歯科の連携"
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                />
+              <div className="relative overflow-hidden rounded-xl bg-gray-100">
+                <div className="relative aspect-square lg:aspect-[5/4]">
+                  <Image
+                    src="/med-dent-hub.png"
+                    alt="医療と歯科の連携"
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -65,12 +67,6 @@ export default async function Home() {
             <h2 className="text-2xl font-bold text-[color:var(--foreground)]">
               注目の記事
             </h2>
-            <Link
-              href="/posts"
-              className="text-sm text-[color:var(--accent)] hover:underline"
-            >
-              すべて見る
-            </Link>
           </div>
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">

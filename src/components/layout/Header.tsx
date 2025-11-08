@@ -95,7 +95,7 @@ export function Header() {
           <div className="h-16 w-auto">
             <Image
               src="/2.png"
-              alt="医師と歯医者の交換日記"
+              alt="医者と歯医者の交換日記"
               width={160}
               height={64}
               className="h-full w-auto object-contain"

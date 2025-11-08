@@ -67,7 +67,7 @@ export default function NewsletterForm() {
   return (
     <form onSubmit={handleSubmit} className="rounded-lg bg-white p-6">
       <h2 className="mb-6 text-center text-2xl font-bold text-gray-800">
-        医師と歯医者の交換日記
+        医者と歯医者の交換日記
         <br />
         メールマガジン登録
       </h2>

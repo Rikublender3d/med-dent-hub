@@ -106,7 +106,7 @@ export default async function ArticlePage({ params }: Props) {
                     編集部
                   </h3>
                   <p className="text-sm text-gray-600">
-                    医師と歯医者の交換日記編集部です。医科歯科連携に関する最新情報や実践的なノウハウをお届けしています。
+                    医者と歯医者の交換日記編集部です。医科歯科連携に関する最新情報や実践的なノウハウをお届けしています。
                   </p>
                 </div>
               </div>
