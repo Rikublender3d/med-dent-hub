@@ -29,10 +29,10 @@ export default async function ArticlePage({ params }: Props) {
   // 関連記事（同じカテゴリーの記事、最大3件）
   const relatedArticles = article.category
     ? sortedByNewest
-      .filter(
-        (a) => a.id !== article.id && a.category?.id === article.category?.id
-      )
-      .slice(0, 3)
+        .filter(
+          (a) => a.id !== article.id && a.category?.id === article.category?.id
+        )
+        .slice(0, 3)
     : sortedByNewest.filter((a) => a.id !== article.id).slice(0, 3)
 
   return (

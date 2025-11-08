@@ -3,15 +3,25 @@ import { ArticleCard } from '@/components/ArticleCard'
 
 export const revalidate = 60
 
+type SearchParams = Record<string, string | string[] | undefined>
+
 interface Props {
-  searchParams: {
-    category?: string
-    categoryName?: string
+  searchParams: Promise<SearchParams> | SearchParams
+}
+
+function resolveCategoryId(params: SearchParams): string | undefined {
+  const value = params.category
+  if (Array.isArray(value)) {
+    return value[0]
   }
+  return value
 }
 
 export default async function PostsPage({ searchParams }: Props) {
-  const categoryId = searchParams.category
+  const resolvedParams =
+    searchParams instanceof Promise ? await searchParams : searchParams
+
+  const categoryId = resolveCategoryId(resolvedParams)
   const { contents } = await getArticles(
     categoryId ? { categoryId } : undefined
   )
