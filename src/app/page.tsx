@@ -1,18 +1,36 @@
-import { getArticles, getCategories } from '@/lib/microCMS/microcms'
+import {
+  getArticles,
+  getCategories,
+  getFeaturedArticles,
+} from '@/lib/microCMS/microcms'
+import { getPopularArticles } from '@/lib/articles/popular'
 import { ArticleCard } from '@/components/ArticleCard'
 import Image from 'next/image'
 import Link from 'next/link'
 
 export default async function Home() {
-  const [{ contents }, categoriesRes] = await Promise.all([
-    getArticles(),
-    getCategories(),
-  ])
+  const [articlesRes, categoriesRes, popularFromAnalytics, featuredRes] =
+    await Promise.all([
+      getArticles(),
+      getCategories(),
+      getPopularArticles(5),
+      getFeaturedArticles(6),
+    ])
+
+  const contents = articlesRes.contents
   const categories = categoriesRes.contents
   const sortedByNewest = [...contents].sort(
     (a, b) =>
       new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
   )
+
+  const fallbackPool = sortedByNewest.filter(
+    (article) =>
+      !popularFromAnalytics.some((popular) => popular.id === article.id)
+  )
+  const popularArticles = [...popularFromAnalytics, ...fallbackPool].slice(0, 5)
+
+  const featuredArticles = featuredRes.contents
 
   // const featuredArticle = sortedByNewest[0]
   // const secondaryArticles = sortedByNewest.slice(1, 3)
@@ -70,7 +88,7 @@ export default async function Home() {
           </div>
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {sortedByNewest.slice(0, 6).map((article) => {
+            {featuredArticles.map((article) => {
               return (
                 <Link
                   key={article.id}
@@ -159,7 +177,7 @@ export default async function Home() {
                     人気記事
                   </h3>
                   <ul className="space-y-4">
-                    {sortedByNewest.slice(0, 5).map((article, index) => (
+                    {popularArticles.map((article, index) => (
                       <li key={article.id} className="flex items-start gap-3">
                         <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[color:var(--accent)] text-xs font-bold text-white">
                           {index + 1}
