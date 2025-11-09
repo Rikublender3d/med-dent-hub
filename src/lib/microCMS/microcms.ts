@@ -41,3 +41,30 @@ export const getCategories = async () => {
   })
   return data
 }
+
+export const getArticlesByIds = async (ids: string[]) => {
+  if (!ids.length) return []
+
+  const data = await client.get<ArticleResponse>({
+    endpoint: 'articles',
+    queries: {
+      ids: ids.join(','),
+      limit: ids.length,
+    },
+  })
+
+  return data.contents
+}
+
+export const getFeaturedArticles = async (limit = 6) => {
+  const data = await client.get<ArticleResponse>({
+    endpoint: 'articles',
+    queries: {
+      filters: 'isFeatured[equals]true',
+      orders: '-publishedAt',
+      limit,
+    },
+  })
+
+  return data
+}

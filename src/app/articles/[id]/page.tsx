@@ -9,6 +9,7 @@ import { SafeHTML } from '@/components/SafeHTML'
 import { ArticleCard } from '@/components/ArticleCard'
 import { TableOfContents } from '@/components/TableOfContents'
 import ArticleAnalytics from '@/components/ArticleAnalytics'
+import { getPopularArticles } from '@/lib/articles/popular'
 
 interface Props {
   params: { id: string }
@@ -16,9 +17,17 @@ interface Props {
 
 export default async function ArticlePage({ params }: Props) {
   const { id } = await params
-  const [article, { contents: allArticles }, categoriesRes] = await Promise.all(
-    [getArticleById(id), getArticles(), getCategories()]
-  )
+  const [
+    article,
+    { contents: allArticles },
+    categoriesRes,
+    popularFromAnalytics,
+  ] = await Promise.all([
+    getArticleById(id),
+    getArticles(),
+    getCategories(),
+    getPopularArticles(5),
+  ])
 
   const categories = categoriesRes.contents
   const sortedByNewest = [...allArticles].sort(
@@ -34,6 +43,15 @@ export default async function ArticlePage({ params }: Props) {
         )
         .slice(0, 3)
     : sortedByNewest.filter((a) => a.id !== article.id).slice(0, 3)
+
+  const fallbackPopular = sortedByNewest.filter(
+    (item) => !popularFromAnalytics.some((popular) => popular.id === item.id)
+  )
+
+  const sidebarPopular = [...popularFromAnalytics, ...fallbackPopular].slice(
+    0,
+    5
+  )
 
   return (
     <div className="min-h-screen bg-white">
@@ -281,19 +299,19 @@ export default async function ArticlePage({ params }: Props) {
               {/* 人気記事 */}
               <div className="rounded-xl bg-white p-6 shadow-sm">
                 <h3 className="mb-4 text-lg font-semibold text-[color:var(--foreground)]">
-                  人気記事（注目）
+                  人気記事
                 </h3>
                 <ul className="space-y-4">
-                  {sortedByNewest.slice(0, 3).map((article, index) => (
-                    <li key={article.id} className="flex items-start gap-3">
+                  {sidebarPopular.map((item, index) => (
+                    <li key={item.id} className="flex items-start gap-3">
                       <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[color:var(--accent)] text-xs font-bold text-white">
                         {index + 1}
                       </span>
                       <Link
-                        href={`/articles/${article.id}`}
+                        href={`/articles/${item.id}`}
                         className="line-clamp-2 text-sm font-medium text-[color:var(--foreground)] hover:text-[color:var(--accent)]"
                       >
-                        {article.title}
+                        {item.title}
                       </Link>
                     </li>
                   ))}

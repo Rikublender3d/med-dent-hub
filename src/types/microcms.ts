@@ -5,6 +5,7 @@ export interface Article {
   publishedAt: string
   createdAt: string
   updatedAt: string
+  isFeatured?: boolean
   eyecatch?: {
     url: string
   }

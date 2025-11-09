@@ -7,7 +7,7 @@ import { Footer } from '@/components/layout/Footer'
 import { Breadcrumb } from '@/components/layout/Breadcrumb'
 import { Analytics } from '@vercel/analytics/next'
 import PageAnalytics from '@/components/PageAnalytics'
-import GoogleAnalytics from '@/components/GoogleAnalytics'
+import GoogleAnalyticsScript from '@/components/GoogleAnalyticsScript'
 
 const zenKakuGothicNew = Zen_Kaku_Gothic_New({
   weight: ['400', '700'],
@@ -59,7 +59,7 @@ export default function RootLayout({
       <body className={`${zenKakuGothicNew.variable} antialiased`}>
         <Suspense fallback={null}>
           <PageAnalytics />
-          <GoogleAnalytics />
+          <GoogleAnalyticsScript />
         </Suspense>
         <Header />
         <Breadcrumb />
