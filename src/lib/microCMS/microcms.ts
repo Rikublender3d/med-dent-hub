@@ -1,5 +1,10 @@
 import { createClient } from 'microcms-js-sdk'
-import { ArticleResponse, Article, CategoryResponse } from '@/types/microcms'
+import {
+  ArticleResponse,
+  Article,
+  CategoryResponse,
+  TagResponse,
+} from '@/types/microcms'
 
 export const client = createClient({
   serviceDomain: process.env.MICROCMS_SERVICE_DOMAIN!,
@@ -11,16 +16,23 @@ export const getArticles = async (params?: {
   limit?: number
   offset?: number
   categoryId?: string
+  tagId?: string
 }) => {
+  const filters: string[] = []
+  if (params?.categoryId) {
+    filters.push(`category[equals]${params.categoryId}`)
+  }
+  if (params?.tagId) {
+    filters.push(`tags[contains]${params.tagId}`)
+  }
+
   const data = await client.get<ArticleResponse>({
     endpoint: 'articles',
     queries: {
       q: params?.q,
       limit: params?.limit,
       offset: params?.offset,
-      filters: params?.categoryId
-        ? `category[equals]${params.categoryId}`
-        : undefined,
+      filters: filters.length > 0 ? filters.join('[and]') : undefined,
     },
   })
   return data
@@ -66,5 +78,13 @@ export const getFeaturedArticles = async (limit = 6) => {
     },
   })
 
+  return data
+}
+
+export const getTags = async () => {
+  const data = await client.get<TagResponse>({
+    endpoint: 'tags',
+    queries: { limit: 100, fields: ['id', 'name'] as unknown as string },
+  })
   return data
 }

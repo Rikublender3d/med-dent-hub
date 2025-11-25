@@ -13,6 +13,14 @@ export interface Article {
     id: string
     name: string
   }
+  tags?: Tag[]
+}
+
+export interface Tag {
+  id: string
+  name: string
+  createdAt: string
+  updatedAt: string
 }
 
 export interface ArticleResponse {
@@ -31,6 +39,13 @@ export interface Category {
 
 export interface CategoryResponse {
   contents: Category[]
+  totalCount: number
+  offset: number
+  limit: number
+}
+
+export interface TagResponse {
+  contents: Tag[]
   totalCount: number
   offset: number
   limit: number

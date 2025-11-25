@@ -2,6 +2,7 @@ import {
   getArticleById,
   getArticles,
   getCategories,
+  getTags,
 } from '@/lib/microCMS/microcms'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -21,15 +22,18 @@ export default async function ArticlePage({ params }: Props) {
     article,
     { contents: allArticles },
     categoriesRes,
+    tagsRes,
     popularFromAnalytics,
   ] = await Promise.all([
     getArticleById(id),
     getArticles(),
     getCategories(),
+    getTags(),
     getPopularArticles(5),
   ])
 
   const categories = categoriesRes.contents
+  const allTags = tagsRes.contents
   const sortedByNewest = [...allArticles].sort(
     (a, b) =>
       new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
@@ -63,16 +67,29 @@ export default async function ArticlePage({ params }: Props) {
         />
         {/* 記事ヘッダー（画像より上） */}
         <div className="mb-8">
-          {article.category && (
-            <div className="mb-4">
+          <div className="mb-4 flex flex-wrap items-center gap-2">
+            {article.category && (
               <Link
                 href={`/posts?category=${article.category.id}`}
                 className="inline-block rounded-full bg-[color:var(--accent)]/10 px-3 py-1 text-sm font-medium text-[color:var(--accent)] hover:bg-[color:var(--accent)]/20"
               >
                 {article.category.name}
               </Link>
-            </div>
-          )}
+            )}
+            {article.tags && article.tags.length > 0 && (
+              <>
+                {article.tags.map((tag) => (
+                  <Link
+                    key={tag.id}
+                    href={`/posts?tag=${tag.id}`}
+                    className="inline-block rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-700 hover:bg-gray-200"
+                  >
+                    #{tag.name}
+                  </Link>
+                ))}
+              </>
+            )}
+          </div>
           <h1 className="mb-4 text-4xl leading-tight font-bold text-[color:var(--foreground)]">
             {article.title}
           </h1>
@@ -295,6 +312,26 @@ export default async function ArticlePage({ params }: Props) {
                   ))}
                 </ul>
               </div>
+
+              {/* タグ */}
+              {allTags.length > 0 && (
+                <div className="rounded-xl bg-white p-6 shadow-sm">
+                  <h3 className="mb-4 text-lg font-semibold text-[color:var(--foreground)]">
+                    タグ
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {allTags.map((tag) => (
+                      <Link
+                        key={tag.id}
+                        href={`/posts?tag=${tag.id}`}
+                        className="inline-block rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200 hover:text-[color:var(--accent)]"
+                      >
+                        #{tag.name}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {/* 人気記事 */}
               <div className="rounded-xl bg-white p-6 shadow-sm">
