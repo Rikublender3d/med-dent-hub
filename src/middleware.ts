@@ -1,9 +1,7 @@
 import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 
-export function middleware() {
-  const response = NextResponse.next()
-
-  // Content Security Policy (tightened)
+function applySecurityHeaders(response: NextResponse) {
   const cspHeader = `
     default-src 'self';
     script-src 'self' 'unsafe-eval' 'unsafe-inline';
@@ -20,8 +18,6 @@ export function middleware() {
     .trim()
 
   response.headers.set('Content-Security-Policy', cspHeader)
-
-  // その他のセキュリティヘッダー
   response.headers.set('X-Frame-Options', 'DENY')
   response.headers.set('X-Content-Type-Options', 'nosniff')
   response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
@@ -29,7 +25,11 @@ export function middleware() {
     'Permissions-Policy',
     'camera=(), microphone=(), geolocation=()'
   )
+}
 
+export function middleware(request: NextRequest) {
+  const response = NextResponse.next()
+  applySecurityHeaders(response)
   return response
 }
 

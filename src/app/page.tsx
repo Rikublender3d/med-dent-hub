@@ -2,6 +2,7 @@ import {
   getArticles,
   getCategories,
   getFeaturedArticles,
+  getTags,
 } from '@/lib/microCMS/microcms'
 import { getPopularArticles } from '@/lib/articles/popular'
 import { ArticleCard } from '@/components/ArticleCard'
@@ -9,16 +10,23 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 export default async function Home() {
-  const [articlesRes, categoriesRes, popularFromAnalytics, featuredRes] =
-    await Promise.all([
-      getArticles(),
-      getCategories(),
-      getPopularArticles(5),
-      getFeaturedArticles(6),
-    ])
+  const [
+    articlesRes,
+    categoriesRes,
+    tagsRes,
+    popularFromAnalytics,
+    featuredRes,
+  ] = await Promise.all([
+    getArticles(),
+    getCategories(),
+    getTags(),
+    getPopularArticles(5),
+    getFeaturedArticles(6),
+  ])
 
   const contents = articlesRes.contents
   const categories = categoriesRes.contents
+  const tags = tagsRes.contents
   const sortedByNewest = [...contents].sort(
     (a, b) =>
       new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
@@ -170,6 +178,26 @@ export default async function Home() {
                     ))}
                   </ul>
                 </div>
+
+                {/* Tags */}
+                {tags.length > 0 && (
+                  <div className="rounded-xl bg-white p-6 shadow-sm">
+                    <h3 className="mb-4 text-lg font-semibold text-[color:var(--foreground)]">
+                      タグ
+                    </h3>
+                    <div className="flex flex-wrap gap-2">
+                      {tags.map((tag) => (
+                        <Link
+                          key={tag.id}
+                          href={`/posts?tag=${tag.id}`}
+                          className="inline-block rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200 hover:text-[color:var(--accent)]"
+                        >
+                          #{tag.name}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {/* Popular Articles */}
                 <div className="rounded-xl bg-white p-6 shadow-sm">
