@@ -14,13 +14,13 @@ export default async function Home() {
     articlesRes,
     categoriesRes,
     tagsRes,
-    popularFromAnalytics,
+    popularArticlesFromAPI,
     featuredRes,
   ] = await Promise.all([
     getArticles(),
     getCategories(),
     getTags(),
-    getPopularArticles(5),
+    getPopularArticles(5), // microCMS優先、フォールバックでGoogle Analytics
     getFeaturedArticles(6),
   ])
 
@@ -32,11 +32,15 @@ export default async function Home() {
       new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
   )
 
+  // 人気記事に含まれていない最新記事をフォールバックとして追加
   const fallbackPool = sortedByNewest.filter(
     (article) =>
-      !popularFromAnalytics.some((popular) => popular.id === article.id)
+      !popularArticlesFromAPI.some((popular) => popular.id === article.id)
   )
-  const popularArticles = [...popularFromAnalytics, ...fallbackPool].slice(0, 5)
+  const popularArticles = [...popularArticlesFromAPI, ...fallbackPool].slice(
+    0,
+    5
+  )
 
   const featuredArticles = featuredRes.contents
 
@@ -52,13 +56,13 @@ export default async function Home() {
             {/* Left: Main Message */}
             <div className="flex flex-col justify-center">
               <h1 className="mb-6 text-4xl leading-tight font-bold text-[color:var(--foreground)] lg:text-5xl">
-                医療の明日が、
+                医療の明日を、
                 <br />
-                もっとよくなる
+                現場からよくする
               </h1>
               <p className="mb-8 text-lg leading-relaxed text-gray-600">
                 医者と歯医者の交換日記は、医科歯科連携にまつわるお役立ち情報をお届けし、
-                「医療の明日が、もっとよくなる」ための一歩を後押しするメディアです。
+                「医療の明日を、現場からよくする」ための一歩を後押しするメディアです。
               </p>
               <Link
                 href="/about"
@@ -73,7 +77,7 @@ export default async function Home() {
               <div className="relative overflow-hidden rounded-xl bg-gray-100">
                 <div className="relative aspect-square lg:aspect-[5/4]">
                   <Image
-                    src="/med-dent-hub.png"
+                    src="/med-dent-hub.webp"
                     alt="医療と歯科の連携"
                     fill
                     className="object-cover"
@@ -161,7 +165,6 @@ export default async function Home() {
               <div className="space-y-6">
                 {/* Categories */}
                 <div className="rounded-xl bg-white p-6 shadow-sm">
-                  {/* カテゴリーヘッダーを非表示に */}
                   <ul className="space-y-3">
                     {categories.map((category) => (
                       <li key={category.id}>
@@ -170,9 +173,6 @@ export default async function Home() {
                           className="flex items-center justify-between rounded-lg p-2 text-sm hover:bg-gray-50"
                         >
                           <span>{category.name}</span>
-                          <span className="text-xs text-gray-500">
-                            ({Math.floor(Math.random() * 20) + 1})
-                          </span>
                         </Link>
                       </li>
                     ))}

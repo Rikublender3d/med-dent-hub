@@ -17,12 +17,21 @@ export const getArticles = async (params?: {
   offset?: number
   categoryId?: string
   tagId?: string
+  tagIds?: string[]
+  isFeatured?: boolean
 }) => {
   const filters: string[] = []
   if (params?.categoryId) {
     filters.push(`category[equals]${params.categoryId}`)
   }
-  if (params?.tagId) {
+  // 複数タグ対応（tagIdsが優先）
+  if (params?.tagIds && params.tagIds.length > 0) {
+    // 複数のタグをAND条件でフィルタリング
+    params.tagIds.forEach((tagId) => {
+      filters.push(`tags[contains]${tagId}`)
+    })
+  } else if (params?.tagId) {
+    // 後方互換性のため、単一タグもサポート
     filters.push(`tags[contains]${params.tagId}`)
   }
 
@@ -42,6 +51,9 @@ export const getArticleById = async (id: string) => {
   const data = await client.get<Article>({
     endpoint: 'articles',
     contentId: id,
+    queries: {
+      depth: 2, // 関連記事も取得するためにdepthを指定
+    },
   })
   return data
 }

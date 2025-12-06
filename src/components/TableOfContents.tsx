@@ -1,5 +1,4 @@
 'use client'
-
 import { useEffect, useState } from 'react'
 
 interface TocItem {
@@ -14,87 +13,100 @@ interface Props {
 
 export function TableOfContents({ html }: Props) {
   const [tocItems, setTocItems] = useState<TocItem[]>([])
-  const [activeId, setActiveId] = useState<string>('')
+  const [isOpen, setIsOpen] = useState(true)
 
   useEffect(() => {
-    // HTMLから見出しタグを抽出
-    const parser = new DOMParser()
-    const doc = parser.parseFromString(html, 'text/html')
-    const headings = doc.querySelectorAll('h1, h2, h3, h4, h5, h6')
-
-    const items: TocItem[] = []
-    headings.forEach((heading, index) => {
-      const level = parseInt(heading.tagName.charAt(1))
-      const text = heading.textContent || ''
-      const id = `heading-${index}`
-
-      // 見出しにIDを設定（実際のDOMには反映されないが、目次用）
-      items.push({
-        id,
-        text,
-        level,
-      })
-    })
-
-    setTocItems(items)
-  }, [html])
-
-  useEffect(() => {
-    // スクロール位置に基づいてアクティブな見出しを更新
-    const handleScroll = () => {
-      const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6')
-      let current = ''
+    const updateToc = () => {
+      const headings = document.querySelectorAll(
+        '.prose h1, .prose h2, .prose h3'
+      )
+      const items: TocItem[] = []
 
       headings.forEach((heading) => {
-        const rect = heading.getBoundingClientRect()
-        if (rect.top <= 100) {
-          current =
-            heading.id || `heading-${Array.from(headings).indexOf(heading)}`
-        }
+        const id = heading.id
+        if (!id || !id.startsWith('autoid_')) return
+
+        items.push({
+          id,
+          text: heading.textContent || '',
+          level: parseInt(heading.tagName.charAt(1)),
+        })
       })
 
-      setActiveId(current)
+      setTocItems(items)
     }
 
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+    const timer = setTimeout(updateToc, 100)
+    return () => clearTimeout(timer)
+  }, [html])
 
-  const scrollToHeading = (index: number) => {
-    const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6')
-    const heading = headings[index]
-    if (heading) {
-      heading.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+    e.preventDefault()
+
+    const element = document.getElementById(id)
+    if (!element) return
+
+    const offset = 100 // ← この数値を変更して余白を調整
+    const elementPosition = element.getBoundingClientRect().top
+    const offsetPosition = elementPosition + window.scrollY - offset
+
+    window.scrollTo({
+      top: offsetPosition,
+      behavior: 'smooth',
+    })
   }
 
-  if (tocItems.length === 0) {
-    return null
-  }
+  if (tocItems.length === 0) return null
 
   return (
-    <div className="rounded-xl bg-white p-6 shadow-sm">
-      <h3 className="mb-4 text-lg font-semibold text-[color:var(--foreground)]">
-        目次
-      </h3>
-      <nav className="space-y-2">
-        {tocItems.map((item, index) => (
-          <button
-            key={item.id}
-            onClick={() => scrollToHeading(index)}
-            className={`block w-full cursor-pointer text-left text-sm transition-colors hover:text-[color:var(--accent)] ${
-              activeId === item.id
-                ? 'font-medium text-[color:var(--accent)]'
-                : 'text-gray-600'
-            }`}
-            style={{
-              paddingLeft: `${(item.level - 1) * 12}px`,
-            }}
-          >
-            {item.text}
-          </button>
-        ))}
-      </nav>
+    <div className="tableOfContents js-accordionBox rounded-xl bg-white shadow-sm">
+      <p
+        className="tableOfContents_title js-accordionTrigger flex cursor-pointer items-center justify-between p-4 font-semibold"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <span>
+          <span className="big mr-2 text-lg">CONTENTS</span>目次
+        </span>
+        <span className="text-sm text-gray-600">
+          {isOpen ? '閉じる' : '開く'}
+        </span>
+      </p>
+      <div
+        className={`tableOfContents_body js-accordionBody ${isOpen ? 'is-open' : ''}`}
+      >
+        <div className="p-4">
+          <ul className="space-y-2">
+            {tocItems.map((item) => {
+              return (
+                <li
+                  key={item.id}
+                  className={`headingLv_${item.level} ${
+                    item.level === 1 ? 'list-none' : 'list-disc'
+                  }`}
+                  style={{
+                    paddingLeft: `${(item.level - 1) * 16}px`,
+                    listStylePosition: 'inside',
+                  }}
+                >
+                  <a
+                    href={`#${item.id}`}
+                    className={`link inline cursor-pointer transition-colors hover:text-[color:var(--accent)] ${
+                      item.level === 1
+                        ? 'text-2xl font-bold text-gray-900'
+                        : item.level === 2
+                          ? 'text-base font-semibold text-gray-800 decoration-gray-800 underline-offset-4'
+                          : 'text-sm font-normal text-gray-700'
+                    }`}
+                    onClick={(e) => handleClick(e, item.id)}
+                  >
+                    {item.text}
+                  </a>
+                </li>
+              )
+            })}
+          </ul>
+        </div>
+      </div>
     </div>
   )
 }
