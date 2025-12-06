@@ -13,7 +13,7 @@ export default function TermsPage() {
           利用規約
         </h1>
 
-        <p className="mb-8 text-sm text-gray-600">最終更新日: 2024年12月19日</p>
+        <p className="mb-8 text-sm text-gray-600">最終更新日: 2025年11月27日</p>
         <section className="mb-10">
           <h2 className="mb-3 text-xl font-semibold">第1条（適用）</h2>
           <p className="leading-7 text-[color:var(--foreground)]">
