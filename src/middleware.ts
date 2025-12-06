@@ -4,14 +4,16 @@ import type { NextRequest } from 'next/server'
 function applySecurityHeaders(response: NextResponse) {
   const cspHeader = `
     default-src 'self';
-    script-src 'self' 'unsafe-eval' 'unsafe-inline';
-    style-src 'self' 'unsafe-inline';
+    script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.youtube.com https://platform.twitter.com https://www.googletagmanager.com https://cdn.iframe.ly;
+    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
     img-src 'self' blob: data: https:;
-    font-src 'self';
+    font-src 'self' https://fonts.gstatic.com;
     object-src 'none';
     base-uri 'self';
     form-action 'self';
+    frame-src 'self' https:;
     frame-ancestors 'none';
+    connect-src 'self' https: https://www.google-analytics.com https://www.googletagmanager.com;
     upgrade-insecure-requests;
   `
     .replace(/\s{2,}/g, ' ')

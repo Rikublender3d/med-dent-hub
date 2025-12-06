@@ -1,7 +1,7 @@
 'use client'
 
 import DOMPurify from 'isomorphic-dompurify'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 
 interface SafeHTMLProps {
   html: string
@@ -10,6 +10,7 @@ interface SafeHTMLProps {
 
 export function SafeHTML({ html, className }: SafeHTMLProps) {
   const [sanitizedHTML, setSanitizedHTML] = useState('')
+  const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     // DOMPurifyでHTMLをサニタイズ
@@ -83,20 +84,40 @@ export function SafeHTML({ html, className }: SafeHTMLProps) {
         'type',
         'data-*',
         'style',
+        'scrolling',
+        'marginwidth',
+        'marginheight',
       ],
       ALLOW_DATA_ATTR: true,
       FORCE_BODY: true,
       // 外部リンクに rel="noopener noreferrer" を追加
       RETURN_DOM_FRAGMENT: false,
       RETURN_DOM: false,
-      // iframeの特定ドメインを許可
-      ADD_ATTR: ['allow'],
+      KEEP_CONTENT: true,
+      ADD_ATTR: ['allow', 'id', 'class'],
+      ADD_TAGS: ['iframe', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'],
     })
     setSanitizedHTML(clean)
   }, [html])
 
+  useEffect(() => {
+    if (!containerRef.current) return
+
+    const headings = containerRef.current.querySelectorAll('h1, h2, h3')
+    const counts: Record<number, number> = {}
+
+    headings.forEach((heading) => {
+      if (heading.id && heading.id.startsWith('autoid_')) return
+
+      const level = parseInt(heading.tagName.charAt(1))
+      counts[level] = (counts[level] || 0) + 1
+      heading.id = `autoid_${level}_${counts[level]}`
+    })
+  }, [sanitizedHTML])
+
   return (
     <div
+      ref={containerRef}
       className={className}
       dangerouslySetInnerHTML={{ __html: sanitizedHTML }}
     />

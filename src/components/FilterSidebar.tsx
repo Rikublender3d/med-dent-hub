@@ -1,25 +1,57 @@
+'use client'
+
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Category, Tag } from '@/types/microcms'
+import { useCallback, useMemo } from 'react'
 
 interface FilterSidebarProps {
   categories: Category[]
   tags: Tag[]
   selectedCategoryId?: string
-  selectedTagId?: string
+  selectedTagIds?: string[]
 }
 
 export default function FilterSidebar({
   categories,
   tags,
   selectedCategoryId,
-  selectedTagId,
+  selectedTagIds = [],
 }: FilterSidebarProps) {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+
   const selectedCategory = selectedCategoryId
     ? categories.find((c) => c.id === selectedCategoryId)
     : null
-  const selectedTag = selectedTagId
-    ? tags.find((t) => t.id === selectedTagId)
-    : null
+
+  const selectedTags = useMemo(
+    () => tags.filter((t) => selectedTagIds.includes(t.id)),
+    [tags, selectedTagIds]
+  )
+
+  const handleTagToggle = useCallback(
+    (tagId: string) => {
+      const currentTags = selectedTagIds || []
+      const newTags = currentTags.includes(tagId)
+        ? currentTags.filter((id) => id !== tagId)
+        : [...currentTags, tagId]
+
+      const params = new URLSearchParams(searchParams.toString())
+
+      if (newTags.length === 0) {
+        params.delete('tag')
+      } else {
+        params.delete('tag')
+        newTags.forEach((id) => {
+          params.append('tag', id)
+        })
+      }
+
+      router.push(`/posts?${params.toString()}`)
+    },
+    [selectedTagIds, searchParams, router]
+  )
 
   return (
     <div className="space-y-6">
@@ -79,36 +111,46 @@ export default function FilterSidebar({
             タグで絞り込む
           </h2>
           <div className="flex flex-wrap gap-2">
-            <Link
-              href={
-                selectedCategoryId
-                  ? `/posts?category=${selectedCategoryId}`
-                  : '/posts'
-              }
-              className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
-                !selectedTagId
-                  ? 'bg-[color:var(--accent)] text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              すべて
-            </Link>
+            {selectedTagIds.length === 0 ? (
+              <button
+                onClick={() => {
+                  const params = new URLSearchParams(searchParams.toString())
+                  router.push(`/posts?${params.toString()}`)
+                }}
+                className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
+                  selectedTagIds.length === 0
+                    ? 'bg-[color:var(--accent)] text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                すべて
+              </button>
+            ) : (
+              <button
+                onClick={() => {
+                  const params = new URLSearchParams(searchParams.toString())
+                  params.delete('tag')
+                  router.push(`/posts?${params.toString()}`)
+                }}
+                className="rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200"
+              >
+                すべて
+              </button>
+            )}
             {tags.map((tag) => {
-              const href = selectedCategoryId
-                ? `/posts?category=${selectedCategoryId}&tag=${tag.id}`
-                : `/posts?tag=${tag.id}`
+              const isSelected = selectedTagIds.includes(tag.id)
               return (
-                <Link
+                <button
                   key={tag.id}
-                  href={href}
+                  onClick={() => handleTagToggle(tag.id)}
                   className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
-                    selectedTagId === tag.id
+                    isSelected
                       ? 'bg-[color:var(--accent)] text-white'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                 >
                   #{tag.name}
-                </Link>
+                </button>
               )
             })}
           </div>
@@ -116,7 +158,7 @@ export default function FilterSidebar({
       )}
 
       {/* 選択中のフィルター表示 */}
-      {(selectedCategory || selectedTag) && (
+      {(selectedCategory || selectedTags.length > 0) && (
         <div className="rounded-xl bg-blue-50 p-4">
           <div className="mb-2 text-sm font-medium text-blue-800">
             現在のフィルター:
@@ -127,21 +169,8 @@ export default function FilterSidebar({
                 カテゴリー: {selectedCategory.name}
                 <Link
                   href={
-                    selectedTagId ? `/posts?tag=${selectedTagId}` : '/posts'
-                  }
-                  className="ml-1 text-blue-600 hover:text-blue-800"
-                >
-                  ×
-                </Link>
-              </span>
-            )}
-            {selectedTag && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-3 py-1 text-sm text-blue-800">
-                タグ: #{selectedTag.name}
-                <Link
-                  href={
-                    selectedCategoryId
-                      ? `/posts?category=${selectedCategoryId}`
+                    selectedTagIds.length > 0
+                      ? `/posts?${selectedTagIds.map((id) => `tag=${id}`).join('&')}`
                       : '/posts'
                   }
                   className="ml-1 text-blue-600 hover:text-blue-800"
@@ -150,6 +179,20 @@ export default function FilterSidebar({
                 </Link>
               </span>
             )}
+            {selectedTags.map((tag) => (
+              <span
+                key={tag.id}
+                className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-3 py-1 text-sm text-blue-800"
+              >
+                タグ: #{tag.name}
+                <button
+                  onClick={() => handleTagToggle(tag.id)}
+                  className="ml-1 text-blue-600 hover:text-blue-800"
+                >
+                  ×
+                </button>
+              </span>
+            ))}
           </div>
           <Link
             href="/posts"

@@ -14,6 +14,7 @@ export interface Article {
     name: string
   }
   tags?: Tag[]
+  relatedarticles?: Article[]
 }
 
 export interface Tag {

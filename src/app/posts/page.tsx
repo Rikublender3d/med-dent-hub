@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import { getArticles, getCategories, getTags } from '@/lib/microCMS/microcms'
 import { ArticleCard } from '@/components/ArticleCard'
 import FilterSidebar from '@/components/FilterSidebar'
@@ -19,14 +20,30 @@ function resolveParam(params: SearchParams, key: string): string | undefined {
   return value
 }
 
+function resolveArrayParam(
+  params: SearchParams,
+  key: string
+): string[] | undefined {
+  const value = params[key]
+  if (Array.isArray(value)) {
+    return value.filter((v): v is string => typeof v === 'string')
+  }
+  if (typeof value === 'string') {
+    return [value]
+  }
+  return undefined
+}
+
 export default async function PostsPage({ searchParams }: Props) {
   const resolvedParams =
     searchParams instanceof Promise ? await searchParams : searchParams
 
   const categoryId = resolveParam(resolvedParams, 'category')
-  const tagId = resolveParam(resolvedParams, 'tag')
+  const tagIds = resolveArrayParam(resolvedParams, 'tag')
   const { contents } = await getArticles(
-    categoryId || tagId ? { categoryId, tagId } : undefined
+    categoryId || tagIds
+      ? { categoryId, tagIds: tagIds && tagIds.length > 0 ? tagIds : undefined }
+      : undefined
   )
   const [categoriesRes, tagsRes] = await Promise.all([
     getCategories(),
@@ -51,12 +68,18 @@ export default async function PostsPage({ searchParams }: Props) {
           <div className="lg:col-span-3">
             {/* SP版: 絞り込みフィルター（上部） */}
             <div className="mb-8 lg:hidden">
-              <FilterSidebar
-                categories={categories}
-                tags={tags}
-                selectedCategoryId={categoryId}
-                selectedTagId={tagId}
-              />
+              <Suspense
+                fallback={
+                  <div className="h-64 animate-pulse rounded-xl bg-gray-100" />
+                }
+              >
+                <FilterSidebar
+                  categories={categories}
+                  tags={tags}
+                  selectedCategoryId={categoryId}
+                  selectedTagIds={tagIds}
+                />
+              </Suspense>
             </div>
 
             {/* 記事一覧 */}
@@ -77,10 +100,10 @@ export default async function PostsPage({ searchParams }: Props) {
                   該当する記事が見つかりませんでした。
                 </p>
                 <Link
-                  href="/posts"
+                  href="/"
                   className="mt-4 inline-block text-sm text-[color:var(--accent)] hover:underline"
                 >
-                  すべての記事を見る
+                  ホームに戻る
                 </Link>
               </div>
             )}
@@ -89,12 +112,18 @@ export default async function PostsPage({ searchParams }: Props) {
           {/* PC版: サイドバー */}
           <aside className="lg:col-span-1">
             <div className="sticky top-24">
-              <FilterSidebar
-                categories={categories}
-                tags={tags}
-                selectedCategoryId={categoryId}
-                selectedTagId={tagId}
-              />
+              <Suspense
+                fallback={
+                  <div className="h-64 animate-pulse rounded-xl bg-gray-100" />
+                }
+              >
+                <FilterSidebar
+                  categories={categories}
+                  tags={tags}
+                  selectedCategoryId={categoryId}
+                  selectedTagIds={tagIds}
+                />
+              </Suspense>
             </div>
           </aside>
         </div>
