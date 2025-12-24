@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+import SpBr from '@/components/SpBr'
 
 export const metadata: Metadata = {
   title: 'このサイトについて - 医者と歯医者の交換日記',
@@ -14,7 +15,8 @@ export default function AboutPage() {
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-4xl text-center">
             <h1 className="mb-6 text-4xl font-bold text-[color:var(--foreground)] lg:text-5xl">
-              医療の明日を、現場からよくする
+              医療の明日を、 <SpBr />
+              現場からよくする
             </h1>
             <p className="mb-4 text-lg leading-relaxed text-gray-700">
               医者と歯医者の交換日記は、医科歯科連携の判断に迷う場面で役立つ
@@ -22,7 +24,8 @@ export default function AboutPage() {
               「現場で使える視点」をまとめたメディアです。
             </p>
             <p className="text-lg leading-relaxed text-gray-600">
-              医師・歯科医師、そして患者さんやそのご家族の判断を支える情報を発信します。
+              医師・歯科医師、そして患者さんやその <SpBr />
+              ご家族の判断を支える情報を発信します。
             </p>
           </div>
         </div>
@@ -37,31 +40,12 @@ export default function AboutPage() {
               <h2 className="mb-6 text-3xl font-bold text-[color:var(--foreground)]">
                 このサイトについて
               </h2>
-              <div className="prose prose-lg max-w-none text-[color:var(--foreground)]">
+              <div className="max-w-none text-[color:var(--foreground)]">
                 <p className="mb-6 text-lg leading-relaxed">
-                  医科と歯科のあいだにある「見えないすきま」を埋めるために生まれたメディア
+                  医科と歯科のあいだにある <SpBr />
+                  見えないすきま」を埋めるために <SpBr />
+                  生まれたメディア
                 </p>
-              </div>
-            </div>
-
-            {/* 運営企業 */}
-            <div className="mb-16">
-              <h2 className="mb-6 text-3xl font-bold text-[color:var(--foreground)]">
-                運営企業
-              </h2>
-              <div className="prose prose-lg max-w-none text-[color:var(--foreground)]">
-                <div className="space-y-4">
-                  <div className="rounded-lg border border-gray-200 bg-white p-6">
-                    <h3 className="mb-2 text-xl font-semibold text-[color:var(--foreground)]">
-                      一般社団法人正しい医療知識を広める会
-                    </h3>
-                  </div>
-                  <div className="rounded-lg border border-gray-200 bg-white p-6">
-                    <h3 className="mb-2 text-xl font-semibold text-[color:var(--foreground)]">
-                      医療法人芯聖会
-                    </h3>
-                  </div>
-                </div>
               </div>
             </div>
 
@@ -70,7 +54,7 @@ export default function AboutPage() {
               <h2 className="mb-6 text-3xl font-bold text-[color:var(--foreground)]">
                 はじめに
               </h2>
-              <div className="prose prose-lg max-w-none text-[color:var(--foreground)]">
+              <div className="max-w-none text-[color:var(--foreground)]">
                 <p className="mb-6 text-lg leading-relaxed">
                   口の変化が、血糖値の変動や心臓への負担にまで影響するのを知っていますか。
                 </p>
@@ -99,23 +83,29 @@ export default function AboutPage() {
                 <p className="mb-6 text-lg leading-relaxed">
                   そして患者やご家族もまた、
                   <br />
-                  「医科に行くべき？
-                  歯科に相談すべき？」「持病があっても治療して大丈夫？」
+                  「医科に行くべき？ 歯科に相談 <SpBr />
+                  すべき？」「持病があっても治療して <SpBr />
+                  大丈夫？」
                   <br />
                   と迷う場面が多くあります。
                 </p>
                 <p className="mb-6 text-lg leading-relaxed">
                   これらは、専門が異なるからこそ生まれる「すきま」です。
                   <br />
-                  このすきまを埋めることが、患者の安全と安心につながります。
+                  このすきまを埋めることが、患者の <SpBr />
+                  安全と安心につながります。
                 </p>
                 <p className="text-lg leading-relaxed">
                   医師と歯医者の交換日記は、
                   <br />
-                  医師・歯科医師・患者ーーすべての立場で「医科と歯科のつながり」を理解し、よりよい選択ができるよう支えるメディアです。
+                  医師・歯科医師・患者ーーすべての
+                  <SpBr />
+                  立場で「医科と歯科のつながり」を理解し、よりよい選択ができるよう支えるメディアです。
                 </p>
                 <p className="mt-6 text-lg leading-relaxed">
-                  医師や歯科医師が現場で役立つ視点、治療の判断に必要な知識、患者が不安を解消し、自分の身体を守るための情報を届けていきます。
+                  医師や歯科医師が現場で役立つ視点、治療の判断に必要な知識、患者が不安を解消し、自分の身体を守るための
+                  <SpBr />
+                  情報を届けていきます。
                 </p>
               </div>
             </div>
@@ -125,7 +115,7 @@ export default function AboutPage() {
               <h2 className="mb-6 text-3xl font-bold text-[color:var(--foreground)]">
                 このメディアが目指すもの
               </h2>
-              <div className="prose prose-lg max-w-none text-[color:var(--foreground)]">
+              <div className="max-w-none text-[color:var(--foreground)]">
                 <p className="mb-6 text-lg leading-relaxed">
                   医科と歯科が扱うテーマは異なりますが、「患者の健康を守る」ゴールは同じです。
                   <br />
@@ -136,13 +126,19 @@ export default function AboutPage() {
                 <div className="space-y-8">
                   <div className="rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 p-6">
                     <h3 className="mb-4 text-xl font-semibold text-[color:var(--foreground)]">
-                      ▷ 医師が「口腔ケアの必要性」を理解するきっかけに
+                      ▷ 医師が「口腔ケアの
+                      <SpBr />
+                      必要性」を理解するきっかけに
                     </h3>
                     <ul className="ml-6 list-disc space-y-2 text-gray-700">
                       <li>
                         糖尿病患者の血糖コントロールが歯周治療で安定するケース
                       </li>
-                      <li>誤嚥性肺炎を予防するために歯科介入が必要な場面</li>
+                      <li>
+                        誤嚥性肺炎を予防するために
+                        <SpBr />
+                        歯科介入が必要な場面
+                      </li>
                       <li>
                         心疾患・抗凝固薬患者の歯科治療で必要になる医科との連絡
                       </li>
@@ -150,17 +146,23 @@ export default function AboutPage() {
                     <p className="mt-4 text-gray-700">
                       こうした「医科だけでは完結しない領域」を明確にし、
                       <br />
-                      日々の外来・病棟・在宅で役立つ視点として届けます。
+                      日々の外来・病棟・在宅で役立つ
+                      <SpBr />
+                      視点として届けます。
                     </p>
                   </div>
 
-                  <div className="rounded-xl bg-gradient-to-br from-green-50 to-green-100 p-6">
+                  <div className="rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 p-6">
                     <h3 className="mb-4 text-xl font-semibold text-[color:var(--foreground)]">
                       ▷ 歯科医師が「全身管理」を学ぶ入り口に
                     </h3>
                     <ul className="ml-6 list-disc space-y-2 text-gray-700">
                       <li>抗凝固薬を中断してよいか判断に迷う場面</li>
-                      <li>高血圧・心不全患者のチェアタイムとリスク管理</li>
+                      <li>
+                        高血圧・心不全患者の
+                        <SpBr />
+                        チェアタイムとリスク管理
+                      </li>
                       <li>糖尿病患者の治癒遅延の背景にある医学的要因</li>
                     </ul>
                     <p className="mt-4 text-gray-700">
@@ -170,18 +172,24 @@ export default function AboutPage() {
                     </p>
                   </div>
 
-                  <div className="rounded-xl bg-gradient-to-br from-purple-50 to-purple-100 p-6">
+                  <div className="rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 p-6">
                     <h3 className="mb-4 text-xl font-semibold text-[color:var(--foreground)]">
                       ▷ 患者が「医科と歯科のつながり」を正しく理解する手がかりに
                     </h3>
                     <ul className="ml-6 list-disc space-y-2 text-gray-700">
                       <li>どちらに相談すべきか分からない</li>
-                      <li>持病があるけれど歯科治療は大丈夫？</li>
+                      <li>
+                        持病があるけれど歯科治療は
+                        <SpBr />
+                        大丈夫？
+                      </li>
                     </ul>
                     <p className="mt-4 text-gray-700">
                       こうした疑問にこたえる、実用的な情報をまとめ、
                       <br />
-                      患者が医療を選択する力を育てるお手伝いをします。
+                      患者が医療を選択する力を育てる
+                      <SpBr />
+                      お手伝いをします。
                     </p>
                   </div>
                 </div>
@@ -193,7 +201,7 @@ export default function AboutPage() {
               <h2 className="mb-6 text-3xl font-bold text-[color:var(--foreground)]">
                 読者のみなさまへ
               </h2>
-              <div className="prose prose-lg max-w-none text-[color:var(--foreground)]">
+              <div className="max-w-none text-[color:var(--foreground)]">
                 <p className="mb-6 text-lg leading-relaxed">
                   このメディアは、あなたの声で育っていきます。
                 </p>
@@ -234,7 +242,9 @@ export default function AboutPage() {
                       </h3>
                     </div>
                     <p className="mb-4 text-sm text-gray-600">
-                      取り上げてほしいテーマや記事のアイデアをお聞かせください。
+                      取り上げてほしいテーマや
+                      <SpBr />
+                      記事のアイデアをお聞かせください。
                     </p>
                     <span className="inline-block rounded-full bg-orange-100 px-3 py-1 text-xs font-medium text-orange-800">
                       準備中
@@ -289,6 +299,27 @@ export default function AboutPage() {
               </div>
             </div>
 
+            {/* 運営企業 */}
+            <div className="mb-16">
+              <h2 className="mb-6 text-3xl font-bold text-[color:var(--foreground)]">
+                運営企業
+              </h2>
+              <div>
+                <div className="space-y-4">
+                  <div className="rounded-lg border border-gray-200 bg-white p-6">
+                    <h3 className="text-xl font-semibold text-[color:var(--foreground)]">
+                      一般社団法人正しい医療知識を広める会
+                    </h3>
+                  </div>
+                  <div className="rounded-lg border border-gray-200 bg-white p-6">
+                    <h3 className="text-xl font-semibold text-[color:var(--foreground)]">
+                      医療法人芯聖会
+                    </h3>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {/* Call to Action */}
             <div className="rounded-2xl bg-gradient-to-r from-[color:var(--accent)] to-[color:var(--accent)]/90 p-8 text-center text-white">
               <h2 className="mb-4 text-2xl font-bold">
@@ -302,7 +333,9 @@ export default function AboutPage() {
               <p className="mb-6 text-lg opacity-90">
                 このメディアは、そのつながりを「現場から育てていく」ための拠点です。
                 <br />
-                日々の診療で生まれる疑問や、共有したい気づき。
+                日々の診療で生まれる疑問や、
+                <SpBr />
+                共有したい気づき。
                 <br />
                 その一つひとつが、別の現場の助けになり、患者の支えになります。
                 <br />
