@@ -308,7 +308,9 @@ export default function AboutPage() {
                 <div className="space-y-4">
                   <div className="rounded-lg border border-gray-200 bg-white p-6">
                     <h3 className="text-xl font-semibold text-[color:var(--foreground)]">
-                      一般社団法人正しい医療知識を広める会
+                      一般社団法人
+                      <SpBr />
+                      正しい医療知識を広める会
                     </h3>
                   </div>
                   <div className="rounded-lg border border-gray-200 bg-white p-6">
