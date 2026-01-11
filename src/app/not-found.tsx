@@ -22,7 +22,7 @@ export default function NotFound() {
             ホームに戻る
           </Link>
           <Link
-            href="/posts"
+            href="/articles"
             className="rounded-lg border border-[color:var(--frame)] bg-white px-5 py-2 text-sm font-medium text-[color:var(--foreground)] hover:bg-gray-50"
           >
             記事一覧を見る

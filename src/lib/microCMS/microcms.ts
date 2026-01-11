@@ -100,3 +100,21 @@ export const getTags = async () => {
   })
   return data
 }
+
+/**
+ * 下書き記事を取得（プレビュー用）
+ * @param id 記事ID
+ * @param draftKey 下書きキー
+ * @returns 下書き記事データ
+ */
+export const getDraftArticle = async (id: string, draftKey: string) => {
+  const data = await client.get<Article>({
+    endpoint: 'articles',
+    contentId: id,
+    queries: {
+      draftKey,
+      depth: 2, // 関連記事も取得するためにdepthを指定
+    },
+  })
+  return data
+}

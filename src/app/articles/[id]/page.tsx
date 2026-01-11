@@ -10,7 +10,12 @@ import { SafeHTML } from '@/components/SafeHTML'
 import { ArticleCard } from '@/components/ArticleCard'
 import { TableOfContents } from '@/components/TableOfContents'
 import ArticleAnalytics from '@/components/ArticleAnalytics'
-import { getPopularArticles } from '@/lib/articles/popular'
+import {
+  getPopularArticles,
+  getPopularArticlesWithFallback,
+} from '@/lib/articles/popular'
+
+export const revalidate = 60
 
 interface Props {
   params: { id: string }
@@ -29,7 +34,7 @@ export default async function ArticlePage({ params }: Props) {
     getArticles(),
     getCategories(),
     getTags(),
-    getPopularArticles(5), // microCMS優先、フォールバックでGoogle Analytics
+    getPopularArticles(5), // Google Analyticsから取得
   ])
 
   const categories = categoriesRes.contents
@@ -43,11 +48,11 @@ export default async function ArticlePage({ params }: Props) {
   const relatedArticles = article.relatedarticles || []
 
   // 人気記事に含まれていない最新記事をフォールバックとして追加
-  const fallbackPopular = sortedByNewest.filter(
-    (item) => !popularArticles.some((popular) => popular.id === item.id)
+  const sidebarPopular = getPopularArticlesWithFallback(
+    popularArticles,
+    sortedByNewest,
+    5
   )
-
-  const sidebarPopular = [...popularArticles, ...fallbackPopular].slice(0, 5)
 
   return (
     <div className="min-h-screen bg-white">
@@ -62,7 +67,7 @@ export default async function ArticlePage({ params }: Props) {
           <div className="mb-4 flex flex-wrap items-center gap-2">
             {article.category && (
               <Link
-                href={`/posts?category=${article.category.id}`}
+                href={`/articles?category=${article.category.id}`}
                 className="inline-block rounded-full bg-[color:var(--accent)]/10 px-3 py-1 text-sm font-medium text-[color:var(--accent)] hover:bg-[color:var(--accent)]/20"
               >
                 {article.category.name}
@@ -73,7 +78,7 @@ export default async function ArticlePage({ params }: Props) {
                 {article.tags.map((tag) => (
                   <Link
                     key={tag.id}
-                    href={`/posts?tag=${tag.id}`}
+                    href={`/articles?tag=${tag.id}`}
                     className="inline-block rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-700 hover:bg-gray-200"
                   >
                     #{tag.name}
@@ -199,7 +204,7 @@ export default async function ArticlePage({ params }: Props) {
               </p>
               <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
                 <Link
-                  href="/posts"
+                  href="/articles"
                   className="inline-flex items-center justify-center gap-2 rounded-lg bg-white px-6 py-3 font-semibold text-[color:var(--accent)] transition-colors hover:bg-gray-100"
                 >
                   他の記事を読む
@@ -294,7 +299,7 @@ export default async function ArticlePage({ params }: Props) {
                   {categories.map((category) => (
                     <li key={category.id}>
                       <Link
-                        href={`/posts?category=${category.id}`}
+                        href={`/articles?category=${category.id}`}
                         className="block rounded-lg p-2 text-sm hover:bg-gray-50"
                       >
                         {category.name}
@@ -314,7 +319,7 @@ export default async function ArticlePage({ params }: Props) {
                     {allTags.map((tag) => (
                       <Link
                         key={tag.id}
-                        href={`/posts?tag=${tag.id}`}
+                        href={`/articles?tag=${tag.id}`}
                         className="inline-block rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200 hover:text-[color:var(--accent)]"
                       >
                         #{tag.name}
