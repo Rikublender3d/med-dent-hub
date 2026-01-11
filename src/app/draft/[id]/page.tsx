@@ -8,19 +8,20 @@ import { notFound } from 'next/navigation'
 export const dynamic = 'force-dynamic'
 
 interface Props {
-  searchParams:
-    | Promise<{ id?: string; draftKey?: string }>
-    | { id?: string; draftKey?: string }
+  params: Promise<{ id: string }> | { id: string }
+  searchParams: Promise<{ draftKey?: string }> | { draftKey?: string }
 }
 
-export default async function DraftPage({ searchParams }: Props) {
-  const resolvedParams =
+export default async function DraftPage({ params, searchParams }: Props) {
+  const resolvedParams = params instanceof Promise ? await params : params
+  const resolvedSearchParams =
     searchParams instanceof Promise ? await searchParams : searchParams
 
-  const { id, draftKey } = resolvedParams
+  const { id } = resolvedParams
+  const { draftKey } = resolvedSearchParams
 
-  // idとdraftKeyが必須
-  if (!id || !draftKey) {
+  // draftKeyが必須
+  if (!draftKey) {
     notFound()
   }
 
