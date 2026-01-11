@@ -10,7 +10,12 @@ import { SafeHTML } from '@/components/SafeHTML'
 import { ArticleCard } from '@/components/ArticleCard'
 import { TableOfContents } from '@/components/TableOfContents'
 import ArticleAnalytics from '@/components/ArticleAnalytics'
-import { getPopularArticles } from '@/lib/articles/popular'
+import {
+  getPopularArticles,
+  getPopularArticlesWithFallback,
+} from '@/lib/articles/popular'
+
+export const revalidate = 60
 
 interface Props {
   params: { id: string }
@@ -29,7 +34,7 @@ export default async function ArticlePage({ params }: Props) {
     getArticles(),
     getCategories(),
     getTags(),
-    getPopularArticles(5), // microCMS優先、フォールバックでGoogle Analytics
+    getPopularArticles(5), // Google Analyticsから取得
   ])
 
   const categories = categoriesRes.contents
@@ -43,11 +48,11 @@ export default async function ArticlePage({ params }: Props) {
   const relatedArticles = article.relatedarticles || []
 
   // 人気記事に含まれていない最新記事をフォールバックとして追加
-  const fallbackPopular = sortedByNewest.filter(
-    (item) => !popularArticles.some((popular) => popular.id === item.id)
+  const sidebarPopular = getPopularArticlesWithFallback(
+    popularArticles,
+    sortedByNewest,
+    5
   )
-
-  const sidebarPopular = [...popularArticles, ...fallbackPopular].slice(0, 5)
 
   return (
     <div className="min-h-screen bg-white">

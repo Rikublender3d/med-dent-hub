@@ -4,10 +4,15 @@ import {
   getFeaturedArticles,
   getTags,
 } from '@/lib/microCMS/microcms'
-import { getPopularArticles } from '@/lib/articles/popular'
+import {
+  getPopularArticles,
+  getPopularArticlesWithFallback,
+} from '@/lib/articles/popular'
 import { ArticleCard } from '@/components/ArticleCard'
 import Image from 'next/image'
 import Link from 'next/link'
+
+export const revalidate = 60
 
 export default async function Home() {
   const [
@@ -20,7 +25,7 @@ export default async function Home() {
     getArticles(),
     getCategories(),
     getTags(),
-    getPopularArticles(5), // microCMS優先、フォールバックでGoogle Analytics
+    getPopularArticles(5), // Google Analyticsから取得
     getFeaturedArticles(6),
   ])
 
@@ -33,12 +38,9 @@ export default async function Home() {
   )
 
   // 人気記事に含まれていない最新記事をフォールバックとして追加
-  const fallbackPool = sortedByNewest.filter(
-    (article) =>
-      !popularArticlesFromAPI.some((popular) => popular.id === article.id)
-  )
-  const popularArticles = [...popularArticlesFromAPI, ...fallbackPool].slice(
-    0,
+  const popularArticles = getPopularArticlesWithFallback(
+    popularArticlesFromAPI,
+    sortedByNewest,
     5
   )
 

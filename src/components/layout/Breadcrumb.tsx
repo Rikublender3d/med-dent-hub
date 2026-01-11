@@ -44,7 +44,7 @@ export function Breadcrumb() {
 
       if (pathLabels[path]) {
         label = pathLabels[path]
-      } else if (index === paths.length - 1 && paths[0] === 'articles') {
+      } else if (index === paths.length - 1 && paths[0] === 'posts') {
         // 記事詳細ページの場合は「記事詳細」と表示
         label = '記事詳細'
       }

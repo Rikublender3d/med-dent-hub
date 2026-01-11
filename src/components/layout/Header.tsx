@@ -4,21 +4,26 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
+import { Squash as Hamburger } from 'hamburger-react'
 
 function NavLink({
   href,
   label,
   hasDropdown,
+  onClick,
 }: {
   href: string
   label: string
   hasDropdown?: boolean
+  onClick?: () => void
 }) {
   const pathname = usePathname()
   const isActive = pathname === href
+
   return (
     <Link
       href={href}
+      onClick={onClick}
       className={`flex items-center gap-1 px-3 py-2 text-sm font-medium transition-colors ${
         isActive
           ? 'text-[color:var(--accent)]'
@@ -79,16 +84,8 @@ export function Header() {
     return () => document.removeEventListener('keydown', handleKey)
   }, [isOpen])
 
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = ''
-    }
-  }, [isOpen])
-
   return (
-    <header className="sticky top-0 z-50 bg-white shadow-sm">
+    <header className="relative sticky top-0 z-50 bg-white shadow-sm">
       <div className="container mx-auto flex items-center justify-between gap-6 px-6 py-2">
         {/* Logo */}
         <Link href="/" className="flex flex-shrink-0 items-center">
@@ -156,32 +153,7 @@ export function Header() {
         {/* Actions / Mobile toggles */}
         <div className="flex flex-shrink-0 items-center gap-2 lg:hidden">
           {/* Hamburger */}
-          <button
-            type="button"
-            aria-label="メニューを開閉"
-            aria-expanded={isOpen}
-            onClick={() => setIsOpen((v) => !v)}
-            className="rounded-md p-2 text-[color:var(--foreground)] hover:bg-gray-100"
-          >
-            <span className="sr-only">メニュー</span>
-            <div className="relative h-5 w-6">
-              <span
-                className={`absolute top-0 left-0 block h-0.5 w-6 bg-current transition-transform duration-300 ease-in-out ${
-                  isOpen ? 'translate-y-2.5 rotate-45' : ''
-                }`}
-              />
-              <span
-                className={`absolute top-2.5 left-0 block h-0.5 w-6 bg-current transition-opacity duration-200 ${
-                  isOpen ? 'opacity-0' : 'opacity-100'
-                }`}
-              />
-              <span
-                className={`absolute bottom-0 left-0 block h-0.5 w-6 bg-current transition-transform duration-300 ease-in-out ${
-                  isOpen ? '-translate-y-2.5 -rotate-45' : ''
-                }`}
-              />
-            </div>
-          </button>
+          <Hamburger toggled={isOpen} toggle={setIsOpen} />
         </div>
 
         {/* Desktop action */}
@@ -199,14 +171,30 @@ export function Header() {
       {isOpen && (
         <div
           ref={panelRef}
-          className="border-t border-gray-100 bg-white lg:hidden"
+          className="absolute inset-x-0 top-full z-40 max-h-[calc(100vh-72px)] overflow-y-auto border-t border-gray-100 bg-white lg:hidden"
         >
           <div className="container mx-auto px-6 py-4">
             <nav className="mb-3 grid gap-1">
-              <NavLink href="/" label="ホーム" />
-              <NavLink href="/posts" label="記事一覧" />
-              <NavLink href="/about" label="サイトについて" />
-              <NavLink href="/newsletter" label="メルマガ" />
+              <NavLink
+                href="/"
+                label="ホーム"
+                onClick={() => setTimeout(() => setIsOpen(false), 30)}
+              />
+              <NavLink
+                href="/posts"
+                label="記事一覧"
+                onClick={() => setTimeout(() => setIsOpen(false), 30)}
+              />
+              <NavLink
+                href="/about"
+                label="サイトについて"
+                onClick={() => setTimeout(() => setIsOpen(false), 30)}
+              />
+              <NavLink
+                href="/newsletter"
+                label="メルマガ"
+                onClick={() => setTimeout(() => setIsOpen(false), 30)}
+              />
             </nav>
             <form
               action="/search"
