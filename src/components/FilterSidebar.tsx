@@ -48,7 +48,7 @@ export default function FilterSidebar({
         })
       }
 
-      router.push(`/posts?${params.toString()}`)
+      router.push(`/articles?${params.toString()}`)
     },
     [selectedTagIds, searchParams, router]
   )
@@ -63,7 +63,7 @@ export default function FilterSidebar({
         <ul className="space-y-1">
           <li>
             <Link
-              href="/posts"
+              href="/articles"
               className={`flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium transition-all ${
                 !selectedCategoryId
                   ? 'bg-[color:var(--accent)]/10 font-semibold text-[color:var(--accent)]'
@@ -83,7 +83,7 @@ export default function FilterSidebar({
           {categories.map((category) => (
             <li key={category.id}>
               <Link
-                href={`/posts?category=${category.id}`}
+                href={`/articles?category=${category.id}`}
                 className={`flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium transition-all ${
                   selectedCategoryId === category.id
                     ? 'bg-[color:var(--accent)]/10 font-semibold text-[color:var(--accent)]'
@@ -115,7 +115,7 @@ export default function FilterSidebar({
               <button
                 onClick={() => {
                   const params = new URLSearchParams(searchParams.toString())
-                  router.push(`/posts?${params.toString()}`)
+                  router.push(`/articles?${params.toString()}`)
                 }}
                 className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
                   selectedTagIds.length === 0
@@ -130,7 +130,7 @@ export default function FilterSidebar({
                 onClick={() => {
                   const params = new URLSearchParams(searchParams.toString())
                   params.delete('tag')
-                  router.push(`/posts?${params.toString()}`)
+                  router.push(`/articles?${params.toString()}`)
                 }}
                 className="rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200"
               >
@@ -170,8 +170,8 @@ export default function FilterSidebar({
                 <Link
                   href={
                     selectedTagIds.length > 0
-                      ? `/posts?${selectedTagIds.map((id) => `tag=${id}`).join('&')}`
-                      : '/posts'
+                      ? `/articles?${selectedTagIds.map((id) => `tag=${id}`).join('&')}`
+                      : '/articles'
                   }
                   className="ml-1 text-blue-600 hover:text-blue-800"
                 >
@@ -195,7 +195,7 @@ export default function FilterSidebar({
             ))}
           </div>
           <Link
-            href="/posts"
+            href="/articles"
             className="mt-3 block text-sm text-blue-600 underline hover:text-blue-800"
           >
             すべてクリア

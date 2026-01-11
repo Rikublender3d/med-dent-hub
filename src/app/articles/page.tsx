@@ -34,7 +34,7 @@ function resolveArrayParam(
   return undefined
 }
 
-export default async function PostsPage({ searchParams }: Props) {
+export default async function ArticlesPage({ searchParams }: Props) {
   const resolvedParams =
     searchParams instanceof Promise ? await searchParams : searchParams
 

@@ -34,8 +34,7 @@ export function Breadcrumb() {
 
       // 特定のパスに対してカスタムラベルを設定
       const pathLabels: Record<string, string> = {
-        posts: '記事一覧',
-        articles: '記事',
+        articles: '記事一覧',
         about: 'サイトについて',
         search: '検索結果',
         categories: 'カテゴリー',
@@ -44,7 +43,7 @@ export function Breadcrumb() {
 
       if (pathLabels[path]) {
         label = pathLabels[path]
-      } else if (index === paths.length - 1 && paths[0] === 'posts') {
+      } else if (index === paths.length - 1 && paths[0] === 'articles') {
         // 記事詳細ページの場合は「記事詳細」と表示
         label = '記事詳細'
       }

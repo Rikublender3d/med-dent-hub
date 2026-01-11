@@ -171,7 +171,7 @@ export default async function Home() {
                     {categories.map((category) => (
                       <li key={category.id}>
                         <Link
-                          href={`/posts?category=${category.id}`}
+                          href={`/articles?category=${category.id}`}
                           className="flex items-center justify-between rounded-lg p-2 text-sm hover:bg-gray-50"
                         >
                           <span>{category.name}</span>
@@ -191,7 +191,7 @@ export default async function Home() {
                       {tags.map((tag) => (
                         <Link
                           key={tag.id}
-                          href={`/posts?tag=${tag.id}`}
+                          href={`/articles?tag=${tag.id}`}
                           className="inline-block rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200 hover:text-[color:var(--accent)]"
                         >
                           #{tag.name}

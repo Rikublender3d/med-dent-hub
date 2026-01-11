@@ -104,7 +104,7 @@ export function Header() {
         {/* Desktop Navigation */}
         <nav className="ml-4 hidden flex-shrink-0 items-center gap-6 lg:flex">
           <NavLink href="/" label="ホーム" />
-          <NavLink href="/posts" label="記事一覧" />
+          <NavLink href="/articles" label="記事一覧" />
           <NavLink href="/about" label="サイトについて" />
           <NavLink href="/newsletter" label="メルマガ" />
         </nav>
@@ -181,7 +181,7 @@ export function Header() {
                 onClick={() => setTimeout(() => setIsOpen(false), 30)}
               />
               <NavLink
-                href="/posts"
+                href="/articles"
                 label="記事一覧"
                 onClick={() => setTimeout(() => setIsOpen(false), 30)}
               />

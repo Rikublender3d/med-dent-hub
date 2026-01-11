@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import SpBr from '@/components/SpBr'
+import Link from 'next/link'
 
 export const metadata: Metadata = {
   title: 'このサイトについて - 医者と歯医者の交換日記',
@@ -275,7 +276,7 @@ export default function AboutPage() {
                     <p className="mb-4 text-sm text-gray-600">
                       取材、連携企画、情報提供など、お気軽にお問い合わせください。
                     </p>
-                    <a
+                    <Link
                       href="/contact"
                       className="inline-flex items-center gap-1 text-sm font-medium text-[color:var(--accent)] hover:underline"
                     >
@@ -293,7 +294,7 @@ export default function AboutPage() {
                           d="M9 5l7 7-7 7"
                         />
                       </svg>
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -312,7 +313,7 @@ export default function AboutPage() {
                       <SpBr />
                       正しい医療知識を広める会
                     </h3>
-                    <a
+                    <Link
                       href="https://tadashiiiryou.or.jp/"
                       target="_blank"
                       rel="noopener noreferrer"
@@ -332,13 +333,13 @@ export default function AboutPage() {
                           d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
                         />
                       </svg>
-                    </a>
+                    </Link>
                   </div>
                   <div className="rounded-lg border border-gray-200 bg-white p-6">
                     <h3 className="mb-2 text-xl font-semibold text-[color:var(--foreground)]">
                       医療法人社団芯聖会
                     </h3>
-                    <a
+                    <Link
                       href="https://shinsei-kai.jp/"
                       target="_blank"
                       rel="noopener noreferrer"
@@ -358,7 +359,7 @@ export default function AboutPage() {
                           d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
                         />
                       </svg>
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -385,8 +386,8 @@ export default function AboutPage() {
                 <br />
                 ともに学び、ともに発信し、これからの医療をつくっていきましょう。
               </p>
-              <a
-                href="/posts"
+              <Link
+                href="/articles"
                 className="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 font-semibold text-[color:var(--accent)] transition-colors hover:bg-gray-100"
               >
                 記事を読む
@@ -403,7 +404,7 @@ export default function AboutPage() {
                     d="M9 5l7 7-7 7"
                   />
                 </svg>
-              </a>
+              </Link>
             </div>
           </div>
         </div>
