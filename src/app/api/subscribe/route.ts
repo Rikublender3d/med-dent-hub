@@ -1,4 +1,8 @@
-import { NextResponse } from 'next/server'
+import { createCorsResponse, createCorsOptionsResponse } from '@/lib/api/cors'
+
+export async function OPTIONS() {
+  return createCorsOptionsResponse()
+}
 
 export async function POST(request: Request) {
   try {
@@ -19,12 +23,12 @@ export async function POST(request: Request) {
 
     const data = await response.json()
 
-    return NextResponse.json({ success: true, data })
+    return createCorsResponse({ success: true, data })
   } catch (error) {
     console.error('Error:', error)
-    return NextResponse.json(
+    return createCorsResponse(
       { success: false, error: 'Failed to submit' },
-      { status: 500 }
+      500
     )
   }
 }

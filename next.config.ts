@@ -19,6 +19,28 @@ const nextConfig: NextConfig = {
 
     return [
       {
+        // APIエンドポイントにCORS設定を追加
+        source: '/api/:path*',
+        headers: [
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: 'https://www.ishatohaisha.com',
+          },
+          {
+            key: 'Access-Control-Allow-Methods',
+            value: 'GET, POST, OPTIONS',
+          },
+          {
+            key: 'Access-Control-Allow-Headers',
+            value: 'Content-Type, Authorization',
+          },
+          {
+            key: 'Access-Control-Max-Age',
+            value: '86400',
+          },
+        ],
+      },
+      {
         // すべてのパスに適用（robots.txt、sitemap.xmlを含む）
         source: '/:path*',
         headers: [

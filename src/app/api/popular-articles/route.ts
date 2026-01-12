@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+import { createCorsResponse, createCorsOptionsResponse } from '@/lib/api/cors'
 import { fetchPopularArticleIds } from '@/lib/analytics/googleAnalytics'
 import { updatePopularArticles } from '@/lib/microCMS/popular'
 
@@ -31,7 +31,7 @@ export async function POST(request: Request) {
     })
 
     if (articleIds.length === 0) {
-      return NextResponse.json({
+      return createCorsResponse({
         success: false,
         message: 'GA4からデータを取得できませんでした',
         count: 0,
@@ -44,7 +44,7 @@ export async function POST(request: Request) {
 
     console.log('=== 人気記事更新完了 ===')
 
-    return NextResponse.json({
+    return createCorsResponse({
       success: true,
       message: '人気記事を更新しました',
       count: articleIds.length,
@@ -53,14 +53,19 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('❌ 人気記事更新エラー:', error)
 
-    return NextResponse.json(
+    return createCorsResponse(
       {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 }
+      500
     )
   }
+}
+
+// OPTIONSリクエスト（CORS preflight）に対応
+export async function OPTIONS() {
+  return createCorsOptionsResponse()
 }
 
 /**
