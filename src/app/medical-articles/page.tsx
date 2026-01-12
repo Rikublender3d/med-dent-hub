@@ -121,7 +121,7 @@ export default async function MedicalArticlesPage({ searchParams }: Props) {
           </div>
 
           {/* PC版: サイドバー */}
-          <aside className="lg:col-span-1">
+          <aside className="hidden lg:col-span-1 lg:block">
             <div className="sticky top-24">
               <Suspense
                 fallback={
