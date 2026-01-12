@@ -98,7 +98,10 @@ export function Header() {
     }
 
     if (isArticlesDropdownOpen) {
-      document.addEventListener('mousedown', handleClickOutside)
+      // 少し遅延させて、ボタンクリックイベントが先に処理されるようにする
+      setTimeout(() => {
+        document.addEventListener('mousedown', handleClickOutside)
+      }, 0)
       return () => document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [isArticlesDropdownOpen])
@@ -115,6 +118,7 @@ export function Header() {
               width={160}
               height={64}
               className="h-full w-auto object-contain"
+              style={{ width: 'auto', height: '100%' }}
               priority
             />
           </div>
@@ -130,7 +134,9 @@ export function Header() {
             >
               記事一覧
               <svg
-                className={`h-3 w-3 transition-transform${isArticlesDropdownOpen ? 'rotate-180' : ''}`}
+                className={`h-3 w-3 transition-transform ${
+                  isArticlesDropdownOpen ? 'rotate-180' : ''
+                }`}
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -144,7 +150,7 @@ export function Header() {
               </svg>
             </button>
             {isArticlesDropdownOpen && (
-              <div className="absolute top-full left-0 mt-1 w-48 rounded-lg border border-gray-200 bg-white shadow-lg">
+              <div className="absolute top-full left-0 z-50 mt-1 w-48 rounded-lg border border-gray-200 bg-white shadow-lg">
                 <Link
                   href="/general"
                   onClick={() => setIsArticlesDropdownOpen(false)}

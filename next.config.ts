@@ -14,8 +14,18 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   async headers() {
     // CSPヘッダーを設定（middleware.tsと統一）
-    const cspHeader =
-      "default-src 'self'; script-src 'self' 'strict-dynamic' 'unsafe-inline' https://www.youtube.com https://www.youtube-nocookie.com https://platform.twitter.com https://www.googletagmanager.com https://cdn.iframe.ly https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' blob: data: https://images.microcms-assets.io https://www.google-analytics.com https://www.googletagmanager.com; font-src 'self' https://fonts.gstatic.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://platform.twitter.com https://cdn.iframe.ly; frame-ancestors 'none'; connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://cdn.iframe.ly https://images.microcms-assets.io; upgrade-insecure-requests;"
+    // 本番環境では'unsafe-inline'と'unsafe-eval'を削除
+    const isDevelopment = process.env.NODE_ENV === 'development'
+
+    const scriptSrc = isDevelopment
+      ? "'self' 'unsafe-inline' 'unsafe-eval' https://www.youtube.com https://www.youtube-nocookie.com https://platform.twitter.com https://www.googletagmanager.com https://cdn.iframe.ly https://www.google-analytics.com https://va.vercel-scripts.com"
+      : "'self' https://www.youtube.com https://www.youtube-nocookie.com https://platform.twitter.com https://www.googletagmanager.com https://cdn.iframe.ly https://www.google-analytics.com https://va.vercel-scripts.com"
+
+    const styleSrc = isDevelopment
+      ? "'self' 'unsafe-inline' https://fonts.googleapis.com"
+      : "'self' https://fonts.googleapis.com"
+
+    const cspHeader = `default-src 'self'; script-src ${scriptSrc}; style-src ${styleSrc}; img-src 'self' blob: data: https://images.microcms-assets.io https://www.google-analytics.com https://www.googletagmanager.com; font-src 'self' https://fonts.gstatic.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://platform.twitter.com https://cdn.iframe.ly; frame-ancestors 'none'; connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://cdn.iframe.ly https://images.microcms-assets.io https://va.vercel-scripts.com; upgrade-insecure-requests;`
 
     return [
       {

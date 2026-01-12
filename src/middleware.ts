@@ -2,14 +2,25 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 function applySecurityHeaders(response: NextResponse) {
-  // CSP: Next.js 15のビルド時に生成されるインラインスクリプトに対応
-  // 'strict-dynamic'を使用して、信頼できるスクリプトから読み込まれたスクリプトを許可
-  // 'unsafe-inline'はNext.jsのビルド時に生成されるインラインスクリプトのために必要
-  // ただし、'strict-dynamic'と組み合わせることで、セキュリティリスクを最小化
+  // CSP: Next.js 15推奨設定
+  // 本番環境では'unsafe-inline'と'unsafe-eval'を削除
+  // 開発環境のみ許可（React開発モードで必要）
+  const isDevelopment = process.env.NODE_ENV === 'development'
+
+  // 本番環境: 厳格なCSP（unsafe-inline/unsafe-evalなし）
+  // 開発環境: 開発用に緩和（unsafe-inline/unsafe-evalあり）
+  const scriptSrc = isDevelopment
+    ? "'self' 'unsafe-inline' 'unsafe-eval' https://www.youtube.com https://www.youtube-nocookie.com https://platform.twitter.com https://www.googletagmanager.com https://cdn.iframe.ly https://www.google-analytics.com https://va.vercel-scripts.com"
+    : "'self' https://www.youtube.com https://www.youtube-nocookie.com https://platform.twitter.com https://www.googletagmanager.com https://cdn.iframe.ly https://www.google-analytics.com https://va.vercel-scripts.com"
+
+  const styleSrc = isDevelopment
+    ? "'self' 'unsafe-inline' https://fonts.googleapis.com"
+    : "'self' https://fonts.googleapis.com"
+
   const cspHeader = `
     default-src 'self';
-    script-src 'self' 'strict-dynamic' 'unsafe-inline' https://www.youtube.com https://www.youtube-nocookie.com https://platform.twitter.com https://www.googletagmanager.com https://cdn.iframe.ly https://www.google-analytics.com;
-    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+    script-src ${scriptSrc};
+    style-src ${styleSrc};
     img-src 'self' blob: data: https://images.microcms-assets.io https://www.google-analytics.com https://www.googletagmanager.com;
     font-src 'self' https://fonts.gstatic.com;
     object-src 'none';
@@ -17,7 +28,7 @@ function applySecurityHeaders(response: NextResponse) {
     form-action 'self';
     frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://platform.twitter.com https://cdn.iframe.ly;
     frame-ancestors 'none';
-    connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://cdn.iframe.ly https://images.microcms-assets.io;
+    connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://cdn.iframe.ly https://images.microcms-assets.io https://va.vercel-scripts.com;
     upgrade-insecure-requests;
   `
     .replace(/\s{2,}/g, ' ')
