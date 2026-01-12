@@ -76,7 +76,11 @@ export function Breadcrumb() {
   }
 
   return (
-    <nav aria-label="パンくずリスト" className="border-gray-100 bg-white py-3">
+    <nav
+      aria-label="パンくずリスト"
+      className="border-gray-100 bg-white py-3"
+      key={pathname}
+    >
       <div className="container mx-auto px-4">
         <ol className="flex flex-wrap items-center gap-2 text-sm">
           {breadcrumbs.map((item, index) => {

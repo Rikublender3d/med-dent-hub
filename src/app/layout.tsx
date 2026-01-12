@@ -62,7 +62,9 @@ export default function RootLayout({
           <GoogleAnalyticsScript />
         </Suspense>
         <Header />
-        <Breadcrumb />
+        <Suspense fallback={null}>
+          <Breadcrumb />
+        </Suspense>
         <main className="container mx-auto px-4">{children}</main>
         <Footer />
         <Analytics />
