@@ -1,9 +1,10 @@
 import { fetchPopularArticleIds } from '@/lib/analytics/googleAnalytics'
-import { getArticlesByIds } from '@/lib/microCMS/microcms'
+import { getAllArticlesByIds } from '@/lib/microCMS/microcms'
 import type { Article } from '@/types/microcms'
 
 /**
  * 人気記事を取得（Google Analyticsから直接取得）
+ * 両方のエンドポイントから取得
  * @param limit 取得件数
  * @returns 記事の配列
  */
@@ -16,8 +17,8 @@ export const getPopularArticles = async (limit = 5): Promise<Article[]> => {
       return []
     }
 
-    // 記事IDから記事データを取得
-    const articles = await getArticlesByIds(popularIds)
+    // 記事IDから記事データを取得（両方のエンドポイントから）
+    const articles = await getAllArticlesByIds(popularIds)
     if (!articles.length) {
       return []
     }

@@ -1,8 +1,9 @@
 import {
   getArticles,
-  getCategories,
   getFeaturedArticles,
+  getMedicalFeaturedArticles,
   getTags,
+  getBasePathByArticleId,
 } from '@/lib/microCMS/microcms'
 import {
   getPopularArticles,
@@ -17,23 +18,22 @@ export const revalidate = 60
 
 export default async function Home() {
   const [
-    articlesRes,
-    categoriesRes,
+    allArticlesRes,
     tagsRes,
     popularArticlesFromAPI,
     featuredRes,
+    medicalFeaturedRes,
   ] = await Promise.all([
     getArticles(),
-    getCategories(),
     getTags(),
-    getPopularArticles(5), // Google Analyticsから取得
-    getFeaturedArticles(6),
+    getPopularArticles(9), // Google Analyticsから取得
+    getFeaturedArticles(20), // 多めに取得してカテゴリ別に分ける
+    getMedicalFeaturedArticles(20), // 多めに取得してカテゴリ別に分ける
   ])
 
-  const contents = articlesRes.contents
-  const categories = categoriesRes.contents
+  const allContents = allArticlesRes.contents
   const tags = tagsRes.contents
-  const sortedByNewest = [...contents].sort(
+  const sortedByNewest = [...allContents].sort(
     (a, b) =>
       new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
   )
@@ -42,10 +42,27 @@ export default async function Home() {
   const popularArticles = getPopularArticlesWithFallback(
     popularArticlesFromAPI,
     sortedByNewest,
-    5
+    9
   )
 
   const featuredArticles = featuredRes.contents
+  const medicalFeaturedArticles = medicalFeaturedRes.contents
+
+  // 人気記事のリンク先を決定
+  const popularArticlesWithPath = await Promise.all(
+    popularArticles.map(async (article) => ({
+      article,
+      basePath: await getBasePathByArticleId(article.id),
+    }))
+  )
+
+  // 新着記事のリンク先を決定
+  const newestArticlesWithPath = await Promise.all(
+    sortedByNewest.slice(0, 9).map(async (article) => ({
+      article,
+      basePath: await getBasePathByArticleId(article.id),
+    }))
+  )
 
   // const featuredArticle = sortedByNewest[0]
   // const secondaryArticles = sortedByNewest.slice(1, 3)
@@ -93,167 +110,140 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Featured Articles Grid */}
-      <section className="py-16">
+      {/* Latest Articles - 新着記事 */}
+      <section className="bg-white py-16">
         <div className="container mx-auto px-4">
-          <div className="mb-8 flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-[color:var(--foreground)]">
-              注目の記事
-            </h2>
-          </div>
-
+          <h2 className="mb-8 text-2xl font-bold text-[color:var(--foreground)]">
+            新着記事
+          </h2>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {featuredArticles.map((article) => {
-              return (
-                <Link
-                  key={article.id}
-                  href={`/articles/${article.id}`}
-                  className="block"
-                >
-                  <article className="group h-full overflow-hidden rounded-xl bg-white shadow-sm transition-shadow hover:shadow-lg">
-                    {article.eyecatch && (
-                      <div className="relative aspect-video overflow-hidden">
-                        <Image
-                          src={article.eyecatch.url}
-                          alt={article.title}
-                          fill
-                          className="object-cover transition-transform group-hover:scale-105"
-                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        />
-                      </div>
-                    )}
-                    <div className="p-6">
-                      {article.category && (
-                        <div className="mb-3">
-                          <span className="text-sm font-medium text-gray-600">
-                            {article.category.name}
-                          </span>
-                        </div>
-                      )}
-                      <h3 className="mb-3 line-clamp-2 text-lg leading-tight font-semibold text-[color:var(--foreground)]">
-                        {article.title}
-                      </h3>
-                      <p className="text-sm text-gray-600">
-                        {new Date(article.publishedAt).toLocaleDateString(
-                          'ja-JP'
-                        )}
-                      </p>
-                    </div>
-                  </article>
-                </Link>
-              )
-            })}
+            {newestArticlesWithPath.map(({ article, basePath }) => (
+              <ArticleCard
+                key={article.id}
+                article={article}
+                basePath={basePath}
+              />
+            ))}
+          </div>
+          <div className="mt-8 text-center">
+            <Link
+              href="/articles"
+              className="inline-flex items-center gap-2 rounded-lg bg-[color:var(--accent)] px-6 py-3 text-white transition-colors hover:bg-[color:var(--accent)]/90"
+            >
+              もっと見る
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* Latest Articles Sidebar */}
+      {/* Featured Keywords - 話題のキーワード */}
+      {tags.length > 0 && (
+        <section className="bg-white py-12">
+          <div className="container mx-auto px-4">
+            <h2 className="mb-6 text-2xl font-bold text-[color:var(--foreground)]">
+              話題のキーワード
+            </h2>
+            <div className="flex flex-wrap gap-3">
+              {tags.map((tag) => (
+                <Link
+                  key={tag.id}
+                  href={`/articles?tag=${tag.id}`}
+                  className="inline-block rounded-full bg-gradient-to-r from-[color:var(--accent)]/10 to-[color:var(--accent)]/5 px-6 py-3 text-sm font-medium text-[color:var(--foreground)] transition-all hover:from-[color:var(--accent)]/20 hover:to-[color:var(--accent)]/10 hover:shadow-md"
+                >
+                  #{tag.name}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Popular Articles - 人気の記事 */}
+      {popularArticles.length > 0 && (
+        <section className="bg-white py-16">
+          <div className="container mx-auto px-4">
+            <h2 className="mb-8 text-2xl font-bold text-[color:var(--foreground)]">
+              人気の記事
+            </h2>
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {popularArticlesWithPath.map(({ article, basePath }) => (
+                <ArticleCard
+                  key={article.id}
+                  article={article}
+                  basePath={basePath}
+                />
+              ))}
+            </div>
+            <div className="mt-8 text-center">
+              <Link
+                href="/articles"
+                className="inline-flex items-center gap-2 rounded-lg bg-[color:var(--accent)] px-6 py-3 text-white transition-colors hover:bg-[color:var(--accent)]/90"
+              >
+                もっと見る
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Featured Articles - おすすめ記事 */}
       <section className="bg-white py-16">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-10">
-            {/* Latest Articles */}
-            <div className="lg:col-span-7">
-              <h2 className="mb-8 text-2xl font-bold text-[color:var(--foreground)]">
-                最新記事
-              </h2>
+          <h2 className="mb-8 text-2xl font-bold text-[color:var(--foreground)]">
+            おすすめ記事
+          </h2>
+
+          {/* 一般向け */}
+          {featuredArticles.length > 0 && (
+            <div className="mb-12">
+              <h3 className="mb-6 text-xl font-bold text-[color:var(--foreground)]">
+                一般の方向け
+              </h3>
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {sortedByNewest.slice(0, 9).map((article) => (
-                  <ArticleCard key={article.id} article={article} />
+                {featuredArticles.slice(0, 9).map((article) => (
+                  <ArticleCard
+                    key={article.id}
+                    article={article}
+                    basePath="/general"
+                  />
                 ))}
               </div>
               <div className="mt-8 text-center">
                 <Link
-                  href="/articles"
+                  href="/general"
                   className="inline-flex items-center gap-2 rounded-lg bg-[color:var(--accent)] px-6 py-3 text-white transition-colors hover:bg-[color:var(--accent)]/90"
                 >
                   もっと見る
                 </Link>
               </div>
             </div>
+          )}
 
-            {/* Sidebar */}
-            <aside className="lg:col-span-3">
-              <div className="space-y-6">
-                {/* Categories */}
-                <div className="rounded-xl bg-white p-6 shadow-sm">
-                  <ul className="space-y-3">
-                    {categories.map((category) => (
-                      <li key={category.id}>
-                        <Link
-                          href={`/articles?category=${category.id}`}
-                          className="flex items-center justify-between rounded-lg p-2 text-sm hover:bg-gray-50"
-                        >
-                          <span>{category.name}</span>
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* Tags */}
-                {tags.length > 0 && (
-                  <div className="rounded-xl bg-white p-6 shadow-sm">
-                    <h3 className="mb-4 text-lg font-semibold text-[color:var(--foreground)]">
-                      タグ
-                    </h3>
-                    <div className="flex flex-wrap gap-2">
-                      {tags.map((tag) => (
-                        <Link
-                          key={tag.id}
-                          href={`/articles?tag=${tag.id}`}
-                          className="inline-block rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200 hover:text-[color:var(--accent)]"
-                        >
-                          #{tag.name}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Popular Articles */}
-                <div className="rounded-xl bg-white p-6 shadow-sm">
-                  <h3 className="mb-4 border-b-2 border-[color:var(--accent)] pb-2 text-xl font-bold text-[color:var(--foreground)]">
-                    人気記事
-                  </h3>
-                  <ul>
-                    {popularArticles.map((article, index) => (
-                      <li
-                        key={article.id}
-                        className={`relative ${
-                          index < popularArticles.length - 1
-                            ? 'border-b border-gray-200'
-                            : ''
-                        }`}
-                      >
-                        <Link
-                          href={`/articles/${article.id}`}
-                          className="flex items-center gap-3 py-4 transition-opacity hover:opacity-80"
-                        >
-                          <span className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-blue-500 text-sm font-bold text-white">
-                            {index + 1}
-                          </span>
-                          {article.eyecatch && (
-                            <div className="relative h-16 w-24 flex-shrink-0 overflow-hidden rounded">
-                              <Image
-                                src={article.eyecatch.url}
-                                alt={article.title}
-                                fill
-                                className="object-cover"
-                                sizes="96px"
-                              />
-                            </div>
-                          )}
-                          <span className="line-clamp-2 flex-1 text-sm font-medium text-[color:var(--foreground)]">
-                            {article.title}
-                          </span>
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+          {/* 医療従事者向け */}
+          {medicalFeaturedArticles.length > 0 && (
+            <div>
+              <h3 className="mb-6 text-xl font-bold text-[color:var(--foreground)]">
+                医療従事者向け
+              </h3>
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {medicalFeaturedArticles.slice(0, 9).map((article) => (
+                  <ArticleCard
+                    key={article.id}
+                    article={article}
+                    basePath="/medical-articles"
+                  />
+                ))}
               </div>
-            </aside>
-          </div>
+              <div className="mt-8 text-center">
+                <Link
+                  href="/medical-articles"
+                  className="inline-flex items-center gap-2 rounded-lg bg-[color:var(--accent)] px-6 py-3 text-white transition-colors hover:bg-[color:var(--accent)]/90"
+                >
+                  もっと見る
+                </Link>
+              </div>
+            </div>
+          )}
         </div>
       </section>
 

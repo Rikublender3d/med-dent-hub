@@ -36,14 +36,27 @@ export function Breadcrumb() {
       const pathLabels: Record<string, string> = {
         articles: '記事一覧',
         about: 'サイトについて',
+        contact: 'お問い合わせ',
+        newsletter: 'メルマガ',
+        privacy: 'プライバシーポリシー',
+        terms: '利用規約',
         search: '検索結果',
         categories: 'カテゴリー',
         profile: 'プロフィール',
+        'medical-articles': '医療従事者向け',
+        general: '一般の方向け',
+        draft: '下書きプレビュー',
       }
 
       if (pathLabels[path]) {
         label = pathLabels[path]
-      } else if (index === paths.length - 1 && paths[0] === 'articles') {
+      } else if (
+        index === paths.length - 1 &&
+        (paths[0] === 'articles' ||
+          paths[0] === 'general' ||
+          paths[0] === 'medical-articles' ||
+          paths[0] === 'draft')
+      ) {
         // 記事詳細ページの場合は「記事詳細」と表示
         label = '記事詳細'
       }

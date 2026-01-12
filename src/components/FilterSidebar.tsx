@@ -10,6 +10,7 @@ interface FilterSidebarProps {
   tags: Tag[]
   selectedCategoryId?: string
   selectedTagIds?: string[]
+  basePath?: string
 }
 
 export default function FilterSidebar({
@@ -17,6 +18,7 @@ export default function FilterSidebar({
   tags,
   selectedCategoryId,
   selectedTagIds = [],
+  basePath = '/articles',
 }: FilterSidebarProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -48,10 +50,21 @@ export default function FilterSidebar({
         })
       }
 
-      router.push(`/articles?${params.toString()}`)
+      router.push(`${basePath}?${params.toString()}`)
     },
-    [selectedTagIds, searchParams, router]
+    [selectedTagIds, searchParams, router, basePath]
   )
+
+  const buildUrl = (additionalParams?: Record<string, string>) => {
+    const params = new URLSearchParams()
+    if (additionalParams) {
+      Object.entries(additionalParams).forEach(([key, value]) => {
+        params.set(key, value)
+      })
+    }
+    const queryString = params.toString()
+    return queryString ? `${basePath}?${queryString}` : basePath
+  }
 
   return (
     <div className="space-y-6">
@@ -63,7 +76,7 @@ export default function FilterSidebar({
         <ul className="space-y-1">
           <li>
             <Link
-              href="/articles"
+              href={basePath}
               className={`flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium transition-all ${
                 !selectedCategoryId
                   ? 'bg-[color:var(--accent)]/10 font-semibold text-[color:var(--accent)]'
@@ -83,7 +96,7 @@ export default function FilterSidebar({
           {categories.map((category) => (
             <li key={category.id}>
               <Link
-                href={`/articles?category=${category.id}`}
+                href={buildUrl({ category: category.id })}
                 className={`flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium transition-all ${
                   selectedCategoryId === category.id
                     ? 'bg-[color:var(--accent)]/10 font-semibold text-[color:var(--accent)]'
@@ -170,8 +183,12 @@ export default function FilterSidebar({
                 <Link
                   href={
                     selectedTagIds.length > 0
-                      ? `/articles?${selectedTagIds.map((id) => `tag=${id}`).join('&')}`
-                      : '/articles'
+                      ? buildUrl(
+                          Object.fromEntries(
+                            selectedTagIds.map((id) => ['tag', id])
+                          )
+                        )
+                      : basePath
                   }
                   className="ml-1 text-blue-600 hover:text-blue-800"
                 >
@@ -195,7 +212,7 @@ export default function FilterSidebar({
             ))}
           </div>
           <Link
-            href="/articles"
+            href={basePath}
             className="mt-3 block text-sm text-blue-600 underline hover:text-blue-800"
           >
             すべてクリア

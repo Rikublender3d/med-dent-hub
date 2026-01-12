@@ -1,8 +1,9 @@
 import {
-  getArticleById,
+  getGeneralArticleById,
   getArticles,
   getCategories,
   getTags,
+  getBasePathByArticleId,
 } from '@/lib/microCMS/microcms'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -31,7 +32,7 @@ export default async function ArticlePage({ params }: Props) {
     tagsRes,
     popularArticles,
   ] = await Promise.all([
-    getArticleById(id),
+    getGeneralArticleById(id),
     getArticles(),
     getCategories(),
     getTags(),
@@ -55,12 +56,35 @@ export default async function ArticlePage({ params }: Props) {
     5
   )
 
+  // サイドバー用の記事にbasePathを追加
+  const sidebarPopularWithPath = await Promise.all(
+    sidebarPopular.map(async (article) => ({
+      article,
+      basePath: await getBasePathByArticleId(article.id),
+    }))
+  )
+
+  const sortedByNewestWithPath = await Promise.all(
+    sortedByNewest.map(async (article) => ({
+      article,
+      basePath: await getBasePathByArticleId(article.id),
+    }))
+  )
+
+  // 関連記事のbasePathを取得
+  const relatedArticlesWithPath = await Promise.all(
+    relatedArticles.map(async (article) => ({
+      article,
+      basePath: await getBasePathByArticleId(article.id),
+    }))
+  )
+
   return (
     <div className="min-h-screen bg-white">
       <div className="mx-auto max-w-7xl py-8">
         <ArticleAnalytics
           id={article.id}
-          path={`/articles/${article.id}`}
+          path={`/general/${article.id}`}
           title={article.title}
         />
         {/* 記事ヘッダー（画像より上） */}
@@ -150,7 +174,7 @@ export default async function ArticlePage({ params }: Props) {
               <span className="text-sm font-medium text-gray-600">シェア:</span>
               <div className="flex gap-2">
                 <a
-                  href={`https://x.com/intent/tweet?url=${encodeURIComponent(`https://www.ishatohaisha.com/articles/${article.id}`)}&text=${encodeURIComponent(article.title)}`}
+                  href={`https://x.com/intent/tweet?url=${encodeURIComponent(`https://www.ishatohaisha.com/general/${article.id}`)}&text=${encodeURIComponent(article.title)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex h-8 w-8 items-center justify-center rounded-full bg-black text-white transition-colors hover:bg-gray-800"
@@ -166,7 +190,7 @@ export default async function ArticlePage({ params }: Props) {
                   </svg>
                 </a>
                 <a
-                  href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`https://www.ishatohaisha.com/articles/${article.id}`)}`}
+                  href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`https://www.ishatohaisha.com/general/${article.id}`)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 text-white transition-colors hover:bg-blue-700"
@@ -182,7 +206,7 @@ export default async function ArticlePage({ params }: Props) {
                   </svg>
                 </a>
                 <a
-                  href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(`https://www.ishatohaisha.com/articles/${article.id}`)}&title=${encodeURIComponent(article.title)}`}
+                  href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(`https://www.ishatohaisha.com/general/${article.id}`)}&title=${encodeURIComponent(article.title)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 text-white transition-colors hover:bg-blue-700"
@@ -200,16 +224,17 @@ export default async function ArticlePage({ params }: Props) {
               </div>
             </div>
             {/* 関連記事 */}
-            {relatedArticles.length > 0 && (
+            {relatedArticlesWithPath.length > 0 && (
               <div className="mt-12">
                 <h2 className="mb-6 text-2xl font-bold text-[color:var(--foreground)]">
                   関連記事
                 </h2>
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                  {relatedArticles.map((relatedArticle) => (
+                  {relatedArticlesWithPath.map(({ article, basePath }) => (
                     <ArticleCard
-                      key={relatedArticle.id}
-                      article={relatedArticle}
+                      key={article.id}
+                      article={article}
+                      basePath={basePath}
                     />
                   ))}
                 </div>
@@ -258,8 +283,8 @@ export default async function ArticlePage({ params }: Props) {
           <ArticleSidebar
             categories={categories}
             allTags={allTags}
-            sortedByNewest={sortedByNewest}
-            sidebarPopular={sidebarPopular}
+            sortedByNewest={sortedByNewestWithPath}
+            sidebarPopular={sidebarPopularWithPath}
           />
         </div>
       </div>

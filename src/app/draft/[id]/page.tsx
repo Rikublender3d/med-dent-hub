@@ -3,6 +3,7 @@ import {
   getArticles,
   getCategories,
   getTags,
+  getBasePathByArticleId,
 } from '@/lib/microCMS/microcms'
 import type { Tag } from '@/types/microcms'
 import Image from 'next/image'
@@ -68,6 +69,29 @@ export default async function DraftPage({ params, searchParams }: Props) {
       popularArticles,
       sortedByNewest,
       5
+    )
+
+    // サイドバー用の記事にbasePathを追加
+    const sidebarPopularWithPath = await Promise.all(
+      sidebarPopular.map(async (article) => ({
+        article,
+        basePath: await getBasePathByArticleId(article.id),
+      }))
+    )
+
+    const sortedByNewestWithPath = await Promise.all(
+      sortedByNewest.map(async (article) => ({
+        article,
+        basePath: await getBasePathByArticleId(article.id),
+      }))
+    )
+
+    // 関連記事のbasePathを取得
+    const relatedArticlesWithPath = await Promise.all(
+      relatedArticles.map(async (article) => ({
+        article,
+        basePath: await getBasePathByArticleId(article.id),
+      }))
     )
 
     return (
@@ -237,16 +261,17 @@ export default async function DraftPage({ params, searchParams }: Props) {
                 </div>
               </div>
               {/* 関連記事 */}
-              {relatedArticles.length > 0 && (
+              {relatedArticlesWithPath.length > 0 && (
                 <div className="mt-12">
                   <h2 className="mb-6 text-2xl font-bold text-[color:var(--foreground)]">
                     関連記事
                   </h2>
                   <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                    {relatedArticles.map((relatedArticle) => (
+                    {relatedArticlesWithPath.map(({ article, basePath }) => (
                       <ArticleCard
-                        key={relatedArticle.id}
-                        article={relatedArticle}
+                        key={article.id}
+                        article={article}
+                        basePath={basePath}
                       />
                     ))}
                   </div>
@@ -295,8 +320,8 @@ export default async function DraftPage({ params, searchParams }: Props) {
             <ArticleSidebar
               categories={categories}
               allTags={allTags}
-              sortedByNewest={sortedByNewest}
-              sidebarPopular={sidebarPopular}
+              sortedByNewest={sortedByNewestWithPath}
+              sidebarPopular={sidebarPopularWithPath}
             />
           </div>
         </div>
