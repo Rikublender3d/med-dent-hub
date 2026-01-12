@@ -53,7 +53,9 @@ function NavLink({
 export function Header() {
   const [query, setQuery] = useState('')
   const [isOpen, setIsOpen] = useState(false)
+  const [isArticlesDropdownOpen, setIsArticlesDropdownOpen] = useState(false)
   const panelRef = useRef<HTMLDivElement | null>(null)
+  const dropdownRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     if (!isOpen) return
@@ -84,6 +86,23 @@ export function Header() {
     return () => document.removeEventListener('keydown', handleKey)
   }, [isOpen])
 
+  // ドロップダウンの外側クリックで閉じる
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsArticlesDropdownOpen(false)
+      }
+    }
+
+    if (isArticlesDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+      return () => document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isArticlesDropdownOpen])
+
   return (
     <header className="relative sticky top-0 z-50 bg-white shadow-sm">
       <div className="container mx-auto flex items-center justify-between gap-6 px-6 py-2">
@@ -104,7 +123,45 @@ export function Header() {
         {/* Desktop Navigation */}
         <nav className="ml-4 hidden flex-shrink-0 items-center gap-6 lg:flex">
           <NavLink href="/" label="ホーム" />
-          <NavLink href="/articles" label="記事一覧" />
+          <div ref={dropdownRef} className="relative">
+            <button
+              onClick={() => setIsArticlesDropdownOpen(!isArticlesDropdownOpen)}
+              className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-[color:var(--foreground)] transition-colors hover:text-[color:var(--accent)]"
+            >
+              記事一覧
+              <svg
+                className={`h-3 w-3 transition-transform${isArticlesDropdownOpen ? 'rotate-180' : ''}`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </button>
+            {isArticlesDropdownOpen && (
+              <div className="absolute top-full left-0 mt-1 w-48 rounded-lg border border-gray-200 bg-white shadow-lg">
+                <Link
+                  href="/general"
+                  onClick={() => setIsArticlesDropdownOpen(false)}
+                  className="block px-4 py-2 text-sm text-[color:var(--foreground)] transition-colors hover:bg-gray-50 hover:text-[color:var(--accent)]"
+                >
+                  一般向け
+                </Link>
+                <Link
+                  href="/medical-articles"
+                  onClick={() => setIsArticlesDropdownOpen(false)}
+                  className="block px-4 py-2 text-sm text-[color:var(--foreground)] transition-colors hover:bg-gray-50 hover:text-[color:var(--accent)]"
+                >
+                  医療従事者向け
+                </Link>
+              </div>
+            )}
+          </div>
           <NavLink href="/about" label="サイトについて" />
           <NavLink href="/newsletter" label="メルマガ" />
         </nav>
@@ -180,11 +237,27 @@ export function Header() {
                 label="ホーム"
                 onClick={() => setTimeout(() => setIsOpen(false), 30)}
               />
-              <NavLink
-                href="/articles"
-                label="記事一覧"
-                onClick={() => setTimeout(() => setIsOpen(false), 30)}
-              />
+              <div className="px-3 py-2">
+                <div className="mb-2 text-sm font-medium text-[color:var(--foreground)]">
+                  記事一覧
+                </div>
+                <div className="ml-2 flex flex-col gap-1">
+                  <Link
+                    href="/general"
+                    onClick={() => setTimeout(() => setIsOpen(false), 30)}
+                    className="px-3 py-1 text-sm text-gray-600 hover:text-[color:var(--accent)]"
+                  >
+                    一般向け
+                  </Link>
+                  <Link
+                    href="/medical-articles"
+                    onClick={() => setTimeout(() => setIsOpen(false), 30)}
+                    className="px-3 py-1 text-sm text-gray-600 hover:text-[color:var(--accent)]"
+                  >
+                    医療従事者向け
+                  </Link>
+                </div>
+              </div>
               <NavLink
                 href="/about"
                 label="サイトについて"

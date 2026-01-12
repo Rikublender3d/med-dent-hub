@@ -1,9 +1,8 @@
 import { Suspense } from 'react'
 import {
-  getArticles,
+  getGeneralArticles,
   getCategories,
   getTags,
-  getBasePathByArticleId,
 } from '@/lib/microCMS/microcms'
 import { ArticleCard } from '@/components/ArticleCard'
 import FilterSidebar from '@/components/FilterSidebar'
@@ -46,7 +45,7 @@ export default async function ArticlesPage({ searchParams }: Props) {
   const categoryId = resolveParam(resolvedParams, 'category')
   const tagIds = resolveArrayParam(resolvedParams, 'tag')
 
-  const { contents } = await getArticles(
+  const { contents } = await getGeneralArticles(
     categoryId || tagIds
       ? { categoryId, tagIds: tagIds && tagIds.length > 0 ? tagIds : undefined }
       : undefined
@@ -62,19 +61,11 @@ export default async function ArticlesPage({ searchParams }: Props) {
       new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
   )
 
-  // 各記事のbasePathを取得
-  const articlesWithPath = await Promise.all(
-    sorted.map(async (article) => ({
-      article,
-      basePath: await getBasePathByArticleId(article.id),
-    }))
-  )
-
   return (
     <div className="py-8">
       <div className="container mx-auto px-4">
         <h1 className="mb-6 text-2xl font-bold text-[color:var(--foreground)]">
-          記事一覧
+          一般向け記事一覧
         </h1>
 
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
@@ -88,7 +79,7 @@ export default async function ArticlesPage({ searchParams }: Props) {
                 }
               >
                 <FilterSidebar
-                  basePath="/articles"
+                  basePath="/general"
                   categories={categories}
                   tags={tags}
                   selectedCategoryId={categoryId}
@@ -100,16 +91,16 @@ export default async function ArticlesPage({ searchParams }: Props) {
             {/* 記事一覧 */}
             <div className="mb-4 flex items-center justify-between">
               <p className="text-sm text-gray-600">
-                {articlesWithPath.length}件の記事が見つかりました
+                {sorted.length}件の記事が見つかりました
               </p>
             </div>
-            {articlesWithPath.length > 0 ? (
+            {sorted.length > 0 ? (
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {articlesWithPath.map(({ article, basePath }) => (
+                {sorted.map((article) => (
                   <ArticleCard
                     key={article.id}
                     article={article}
-                    basePath={basePath}
+                    basePath="/general"
                   />
                 ))}
               </div>
@@ -137,7 +128,7 @@ export default async function ArticlesPage({ searchParams }: Props) {
                 }
               >
                 <FilterSidebar
-                  basePath="/articles"
+                  basePath="/general"
                   categories={categories}
                   tags={tags}
                   selectedCategoryId={categoryId}
