@@ -9,6 +9,7 @@ import {
   getPopularArticlesWithFallback,
 } from '@/lib/articles/popular'
 import { ArticleCard } from '@/components/ArticleCard'
+import NewsletterBanner from '@/components/NewsletterBanner'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -149,9 +150,9 @@ export default async function Home() {
       {/* Latest Articles Sidebar */}
       <section className="bg-white py-16">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-10">
             {/* Latest Articles */}
-            <div className="lg:col-span-3">
+            <div className="lg:col-span-7">
               <h2 className="mb-8 text-2xl font-bold text-[color:var(--foreground)]">
                 最新記事
               </h2>
@@ -160,10 +161,18 @@ export default async function Home() {
                   <ArticleCard key={article.id} article={article} />
                 ))}
               </div>
+              <div className="mt-8 text-center">
+                <Link
+                  href="/articles"
+                  className="inline-flex items-center gap-2 rounded-lg bg-[color:var(--accent)] px-6 py-3 text-white transition-colors hover:bg-[color:var(--accent)]/90"
+                >
+                  もっと見る
+                </Link>
+              </div>
             </div>
 
             {/* Sidebar */}
-            <aside className="lg:col-span-1">
+            <aside className="lg:col-span-3">
               <div className="space-y-6">
                 {/* Categories */}
                 <div className="rounded-xl bg-white p-6 shadow-sm">
@@ -203,20 +212,40 @@ export default async function Home() {
 
                 {/* Popular Articles */}
                 <div className="rounded-xl bg-white p-6 shadow-sm">
-                  <h3 className="mb-4 text-lg font-semibold text-[color:var(--foreground)]">
+                  <h3 className="mb-4 border-b-2 border-[color:var(--accent)] pb-2 text-xl font-bold text-[color:var(--foreground)]">
                     人気記事
                   </h3>
-                  <ul className="space-y-4">
+                  <ul>
                     {popularArticles.map((article, index) => (
-                      <li key={article.id} className="flex items-start gap-3">
-                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[color:var(--accent)] text-xs font-bold text-white">
-                          {index + 1}
-                        </span>
+                      <li
+                        key={article.id}
+                        className={`relative ${
+                          index < popularArticles.length - 1
+                            ? 'border-b border-gray-200'
+                            : ''
+                        }`}
+                      >
                         <Link
                           href={`/articles/${article.id}`}
-                          className="line-clamp-2 text-sm font-medium text-[color:var(--foreground)] hover:text-[color:var(--accent)]"
+                          className="flex items-center gap-3 py-4 transition-opacity hover:opacity-80"
                         >
-                          {article.title}
+                          <span className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-blue-500 text-sm font-bold text-white">
+                            {index + 1}
+                          </span>
+                          {article.eyecatch && (
+                            <div className="relative h-16 w-24 flex-shrink-0 overflow-hidden rounded">
+                              <Image
+                                src={article.eyecatch.url}
+                                alt={article.title}
+                                fill
+                                className="object-cover"
+                                sizes="96px"
+                              />
+                            </div>
+                          )}
+                          <span className="line-clamp-2 flex-1 text-sm font-medium text-[color:var(--foreground)]">
+                            {article.title}
+                          </span>
                         </Link>
                       </li>
                     ))}
@@ -227,6 +256,9 @@ export default async function Home() {
           </div>
         </div>
       </section>
+
+      {/* Newsletter Floating Banner */}
+      <NewsletterBanner />
     </div>
   )
 }
