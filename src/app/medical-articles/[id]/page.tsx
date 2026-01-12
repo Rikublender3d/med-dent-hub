@@ -175,7 +175,9 @@ export default async function MedicalArticlePage({ params }: Props) {
 
               {/* ソーシャルシェア */}
               <div className="mt-8 flex items-center gap-4">
-                <span className="text-sm font-medium text-gray-600">シェア:</span>
+                <span className="text-sm font-medium text-gray-600">
+                  シェア:
+                </span>
                 <div className="flex gap-2">
                   <a
                     href={`https://x.com/intent/tweet?url=${encodeURIComponent(`https://www.ishatohaisha.com/medical-articles/${article.id}`)}&text=${encodeURIComponent(article.title)}`}
