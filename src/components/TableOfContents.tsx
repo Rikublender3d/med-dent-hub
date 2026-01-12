@@ -1,4 +1,5 @@
 'use client'
+import { IoIosArrowDown } from 'react-icons/io'
 import { useEffect, useState } from 'react'
 
 interface TocItem {
@@ -68,7 +69,17 @@ export function TableOfContents({ html }: Props) {
           <span className="big mr-2 text-lg">CONTENTS</span>目次
         </span>
         <span className="text-sm text-gray-600">
-          {isOpen ? '閉じる' : '開く'}
+          {isOpen ? (
+            <IoIosArrowDown
+              className="rotate-180 transition-transform duration-300"
+              size={24}
+            />
+          ) : (
+            <IoIosArrowDown
+              className="rotate-0 transition-transform duration-300"
+              size={24}
+            />
+          )}
         </span>
       </p>
       <div
