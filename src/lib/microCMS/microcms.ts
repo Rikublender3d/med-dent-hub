@@ -255,13 +255,27 @@ export const getMedicalArticleById = async (id: string) => {
  * @returns 下書き記事データ
  */
 export const getDraftArticle = async (id: string, draftKey: string) => {
-  const data = await client.get<Article>({
-    endpoint: 'general',
-    contentId: id,
-    queries: {
-      draftKey,
-      depth: 2, // 関連記事も取得するためにdepthを指定
-    },
-  })
-  return data
+  // まずgeneralエンドポイントで試す
+  try {
+    const data = await client.get<Article>({
+      endpoint: 'general',
+      contentId: id,
+      queries: {
+        draftKey,
+        depth: 2, // 関連記事も取得するためにdepthを指定
+      },
+    })
+    return data
+  } catch {
+    // generalで見つからない場合はmedical-articlesで試す
+    const data = await client.get<Article>({
+      endpoint: 'medical-articles',
+      contentId: id,
+      queries: {
+        draftKey,
+        depth: 2, // 関連記事も取得するためにdepthを指定
+      },
+    })
+    return data
+  }
 }
