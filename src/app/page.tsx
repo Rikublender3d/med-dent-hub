@@ -92,7 +92,7 @@ export default async function Home() {
               </Link>
             </div>
 
-            {/* Right: Featured Article */}
+            {/* Right: Featured Articles */}
             <div className="relative">
               <div className="relative overflow-hidden rounded-xl bg-gray-100">
                 <div className="relative aspect-square lg:aspect-[5/4]">
