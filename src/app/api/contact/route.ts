@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { createCorsResponse, createCorsOptionsResponse } from '@/lib/api/cors'
 
 // 環境変数から取得（.env.localのAPPS_SCRIPT_URLと一致させる）
 const scriptUrl = process.env.APPS_SCRIPT_URL
@@ -99,10 +100,10 @@ export async function POST(request: Request) {
       throw new Error(data.error || 'フォームの送信に失敗しました。')
     }
 
-    return NextResponse.json({ success: true })
+    return createCorsResponse({ success: true })
   } catch (error) {
     console.error('❌ Contact form submission error:', error)
-    return NextResponse.json(
+    return createCorsResponse(
       {
         success: false,
         error:
@@ -110,15 +111,20 @@ export async function POST(request: Request) {
             ? error.message
             : 'Failed to submit contact form.',
       },
-      { status: 500 }
+      500
     )
   }
 }
 
+// OPTIONSリクエスト（CORS preflight）に対応
+export async function OPTIONS() {
+  return createCorsOptionsResponse()
+}
+
 // GETリクエストは許可しない
 export async function GET() {
-  return NextResponse.json(
+  return createCorsResponse(
     { error: 'Method not allowed. Please use POST.' },
-    { status: 405 }
+    405
   )
 }
