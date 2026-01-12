@@ -2,12 +2,13 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 function applySecurityHeaders(response: NextResponse) {
-  // CSP: ワイルドカードを削除し、具体的なドメインを指定
-  // unsafe-evalとunsafe-inlineを削除（Next.js 15では通常不要）
-  // 必要に応じてnonceベースの実装に変更可能
+  // CSP: Next.js 15のビルド時に生成されるインラインスクリプトに対応
+  // 'strict-dynamic'を使用して、信頼できるスクリプトから読み込まれたスクリプトを許可
+  // 'unsafe-inline'はNext.jsのビルド時に生成されるインラインスクリプトのために必要
+  // ただし、'strict-dynamic'と組み合わせることで、セキュリティリスクを最小化
   const cspHeader = `
     default-src 'self';
-    script-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://platform.twitter.com https://www.googletagmanager.com https://cdn.iframe.ly https://www.google-analytics.com;
+    script-src 'self' 'strict-dynamic' 'unsafe-inline' https://www.youtube.com https://www.youtube-nocookie.com https://platform.twitter.com https://www.googletagmanager.com https://cdn.iframe.ly https://www.google-analytics.com;
     style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
     img-src 'self' blob: data: https://images.microcms-assets.io https://www.google-analytics.com https://www.googletagmanager.com;
     font-src 'self' https://fonts.gstatic.com;
