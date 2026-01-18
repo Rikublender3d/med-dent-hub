@@ -17,11 +17,52 @@ import {
   getPopularArticlesWithFallback,
 } from '@/lib/articles/popular'
 import { notFound } from 'next/navigation'
+import type { Metadata } from 'next'
 
 export const revalidate = 60
 
 interface Props {
   params: { id: string }
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await params
+
+  try {
+    const article = await getGeneralArticleById(id)
+
+    return {
+      title: article.title,
+      description: article.description || '医者と歯医者の交換日記',
+      openGraph: {
+        title: article.title,
+        description: article.description || '医者と歯医者の交換日記',
+        type: 'article',
+        publishedTime: article.publishedAt,
+        images: article.eyecatch
+          ? [
+              {
+                url: article.eyecatch.url,
+                width: 1200,
+                height: 630,
+                alt: article.title,
+              },
+            ]
+          : undefined,
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: article.title,
+        description: article.description || '医者と歯医者の交換日記',
+        images: article.eyecatch ? [article.eyecatch.url] : undefined,
+      },
+    }
+  } catch {
+    return {
+      title: '記事が見つかりません',
+      description: '医者と歯医者の交換日記',
+    }
+  }
 }
 
 export default async function ArticlePage({ params }: Props) {
