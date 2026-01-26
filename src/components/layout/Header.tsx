@@ -24,10 +24,11 @@ function NavLink({
     <Link
       href={href}
       onClick={onClick}
-      className={`flex items-center gap-1 px-3 py-2 text-sm font-medium transition-colors ${isActive
-        ? 'text-[color:var(--accent)]'
-        : 'text-[color:var(--foreground)] hover:text-[color:var(--accent)]'
-        }`}
+      className={`flex items-center gap-1 px-3 py-2 text-sm font-medium transition-colors ${
+        isActive
+          ? 'text-[color:var(--accent)]'
+          : 'text-[color:var(--foreground)] hover:text-[color:var(--accent)]'
+      }`}
     >
       {label}
       {hasDropdown && (
@@ -133,8 +134,9 @@ export function Header() {
             >
               記事一覧
               <svg
-                className={`h-3 w-3 transition-transform ${isArticlesDropdownOpen ? 'rotate-180' : ''
-                  }`}
+                className={`h-3 w-3 transition-transform ${
+                  isArticlesDropdownOpen ? 'rotate-180' : ''
+                }`}
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -247,18 +249,18 @@ export function Header() {
                 </div>
                 <div className="ml-2 flex flex-col gap-1">
                   <Link
-                    href="/general"
-                    onClick={() => setTimeout(() => setIsOpen(false), 30)}
-                    className="px-3 py-1 text-sm text-gray-600 hover:text-[color:var(--accent)]"
-                  >
-                    一般向け
-                  </Link>
-                  <Link
                     href="/medical-articles"
                     onClick={() => setTimeout(() => setIsOpen(false), 30)}
                     className="px-3 py-1 text-sm text-gray-600 hover:text-[color:var(--accent)]"
                   >
                     医療従事者向け
+                  </Link>
+                  <Link
+                    href="/general"
+                    onClick={() => setTimeout(() => setIsOpen(false), 30)}
+                    className="px-3 py-1 text-sm text-gray-600 hover:text-[color:var(--accent)]"
+                  >
+                    一般向け
                   </Link>
                 </div>
               </div>
