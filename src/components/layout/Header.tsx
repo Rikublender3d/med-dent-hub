@@ -152,18 +152,18 @@ export function Header() {
             {isArticlesDropdownOpen && (
               <div className="absolute top-full left-0 z-50 mt-1 w-48 rounded-lg border border-gray-200 bg-white shadow-lg">
                 <Link
-                  href="/general"
-                  onClick={() => setIsArticlesDropdownOpen(false)}
-                  className="block px-4 py-2 text-sm text-[color:var(--foreground)] transition-colors hover:bg-gray-50 hover:text-[color:var(--accent)]"
-                >
-                  一般向け
-                </Link>
-                <Link
                   href="/medical-articles"
                   onClick={() => setIsArticlesDropdownOpen(false)}
                   className="block px-4 py-2 text-sm text-[color:var(--foreground)] transition-colors hover:bg-gray-50 hover:text-[color:var(--accent)]"
                 >
                   医療従事者向け
+                </Link>
+                <Link
+                  href="/general"
+                  onClick={() => setIsArticlesDropdownOpen(false)}
+                  className="block px-4 py-2 text-sm text-[color:var(--foreground)] transition-colors hover:bg-gray-50 hover:text-[color:var(--accent)]"
+                >
+                  一般向け
                 </Link>
               </div>
             )}
@@ -249,18 +249,18 @@ export function Header() {
                 </div>
                 <div className="ml-2 flex flex-col gap-1">
                   <Link
-                    href="/general"
-                    onClick={() => setTimeout(() => setIsOpen(false), 30)}
-                    className="px-3 py-1 text-sm text-gray-600 hover:text-[color:var(--accent)]"
-                  >
-                    一般向け
-                  </Link>
-                  <Link
                     href="/medical-articles"
                     onClick={() => setTimeout(() => setIsOpen(false), 30)}
                     className="px-3 py-1 text-sm text-gray-600 hover:text-[color:var(--accent)]"
                   >
                     医療従事者向け
+                  </Link>
+                  <Link
+                    href="/general"
+                    onClick={() => setTimeout(() => setIsOpen(false), 30)}
+                    className="px-3 py-1 text-sm text-gray-600 hover:text-[color:var(--accent)]"
+                  >
+                    一般向け
                   </Link>
                 </div>
               </div>
