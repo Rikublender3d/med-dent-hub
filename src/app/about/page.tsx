@@ -16,7 +16,8 @@ export default function AboutPage() {
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-4xl text-center">
             <h1 className="mb-6 text-4xl font-bold text-[color:var(--foreground)] lg:text-5xl">
-              医療の明日を、 <SpBr />
+              医療の明日を、
+              <SpBr />
               現場からよくする
             </h1>
             <p className="mb-4 text-lg leading-relaxed text-gray-700">
@@ -25,7 +26,8 @@ export default function AboutPage() {
               「現場で使える視点」をまとめたメディアです。
             </p>
             <p className="text-lg leading-relaxed text-gray-600">
-              医師・歯科医師、そして患者さんやその <SpBr />
+              医師・歯科医師、そして患者さんやその
+              <SpBr />
               ご家族の判断を支える情報を発信します。
             </p>
           </div>
@@ -43,8 +45,10 @@ export default function AboutPage() {
               </h2>
               <div className="max-w-none text-[color:var(--foreground)]">
                 <p className="mb-6 text-lg leading-relaxed">
-                  医科と歯科のあいだにある <SpBr />
-                  見えないすきま」を埋めるために <SpBr />
+                  「医科と歯科のあいだにある
+                  <SpBr />
+                  見えないすきま」を埋めるために
+                  <SpBr />
                   生まれたメディア
                 </p>
               </div>
@@ -84,8 +88,10 @@ export default function AboutPage() {
                 <p className="mb-6 text-lg leading-relaxed">
                   そして患者やご家族もまた、
                   <br />
-                  「医科に行くべき？ 歯科に相談 <SpBr />
-                  すべき？」「持病があっても治療して <SpBr />
+                  「医科に行くべき？ 歯科に相談
+                  <SpBr />
+                  すべき？」「持病があっても治療して
+                  <SpBr />
                   大丈夫？」
                   <br />
                   と迷う場面が多くあります。
@@ -93,7 +99,8 @@ export default function AboutPage() {
                 <p className="mb-6 text-lg leading-relaxed">
                   これらは、専門が異なるからこそ生まれる「すきま」です。
                   <br />
-                  このすきまを埋めることが、患者の <SpBr />
+                  このすきまを埋めることが、患者の
+                  <SpBr />
                   安全と安心につながります。
                 </p>
                 <p className="text-lg leading-relaxed">
