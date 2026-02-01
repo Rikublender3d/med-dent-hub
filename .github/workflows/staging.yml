@@ -13,6 +13,10 @@ jobs:
     env:
       MICROCMS_SERVICE_DOMAIN: ${{ secrets.MICROCMS_SERVICE_DOMAIN }}
       MICROCMS_API_KEY: ${{ secrets.MICROCMS_API_KEY }}
+      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+      RESEND_FROM: ${{ secrets.RESEND_FROM }}
+      RESEND_SEGMENT_GENERAL: ${{ secrets.RESEND_SEGMENT_GENERAL }}
+      RESEND_SEGMENT_MEDICAL: ${{ secrets.RESEND_SEGMENT_MEDICAL }}
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 

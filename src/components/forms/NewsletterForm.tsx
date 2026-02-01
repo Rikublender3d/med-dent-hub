@@ -38,7 +38,7 @@ export default function NewsletterForm() {
         setIsSubmitted(true)
         setFormData({ email: '', name: '', profession: '' })
       } else {
-        alert('送信に失敗しました')
+        alert(result.error ?? '送信に失敗しました')
       }
     } catch (error) {
       console.error('Error:', error)
