@@ -1,7 +1,7 @@
 import { Resend } from 'resend'
 import { createCorsResponse, createCorsOptionsResponse } from '@/lib/api/cors'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+// Resend は POST 内で API キーがあるときだけ new する（ビルド時に env が無くてエラーにならないように）
 
 // ドメイン検証後: RESEND_FROM="医者と歯医者の交換日記 <info@ishatohaisha.com>"
 // Segment: RESEND_SEGMENT_GENERAL（一般読者）, RESEND_SEGMENT_MEDICAL（医療従事者）
@@ -69,7 +69,16 @@ export async function POST(request: Request) {
     const segmentKey = profession === '医療関係者以外' ? 'general' : 'medical'
     const segmentId = SEGMENT_IDS[segmentKey]
 
-    //contacts.create でコンタクト作成とセグメント登録を一度に
+    const apiKey = process.env.RESEND_API_KEY
+    if (!apiKey) {
+      return createCorsResponse(
+        { success: false, error: '送信設定がありません' },
+        500
+      )
+    }
+    const resend = new Resend(apiKey)
+
+    // contacts.create でコンタクト作成とセグメント登録を一度に
     const segmentIdForApi = toSegmentIdForApi(segmentId)
     try {
       const nameParts = typeof name === 'string' ? name.trim().split(/\s+/) : []
@@ -93,13 +102,6 @@ export async function POST(request: Request) {
       }
     } catch (contactErr) {
       console.warn('Resend contact create (skipped):', contactErr)
-    }
-
-    if (!process.env.RESEND_API_KEY) {
-      return createCorsResponse(
-        { success: false, error: '送信設定がありません' },
-        500
-      )
     }
 
     // Segment に応じたウェルカムメール
