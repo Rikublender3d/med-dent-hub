@@ -10,7 +10,6 @@ import Link from 'next/link'
 import { SafeHTML } from '@/components/SafeHTML'
 import { ArticleCard } from '@/components/ArticleCard'
 import { TableOfContents } from '@/components/TableOfContents'
-import ArticleAnalytics from '@/components/ArticleAnalytics'
 import { ArticleSidebar } from '@/components/ArticleSidebar'
 import {
   getPopularArticles,
@@ -40,7 +39,7 @@ export default async function MedicalArticlePage({ params }: Props) {
       getArticles(),
       getCategories(),
       getTags(),
-      getPopularArticles(5), // Google Analyticsから取得
+      getPopularArticles(5),
     ])
 
     const categories = categoriesRes.contents
@@ -86,11 +85,6 @@ export default async function MedicalArticlePage({ params }: Props) {
     return (
       <div className="min-h-screen bg-white">
         <div className="mx-auto max-w-7xl py-8">
-          <ArticleAnalytics
-            id={article.id}
-            path={`/medical-articles/${article.id}`}
-            title={article.title}
-          />
           {/* 記事ヘッダー（画像より上） */}
           <div className="mb-8">
             <div className="mb-4 flex flex-wrap items-center gap-2">

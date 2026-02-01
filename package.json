@@ -14,8 +14,6 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "@google-analytics/data": "^5.2.1",
-    "@vercel/analytics": "^1.5.0",
     "framer-motion": "^12.25.0",
     "hamburger-react": "^2.5.2",
     "isomorphic-dompurify": "^2.28.0",

@@ -26,7 +26,7 @@ export default async function Home() {
   ] = await Promise.all([
     getArticles(),
     getTags(),
-    getPopularArticles(9), // Google Analyticsから取得
+    getPopularArticles(9),
     getFeaturedArticles(20), // 多めに取得してカテゴリ別に分ける
     getMedicalFeaturedArticles(20), // 多めに取得してカテゴリ別に分ける
   ])
