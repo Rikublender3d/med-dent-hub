@@ -5,9 +5,9 @@ import './globals.css'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { Breadcrumb } from '@/components/layout/Breadcrumb'
-import { Analytics } from '@vercel/analytics/next'
-import PageAnalytics from '@/components/PageAnalytics'
-import GoogleAnalyticsScript from '@/components/GoogleAnalyticsScript'
+import { GoogleTagManager } from '@/components/analytics/GoogleTagManager'
+import { GoogleTagManagerNoScript } from '@/components/analytics/GoogleTagManager'
+import { AutoBtnId } from '@/components/analytics/AutoBtnId'
 
 const zenKakuGothicNew = Zen_Kaku_Gothic_New({
   weight: ['400', '700'],
@@ -56,18 +56,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
+      <head>
+        <GoogleTagManager />
+      </head>
       <body className={`${zenKakuGothicNew.variable} antialiased`}>
-        <Suspense fallback={null}>
-          <PageAnalytics />
-          <GoogleAnalyticsScript />
-        </Suspense>
+        <GoogleTagManagerNoScript />
+        <AutoBtnId />
         <Header />
         <Suspense fallback={null}>
           <Breadcrumb />
         </Suspense>
         <main className="container mx-auto px-4">{children}</main>
         <Footer />
-        <Analytics />
       </body>
     </html>
   )

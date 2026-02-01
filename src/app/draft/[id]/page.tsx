@@ -51,7 +51,7 @@ export default async function DraftPage({ params, searchParams }: Props) {
       getArticles(),
       getCategories(),
       getTags(),
-      getPopularArticles(5), // Google Analyticsから取得
+      getPopularArticles(5),
     ])
 
     const categories = categoriesRes.contents
