@@ -2,9 +2,9 @@ import { Metadata } from 'next'
 import NewsletterForm from '@/components/forms/NewsletterForm'
 
 export const metadata: Metadata = {
-  title: 'メルマガ申し込み',
+  title: '医科歯科連携マニュアル&フォーマットダウンロード',
   description:
-    '医者と歯医者の交換日記のメルマガにご登録ください。最新の医療情報や歯科情報をお届けします。',
+    '医科歯科連携マニュアル&フォーマットをダウンロードいただけます。医療従事者の皆様にお役立ていただける資料をご用意しています。',
 }
 
 export default function NewsletterPage() {
@@ -12,11 +12,11 @@ export default function NewsletterPage() {
     <div className="min-h-screen bg-white py-12">
       <div className="container mx-auto max-w-4xl px-4">
         <h1 className="mb-8 text-3xl font-bold text-[color:var(--foreground)]">
-          メルマガ申し込み
+          医科歯科連携マニュアル&フォーマットダウンロード
         </h1>
 
         <p className="mb-8 text-sm text-gray-600">
-          医者と歯医者の交換日記の最新情報をお届けします
+          以下のフォームにご入力いただくと、医科歯科連携に役立つマニュアルとフォーマットをダウンロードいただけます
         </p>
 
         <div className="mb-10">

@@ -26,14 +26,32 @@ export async function OPTIONS() {
   return createCorsOptionsResponse()
 }
 
+interface SubscribeBody {
+  email?: string
+  name?: string
+  profession?: string
+  workStyle?: string
+  workplaceType?: string
+  departments?: string
+  yearsOfExperience?: string
+  qualifications?: string
+  registrationSource?: string
+}
+
 export async function POST(request: Request) {
   try {
-    const body = await request.json()
-    const { email, name, profession } = body as {
-      email?: string
-      name?: string
-      profession?: string
-    }
+    const body = (await request.json()) as SubscribeBody
+    const {
+      email,
+      name,
+      profession,
+      workStyle,
+      workplaceType,
+      departments,
+      yearsOfExperience,
+      qualifications,
+      registrationSource,
+    } = body
 
     if (!email || typeof email !== 'string') {
       return createCorsResponse(
@@ -50,6 +68,17 @@ export async function POST(request: Request) {
       email,
       name: (typeof name === 'string' ? name : '') || '',
       profession: (typeof profession === 'string' ? profession : '') || '',
+      workStyle: (typeof workStyle === 'string' ? workStyle : '') || '',
+      workplaceType:
+        (typeof workplaceType === 'string' ? workplaceType : '') || '',
+      departments: (typeof departments === 'string' ? departments : '') || '',
+      yearsOfExperience:
+        (typeof yearsOfExperience === 'string' ? yearsOfExperience : '') || '',
+      qualifications:
+        (typeof qualifications === 'string' ? qualifications : '') || '',
+      registrationSource:
+        (typeof registrationSource === 'string' ? registrationSource : '') ||
+        '',
     })
     try {
       const googleRes = await fetch(`${scriptUrl}?${params.toString()}`)
@@ -106,21 +135,39 @@ export async function POST(request: Request) {
 
     // Segment に応じたウェルカムメール
     const isMedical = segmentKey === 'medical'
+
+    // 追加情報のHTMLを構築
+    const additionalInfoHtml = isMedical
+      ? `
+        ${profession ? `<p>職種：${profession}</p>` : ''}
+        ${workStyle ? `<p>勤務形態：${workStyle}</p>` : ''}
+        ${workplaceType ? `<p>勤務先の種別：${workplaceType}</p>` : ''}
+        ${departments ? `<p>診療科：${departments}</p>` : ''}
+        ${yearsOfExperience ? `<p>経験年数：${yearsOfExperience}</p>` : ''}
+        ${qualifications ? `<p>保有資格：${qualifications}</p>` : ''}
+        ${registrationSource ? `<p>登録経路：${registrationSource}</p>` : ''}
+      `
+      : `
+        ${profession ? `<p>職種：${profession}</p>` : ''}
+        ${registrationSource ? `<p>登録経路：${registrationSource}</p>` : ''}
+      `
+
     const welcomeSubject = isMedical
-      ? '【医者と歯医者の交換日記】医療従事者向けメルマガ登録ありがとうございます'
-      : '【医者と歯医者の交換日記】メルマガ登録ありがとうございます'
+      ? '【医者と歯医者の交換日記】医科歯科連携マニュアル&フォーマットのダウンロードについて'
+      : '【医者と歯医者の交換日記】ダウンロードありがとうございます'
     const welcomeBody = isMedical
       ? `
         <p>${name ? `${name}様` : '登録者様'}</p>
-        <p>医者と歯医者の交換日記、医療従事者向けメルマガへご登録いただき、ありがとうございます。</p>
-        ${profession ? `<p>職種：${profession}</p>` : ''}
+        <p>医者と歯医者の交換日記、医科歯科連携マニュアル&フォーマットダウンロードにご登録いただき、ありがとうございます。</p>
+        ${additionalInfoHtml}
         <p>医科歯科連携や現場で役立つ情報をお届けしてまいります。</p>
         <hr />
         <p style="color:#888;font-size:12px;">医者と歯医者の交換日記</p>
       `
       : `
         <p>${name ? `${name}様` : '登録者様'}</p>
-        <p>医者と歯医者の交換日記メルマガへご登録いただき、ありがとうございます。</p>
+        <p>医者と歯医者の交換日記、ダウンロードにご登録いただき、ありがとうございます。</p>
+        ${additionalInfoHtml}
         <p>医療・歯科に関するわかりやすい情報をお届けしてまいります。</p>
         <hr />
         <p style="color:#888;font-size:12px;">医者と歯医者の交換日記</p>
