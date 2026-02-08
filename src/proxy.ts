@@ -35,12 +35,12 @@ function applySecurityHeaders(response: NextResponse) {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function middleware(_request: NextRequest) {
+export function proxy(_request: NextRequest) {
   const response = NextResponse.next()
   applySecurityHeaders(response)
   return response
 }
 
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|pdf).*)'],
 }
