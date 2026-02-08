@@ -22,9 +22,9 @@ export const metadata: Metadata = {
   },
   description: '医者と歯医者の交換日記',
   icons: {
-    icon: '/1.png',
-    shortcut: '/1.png',
-    apple: '/1.png',
+    icon: '/favicon.png',
+    shortcut: '/favicon.png',
+    apple: '/favicon.png',
   },
   metadataBase: new URL('https://med-dent-hub.vercel.app'),
   openGraph: {

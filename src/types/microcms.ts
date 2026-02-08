@@ -1,3 +1,13 @@
+import { NextRequest, NextResponse } from 'next/server'
+/** 記事のエンドポイント。path は `/${endpoint}/${id}` で組み立てる */
+export type Endpoint = 'general' | 'medical-articles'
+
+/** microCMS の関連記事で「ID + エンドポイント」形式にした場合の型 */
+export type RelatedArticleRef = {
+  id: string
+  endpoint: Endpoint
+}
+
 export interface Article {
   id: string
   title: string
@@ -15,7 +25,12 @@ export interface Article {
     name: string
   }
   tags?: Tag[]
-  relatedarticles?: Article[]
+  relatedarticles?: (Article | RelatedArticleRef)[]
+}
+
+/** 一覧取得時に付与。path は `/${endpoint}/${id}` */
+export interface ArticleWithEndpoint extends Article {
+  endpoint: Endpoint
 }
 
 export interface Tag {
@@ -51,4 +66,15 @@ export interface TagResponse {
   totalCount: number
   offset: number
   limit: number
+}
+export function middleware(request: NextRequest) {
+  const referer = request.headers.get('referer')
+  const origin = request.nextUrl.origin
+  if (referer && referer.startsWith(origin)) {
+    return new NextResponse('Unauthorized', { status: 403 })
+  }
+  return NextResponse.next()
+}
+export const config = {
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|pdf).*)'],
 }

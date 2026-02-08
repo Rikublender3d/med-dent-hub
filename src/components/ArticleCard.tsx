@@ -1,15 +1,15 @@
 import Link from 'next/link'
-import { Article } from '@/types/microcms'
+import { Article, Endpoint } from '@/types/microcms'
 import Image from 'next/image'
 
 interface Props {
   article: Article
-  basePath?: string
+  endpoint?: Endpoint
 }
 
-export const ArticleCard = ({ article, basePath = '/general' }: Props) => {
+export const ArticleCard = ({ article, endpoint = 'general' }: Props) => {
   return (
-    <Link href={`${basePath}/${article.id}`} className="block">
+    <Link href={`/${endpoint}/${article.id}`} className="block">
       <article className="group h-full overflow-hidden rounded-xl bg-white shadow-sm transition-shadow hover:shadow-lg">
         {article.eyecatch && (
           <div className="relative aspect-video overflow-hidden">

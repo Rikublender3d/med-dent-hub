@@ -2,6 +2,8 @@ import { createClient } from 'microcms-js-sdk'
 import {
   ArticleResponse,
   Article,
+  ArticleWithEndpoint,
+  Endpoint,
   CategoryResponse,
   TagResponse,
 } from '@/types/microcms'
@@ -95,25 +97,36 @@ export const getMedicalArticlesByIds = async (ids: string[]) => {
 }
 
 /**
- * 記事IDからbasePathを判定する関数
+ * 複数IDの endpoint を一括取得（2リクエストで済む）
  */
-export const getBasePathByArticleId = async (
-  id: string
-): Promise<'/general' | '/medical-articles'> => {
-  try {
-    await getGeneralArticleById(id)
-    return '/general'
-  } catch {
-    return '/medical-articles'
-  }
+export const getEndpointsForIds = async (
+  ids: string[]
+): Promise<Map<string, Endpoint>> => {
+  if (!ids.length) return new Map()
+  const [general, medical] = await Promise.all([
+    getGeneralArticlesByIds(ids),
+    getMedicalArticlesByIds(ids),
+  ])
+  const map = new Map<string, Endpoint>()
+  general.forEach((a) => map.set(a.id, 'general'))
+  medical.forEach((a) => map.set(a.id, 'medical-articles'))
+  return map
 }
 
 /**
- * 両方のエンドポイントから記事IDで取得
+ * 記事IDからendpointを判定（単体用。複数は getEndpointsForIds を使うこと）
+ */
+export const getEndpointByArticleId = async (id: string): Promise<Endpoint> => {
+  const map = await getEndpointsForIds([id])
+  return map.get(id) ?? 'medical-articles'
+}
+
+/**
+ * 両方のエンドポイントから記事IDで取得（endpoint 付き）
  */
 export const getAllArticlesByIds = async (
   ids: string[]
-): Promise<Article[]> => {
+): Promise<ArticleWithEndpoint[]> => {
   if (!ids.length) return []
 
   const [articles, medicalArticles] = await Promise.all([
@@ -121,15 +134,14 @@ export const getAllArticlesByIds = async (
     getMedicalArticlesByIds(ids),
   ])
 
-  // IDの順序を保持
-  const articleMap = new Map(
-    [...articles, ...medicalArticles].map((article) => [article.id, article])
+  const articleMap = new Map<string, ArticleWithEndpoint>()
+  articles.forEach((a) => articleMap.set(a.id, { ...a, endpoint: 'general' }))
+  medicalArticles.forEach((a) =>
+    articleMap.set(a.id, { ...a, endpoint: 'medical-articles' })
   )
-  const orderedArticles = ids
+  return ids
     .map((id) => articleMap.get(id))
-    .filter(Boolean) as Article[]
-
-  return orderedArticles
+    .filter((a): a is ArticleWithEndpoint => Boolean(a))
 }
 
 export const getFeaturedArticles = async (limit = 6) => {
@@ -141,8 +153,13 @@ export const getFeaturedArticles = async (limit = 6) => {
       limit,
     },
   })
-
-  return data
+  const contentsWithEndpoint: ArticleWithEndpoint[] = data.contents.map(
+    (c) => ({
+      ...c,
+      endpoint: 'general' as const,
+    })
+  )
+  return { ...data, contents: contentsWithEndpoint }
 }
 
 export const getMedicalFeaturedArticles = async (limit = 6) => {
@@ -154,8 +171,13 @@ export const getMedicalFeaturedArticles = async (limit = 6) => {
       limit,
     },
   })
-
-  return data
+  const contentsWithEndpoint: ArticleWithEndpoint[] = data.contents.map(
+    (c) => ({
+      ...c,
+      endpoint: 'medical-articles' as const,
+    })
+  )
+  return { ...data, contents: contentsWithEndpoint }
 }
 
 export const getTags = async () => {
@@ -167,8 +189,7 @@ export const getTags = async () => {
 }
 
 /**
- * generalとmedical-articlesの両方から取得して統合
- * 人気記事や最新記事の取得に使用
+ * generalとmedical-articlesの両方から取得して統合（endpoint 付き）
  */
 export const getArticles = async (params?: {
   q?: string
@@ -178,16 +199,21 @@ export const getArticles = async (params?: {
   tagId?: string
   tagIds?: string[]
   isFeatured?: boolean
-}): Promise<ArticleResponse> => {
+}) => {
   const [articlesRes, medicalArticlesRes] = await Promise.all([
     getGeneralArticles(params),
     getMedicalArticles(params),
   ])
 
-  const allContents = [...articlesRes.contents, ...medicalArticlesRes.contents]
-
-  // 公開日時でソート
-  const sorted = allContents.sort(
+  const generalWithEndpoint: ArticleWithEndpoint[] = articlesRes.contents.map(
+    (c) => ({ ...c, endpoint: 'general' as const })
+  )
+  const medicalWithEndpoint: ArticleWithEndpoint[] =
+    medicalArticlesRes.contents.map((c) => ({
+      ...c,
+      endpoint: 'medical-articles' as const,
+    }))
+  const sorted = [...generalWithEndpoint, ...medicalWithEndpoint].sort(
     (a, b) =>
       new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
   )

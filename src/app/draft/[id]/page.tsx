@@ -3,7 +3,7 @@ import {
   getArticles,
   getCategories,
   getTags,
-  getBasePathByArticleId,
+  getAllArticlesByIds,
 } from '@/lib/microCMS/microcms'
 import type { Tag } from '@/types/microcms'
 import Image from 'next/image'
@@ -12,10 +12,6 @@ import { SafeHTML } from '@/components/SafeHTML'
 import { ArticleCard } from '@/components/ArticleCard'
 import { TableOfContents } from '@/components/TableOfContents'
 import { ArticleSidebar } from '@/components/ArticleSidebar'
-import {
-  getPopularArticles,
-  getPopularArticlesWithFallback,
-} from '@/lib/articles/popular'
 import { notFound } from 'next/navigation'
 
 export const dynamic = 'force-dynamic'
@@ -40,19 +36,13 @@ export default async function DraftPage({ params, searchParams }: Props) {
 
   try {
     // 下書き記事と関連データを取得
-    const [
-      article,
-      { contents: allArticles },
-      categoriesRes,
-      tagsRes,
-      popularArticles,
-    ] = await Promise.all([
-      getDraftArticle(id, draftKey),
-      getArticles(),
-      getCategories(),
-      getTags(),
-      getPopularArticles(5),
-    ])
+    const [article, { contents: allArticles }, categoriesRes, tagsRes] =
+      await Promise.all([
+        getDraftArticle(id, draftKey),
+        getArticles(),
+        getCategories(),
+        getTags(),
+      ])
 
     const categories = categoriesRes.contents
     const allTags = tagsRes.contents
@@ -64,35 +54,25 @@ export default async function DraftPage({ params, searchParams }: Props) {
     // 関連記事（microCMSのrelatedarticlesフィールドから取得）
     const relatedArticles = article.relatedarticles || []
 
-    // 人気記事に含まれていない最新記事をフォールバックとして追加
-    const sidebarPopular = getPopularArticlesWithFallback(
-      popularArticles,
-      sortedByNewest,
-      5
-    )
+    // サイドバー「人気記事」は一旦最新記事と同じ（後ほどGTMで差し替え予定）
+    const sidebarPopular = sortedByNewest.slice(0, 5)
 
-    // サイドバー用の記事にbasePathを追加
-    const sidebarPopularWithPath = await Promise.all(
-      sidebarPopular.map(async (article) => ({
-        article,
-        basePath: await getBasePathByArticleId(article.id),
-      }))
-    )
+    const sidebarPopularWithEndpoint = sidebarPopular.map((a) => ({
+      article: a,
+      endpoint: a.endpoint,
+    }))
+    const sortedByNewestWithEndpoint = sortedByNewest.map((a) => ({
+      article: a,
+      endpoint: a.endpoint,
+    }))
 
-    const sortedByNewestWithPath = await Promise.all(
-      sortedByNewest.map(async (article) => ({
-        article,
-        basePath: await getBasePathByArticleId(article.id),
-      }))
-    )
-
-    // 関連記事のbasePathを取得
-    const relatedArticlesWithPath = await Promise.all(
-      relatedArticles.map(async (article) => ({
-        article,
-        basePath: await getBasePathByArticleId(article.id),
-      }))
-    )
+    const relatedIds = relatedArticles.map((a) => a.id)
+    const relatedFetched =
+      relatedIds.length > 0 ? await getAllArticlesByIds(relatedIds) : []
+    const relatedArticlesWithEndpoint = relatedFetched.map((article) => ({
+      article,
+      endpoint: article.endpoint,
+    }))
 
     return (
       <div className="min-h-screen bg-white">
@@ -261,19 +241,21 @@ export default async function DraftPage({ params, searchParams }: Props) {
                 </div>
               </div>
               {/* 関連記事 */}
-              {relatedArticlesWithPath.length > 0 && (
+              {relatedArticlesWithEndpoint.length > 0 && (
                 <div className="mt-12">
                   <h2 className="mb-6 text-2xl font-bold text-[color:var(--foreground)]">
                     関連記事
                   </h2>
                   <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                    {relatedArticlesWithPath.map(({ article, basePath }) => (
-                      <ArticleCard
-                        key={article.id}
-                        article={article}
-                        basePath={basePath}
-                      />
-                    ))}
+                    {relatedArticlesWithEndpoint.map(
+                      ({ article, endpoint }) => (
+                        <ArticleCard
+                          key={article.id}
+                          article={article}
+                          endpoint={endpoint}
+                        />
+                      )
+                    )}
                   </div>
                 </div>
               )}
@@ -320,8 +302,8 @@ export default async function DraftPage({ params, searchParams }: Props) {
             <ArticleSidebar
               categories={categories}
               allTags={allTags}
-              sortedByNewest={sortedByNewestWithPath}
-              sidebarPopular={sidebarPopularWithPath}
+              sortedByNewest={sortedByNewestWithEndpoint}
+              sidebarPopular={sidebarPopularWithEndpoint}
             />
           </div>
         </div>

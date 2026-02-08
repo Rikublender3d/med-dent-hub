@@ -4,7 +4,7 @@ import { getArticles } from '@/lib/microCMS/microcms'
 export const revalidate = 3600 // 1時間ごとに再生成
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://www.ishatohaisha.com'
+  const baseUrl = process.env.BASE_URL ?? 'https://www.ishatohaisha.com'
 
   // 静的ページ
   const staticPages: MetadataRoute.Sitemap = [
@@ -57,7 +57,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const { contents } = await getArticles()
     articlePages = contents.map((article) => ({
-      url: `${baseUrl}/articles/${article.id}`,
+      url: `${baseUrl}/${article.endpoint}/${article.id}`,
       lastModified: new Date(article.updatedAt || article.publishedAt),
       changeFrequency: 'weekly' as const,
       priority: 0.8,
