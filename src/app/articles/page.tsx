@@ -1,10 +1,5 @@
 import { Suspense } from 'react'
-import {
-  getArticles,
-  getCategories,
-  getTags,
-  getBasePathByArticleId,
-} from '@/lib/microCMS/microcms'
+import { getArticles, getCategories, getTags } from '@/lib/microCMS/microcms'
 import { ArticleCard } from '@/components/ArticleCard'
 import FilterSidebar from '@/components/FilterSidebar'
 import Link from 'next/link'
@@ -62,13 +57,10 @@ export default async function ArticlesPage({ searchParams }: Props) {
       new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
   )
 
-  // 各記事のbasePathを取得
-  const articlesWithPath = await Promise.all(
-    sorted.map(async (article) => ({
-      article,
-      basePath: await getBasePathByArticleId(article.id),
-    }))
-  )
+  const articlesWithEndpoint = sorted.map((article) => ({
+    article,
+    endpoint: article.endpoint,
+  }))
 
   return (
     <div className="py-8">
@@ -100,16 +92,16 @@ export default async function ArticlesPage({ searchParams }: Props) {
             {/* 記事一覧 */}
             <div className="mb-4 flex items-center justify-between">
               <p className="text-sm text-gray-600">
-                {articlesWithPath.length}件の記事が見つかりました
+                {articlesWithEndpoint.length}件の記事が見つかりました
               </p>
             </div>
-            {articlesWithPath.length > 0 ? (
+            {articlesWithEndpoint.length > 0 ? (
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {articlesWithPath.map(({ article, basePath }) => (
+                {articlesWithEndpoint.map(({ article, endpoint }) => (
                   <ArticleCard
                     key={article.id}
                     article={article}
-                    basePath={basePath}
+                    endpoint={endpoint}
                   />
                 ))}
               </div>

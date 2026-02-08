@@ -1,4 +1,4 @@
-import { getArticles, getBasePathByArticleId } from '@/lib/microCMS/microcms'
+import { getArticles } from '@/lib/microCMS/microcms'
 import { ArticleCard } from '@/components/ArticleCard'
 
 export const revalidate = 30
@@ -12,13 +12,10 @@ export default async function SearchPage({ searchParams }: Props) {
   const q = (params.q ?? '').trim()
   const { contents } = await getArticles(q ? { q, limit: 50 } : { limit: 24 })
 
-  // 各記事のbasePathを取得
-  const articlesWithPath = await Promise.all(
-    contents.map(async (article) => ({
-      article,
-      basePath: await getBasePathByArticleId(article.id),
-    }))
-  )
+  const articlesWithEndpoint = contents.map((article) => ({
+    article,
+    endpoint: article.endpoint,
+  }))
 
   return (
     <div className="py-8">
@@ -28,8 +25,8 @@ export default async function SearchPage({ searchParams }: Props) {
       </p>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {articlesWithPath.map(({ article, basePath }) => (
-          <ArticleCard key={article.id} article={article} basePath={basePath} />
+        {articlesWithEndpoint.map(({ article, endpoint }) => (
+          <ArticleCard key={article.id} article={article} endpoint={endpoint} />
         ))}
       </div>
     </div>

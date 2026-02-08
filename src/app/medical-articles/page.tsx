@@ -101,7 +101,7 @@ export default async function MedicalArticlesPage({ searchParams }: Props) {
                   <ArticleCard
                     key={article.id}
                     article={article}
-                    basePath="/medical-articles"
+                    endpoint="medical-articles"
                   />
                 ))}
               </div>

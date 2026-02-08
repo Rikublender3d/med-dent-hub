@@ -5,6 +5,9 @@ import { createCorsResponse, createCorsOptionsResponse } from '@/lib/api/cors'
 
 // ドメイン検証後: RESEND_FROM="医者と歯医者の交換日記 <info@ishatohaisha.com>"
 // Segment: RESEND_SEGMENT_GENERAL（一般読者）, RESEND_SEGMENT_MEDICAL（医療従事者）
+const WELCOME_PDF_URL =
+  process.env.BASE_URL ?? 'https://www.ishatohaisha.com/pdf_test.pdf'
+
 const FROM_EMAIL = process.env.RESEND_FROM ?? 'onboarding@resend.dev'
 
 const SEGMENT_IDS = {
@@ -29,10 +32,26 @@ export async function OPTIONS() {
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { email, name, profession } = body as {
+    const {
+      email,
+      name,
+      profession,
+      workType,
+      workFor,
+      department,
+      yearsOfExperience,
+      qualifications,
+      registrationRoute,
+    } = body as {
       email?: string
       name?: string
       profession?: string
+      workType?: string
+      workFor?: string
+      department?: string
+      yearsOfExperience?: string
+      qualifications?: string
+      registrationRoute?: string
     }
 
     if (!email || typeof email !== 'string') {
@@ -42,14 +61,22 @@ export async function POST(request: Request) {
       )
     }
 
+    const str = (v: unknown) => (typeof v === 'string' ? v : '') || ''
+
     // Google Apps Script にリクエストをプロキシ（メルマガ用。Resend と併用）
     const scriptUrl =
       process.env.SUBSCRIBE_SCRIPT_URL ??
       'https://script.google.com/macros/s/AKfycbxDnimr6ZXAdCX0mHd20Z4zJvIpyj7N9IYEemqnfYFChoqnmWqcvEYW32C4Yv5yj54/exec'
     const params = new URLSearchParams({
       email,
-      name: (typeof name === 'string' ? name : '') || '',
-      profession: (typeof profession === 'string' ? profession : '') || '',
+      name: str(name),
+      profession: str(profession),
+      workType: str(workType),
+      workFor: str(workFor),
+      department: str(department),
+      yearsOfExperience: str(yearsOfExperience),
+      qualifications: str(qualifications),
+      registrationRoute: str(registrationRoute),
     })
     try {
       const googleRes = await fetch(`${scriptUrl}?${params.toString()}`)
@@ -104,26 +131,44 @@ export async function POST(request: Request) {
       console.warn('Resend contact create (skipped):', contactErr)
     }
 
-    // Segment に応じたウェルカムメール
+    // Segment に応じたウェルカムメール（PDFはリンクで案内。iframeは多くのメールクライアントで非対応のため使用しない）
     const isMedical = segmentKey === 'medical'
     const welcomeSubject = isMedical
       ? '【医者と歯医者の交換日記】医療従事者向けメルマガ登録ありがとうございます'
       : '【医者と歯医者の交換日記】メルマガ登録ありがとうございます'
+
+    const pdfSection = `
+      <div style="margin:24px 0; padding:20px; background:#f8f9fa; border-radius:8px; border:1px solid #e9ecef;">
+        <p style="margin:0 0 12px; font-size:15px; font-weight:bold; color:#333;">📎 ご登録特典</p>
+        <p style="margin:0 0 16px; font-size:14px; color:#495057; line-height:1.6;">医科歯科連携や現場で役立つ資料をPDFでご用意しました。下のボタンからご覧・ダウンロードいただけます。</p>
+        <table cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:collapse;"><tr>
+          <td style="border-radius:6px; background:#2563eb;"><a href="${WELCOME_PDF_URL}" target="_blank" rel="noopener noreferrer" style="display:inline-block; padding:12px 24px; font-size:14px; font-weight:bold; color:#ffffff; text-decoration:none;">資料を開く（PDF）</a></td>
+        </tr></table>
+        <p style="margin:12px 0 0; font-size:12px; color:#868e96;">※メールによってはPDFが表示されない場合があります。その場合は上記リンクをクリックしてください。</p>
+      </div>
+    `
+
     const welcomeBody = isMedical
       ? `
-        <p>${name ? `${name}様` : '登録者様'}</p>
-        <p>医者と歯医者の交換日記、医療従事者向けメルマガへご登録いただき、ありがとうございます。</p>
-        ${profession ? `<p>職種：${profession}</p>` : ''}
-        <p>医科歯科連携や現場で役立つ情報をお届けしてまいります。</p>
-        <hr />
-        <p style="color:#888;font-size:12px;">医者と歯医者の交換日記</p>
+        <div style="font-family: sans-serif; max-width:560px; color:#212529;">
+          <p style="font-size:16px; line-height:1.7;">${name ? `${name}様` : '登録者様'}</p>
+          <p style="font-size:15px; line-height:1.7;">医者と歯医者の交換日記、医療従事者向けメルマガへご登録いただき、ありがとうございます。</p>
+          ${profession ? `<p style="font-size:14px; color:#495057;">職種：${profession}</p>` : ''}
+          <p style="font-size:15px; line-height:1.7;">今後は医科歯科連携や現場で役立つ情報をお届けしてまいります。</p>
+          ${pdfSection}
+          <hr style="border:none; border-top:1px solid #dee2e6; margin:28px 0;" />
+          <p style="font-size:12px; color:#868e96;">医者と歯医者の交換日記</p>
+        </div>
       `
       : `
-        <p>${name ? `${name}様` : '登録者様'}</p>
-        <p>医者と歯医者の交換日記メルマガへご登録いただき、ありがとうございます。</p>
-        <p>医療・歯科に関するわかりやすい情報をお届けしてまいります。</p>
-        <hr />
-        <p style="color:#888;font-size:12px;">医者と歯医者の交換日記</p>
+        <div style="font-family: sans-serif; max-width:560px; color:#212529;">
+          <p style="font-size:16px; line-height:1.7;">${name ? `${name}様` : '登録者様'}</p>
+          <p style="font-size:15px; line-height:1.7;">医者と歯医者の交換日記メルマガへご登録いただき、ありがとうございます。</p>
+          <p style="font-size:15px; line-height:1.7;">医療・歯科に関するわかりやすい情報をお届けしてまいります。</p>
+          ${pdfSection}
+          <hr style="border:none; border-top:1px solid #dee2e6; margin:28px 0;" />
+          <p style="font-size:12px; color:#868e96;">医者と歯医者の交換日記</p>
+        </div>
       `
 
     const { data, error } = await resend.emails.send({

@@ -3,12 +3,7 @@ import {
   getFeaturedArticles,
   getMedicalFeaturedArticles,
   getTags,
-  getBasePathByArticleId,
 } from '@/lib/microCMS/microcms'
-import {
-  getPopularArticles,
-  getPopularArticlesWithFallback,
-} from '@/lib/articles/popular'
 import { ArticleCard } from '@/components/ArticleCard'
 import NewsletterBanner from '@/components/NewsletterBanner'
 import Image from 'next/image'
@@ -17,19 +12,13 @@ import Link from 'next/link'
 export const revalidate = 60
 
 export default async function Home() {
-  const [
-    allArticlesRes,
-    tagsRes,
-    popularArticlesFromAPI,
-    featuredRes,
-    medicalFeaturedRes,
-  ] = await Promise.all([
-    getArticles(),
-    getTags(),
-    getPopularArticles(9),
-    getFeaturedArticles(20), // 多めに取得してカテゴリ別に分ける
-    getMedicalFeaturedArticles(20), // 多めに取得してカテゴリ別に分ける
-  ])
+  const [allArticlesRes, tagsRes, featuredRes, medicalFeaturedRes] =
+    await Promise.all([
+      getArticles(),
+      getTags(),
+      getFeaturedArticles(5), // 多めに取得してカテゴリ別に分ける
+      getMedicalFeaturedArticles(5), // 多めに取得してカテゴリ別に分ける
+    ])
 
   const allContents = allArticlesRes.contents
   const tags = tagsRes.contents
@@ -38,31 +27,22 @@ export default async function Home() {
       new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
   )
 
-  // 人気記事に含まれていない最新記事をフォールバックとして追加
-  const popularArticles = getPopularArticlesWithFallback(
-    popularArticlesFromAPI,
-    sortedByNewest,
-    9
-  )
+  // 人気記事は一旦最新記事と同じロジック（後ほどGTMで差し替え予定）
+  const popularArticles = sortedByNewest.slice(0, 9)
 
   const featuredArticles = featuredRes.contents
   const medicalFeaturedArticles = medicalFeaturedRes.contents
 
-  // 人気記事のリンク先を決定
-  const popularArticlesWithPath = await Promise.all(
-    popularArticles.map(async (article) => ({
+  const popularArticlesWithEndpoint = popularArticles.map((article) => ({
+    article,
+    endpoint: article.endpoint,
+  }))
+  const newestArticlesWithEndpoint = sortedByNewest
+    .slice(0, 9)
+    .map((article) => ({
       article,
-      basePath: await getBasePathByArticleId(article.id),
+      endpoint: article.endpoint,
     }))
-  )
-
-  // 新着記事のリンク先を決定
-  const newestArticlesWithPath = await Promise.all(
-    sortedByNewest.slice(0, 9).map(async (article) => ({
-      article,
-      basePath: await getBasePathByArticleId(article.id),
-    }))
-  )
 
   // const featuredArticle = sortedByNewest[0]
   // const secondaryArticles = sortedByNewest.slice(1, 3)
@@ -117,11 +97,11 @@ export default async function Home() {
             新着記事
           </h2>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {newestArticlesWithPath.map(({ article, basePath }) => (
+            {newestArticlesWithEndpoint.map(({ article, endpoint }) => (
               <ArticleCard
                 key={article.id}
                 article={article}
-                basePath={basePath}
+                endpoint={endpoint}
               />
             ))}
           </div>
@@ -166,11 +146,11 @@ export default async function Home() {
               人気の記事
             </h2>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {popularArticlesWithPath.map(({ article, basePath }) => (
+              {popularArticlesWithEndpoint.map(({ article, endpoint }) => (
                 <ArticleCard
                   key={article.id}
                   article={article}
-                  basePath={basePath}
+                  endpoint={endpoint}
                 />
               ))}
             </div>
@@ -204,7 +184,7 @@ export default async function Home() {
                   <ArticleCard
                     key={article.id}
                     article={article}
-                    basePath="/general"
+                    endpoint="general"
                   />
                 ))}
               </div>
@@ -230,7 +210,7 @@ export default async function Home() {
                   <ArticleCard
                     key={article.id}
                     article={article}
-                    basePath="/medical-articles"
+                    endpoint="medical-articles"
                   />
                 ))}
               </div>

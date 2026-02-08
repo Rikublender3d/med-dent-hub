@@ -1,17 +1,18 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import type { Article, Category, Tag } from '@/types/microcms'
+import type { Article, Category, Endpoint, Tag } from '@/types/microcms'
 
-interface ArticleWithBasePath {
+interface ArticleWithEndpoint {
   article: Article
-  basePath: string
+  endpoint: Endpoint
 }
 
 interface ArticleSidebarProps {
   categories: Category[]
   allTags: Tag[]
-  sortedByNewest: ArticleWithBasePath[]
-  sidebarPopular: ArticleWithBasePath[]
+  sortedByNewest: ArticleWithEndpoint[]
+  sidebarPopular: ArticleWithEndpoint[]
+  /** フィルター・一覧リンク用のパス（例: /articles, /general） */
   basePath?: string
 }
 
@@ -97,41 +98,39 @@ export const ArticleSidebar = ({
             人気記事
           </h3>
           <ul>
-            {sidebarPopular.map(
-              ({ article, basePath: articleBasePath }, index) => (
-                <li
-                  key={article.id}
-                  className={`relative ${
-                    index < sidebarPopular.length - 1
-                      ? 'border-b border-gray-200'
-                      : ''
-                  }`}
+            {sidebarPopular.map(({ article, endpoint }, index) => (
+              <li
+                key={article.id}
+                className={`relative ${
+                  index < sidebarPopular.length - 1
+                    ? 'border-b border-gray-200'
+                    : ''
+                }`}
+              >
+                <Link
+                  href={`/${endpoint}/${article.id}`}
+                  className="flex items-center gap-3 py-4 transition-opacity hover:opacity-80"
                 >
-                  <Link
-                    href={`${articleBasePath}/${article.id}`}
-                    className="flex items-center gap-3 py-4 transition-opacity hover:opacity-80"
-                  >
-                    <span className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-blue-500 text-sm font-bold text-white">
-                      {index + 1}
-                    </span>
-                    {article.eyecatch && (
-                      <div className="relative h-16 w-24 flex-shrink-0 overflow-hidden rounded">
-                        <Image
-                          src={article.eyecatch.url}
-                          alt={article.title}
-                          fill
-                          className="object-cover"
-                          sizes="96px"
-                        />
-                      </div>
-                    )}
-                    <span className="line-clamp-2 flex-1 text-sm font-medium text-[color:var(--foreground)]">
-                      {article.title}
-                    </span>
-                  </Link>
-                </li>
-              )
-            )}
+                  <span className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-blue-500 text-sm font-bold text-white">
+                    {index + 1}
+                  </span>
+                  {article.eyecatch && (
+                    <div className="relative h-16 w-24 flex-shrink-0 overflow-hidden rounded">
+                      <Image
+                        src={article.eyecatch.url}
+                        alt={article.title}
+                        fill
+                        className="object-cover"
+                        sizes="96px"
+                      />
+                    </div>
+                  )}
+                  <span className="line-clamp-2 flex-1 text-sm font-medium text-[color:var(--foreground)]">
+                    {article.title}
+                  </span>
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
 
@@ -141,25 +140,21 @@ export const ArticleSidebar = ({
             最新記事
           </h3>
           <ul className="space-y-4">
-            {sortedByNewest
-              .slice(0, 5)
-              .map(({ article, basePath: articleBasePath }) => (
-                <li key={article.id}>
-                  <Link
-                    href={`${articleBasePath}/${article.id}`}
-                    className="block rounded-lg p-3 hover:bg-gray-50"
-                  >
-                    <h4 className="mb-1 line-clamp-2 text-sm font-medium text-[color:var(--foreground)]">
-                      {article.title}
-                    </h4>
-                    <time className="text-xs text-gray-500">
-                      {new Date(article.publishedAt).toLocaleDateString(
-                        'ja-JP'
-                      )}
-                    </time>
-                  </Link>
-                </li>
-              ))}
+            {sortedByNewest.slice(0, 5).map(({ article, endpoint }) => (
+              <li key={article.id}>
+                <Link
+                  href={`/${endpoint}/${article.id}`}
+                  className="block rounded-lg p-3 hover:bg-gray-50"
+                >
+                  <h4 className="mb-1 line-clamp-2 text-sm font-medium text-[color:var(--foreground)]">
+                    {article.title}
+                  </h4>
+                  <time className="text-xs text-gray-500">
+                    {new Date(article.publishedAt).toLocaleDateString('ja-JP')}
+                  </time>
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
       </div>
