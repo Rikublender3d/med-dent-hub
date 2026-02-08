@@ -5,10 +5,10 @@ function applySecurityHeaders(response: NextResponse) {
   // CSP: Next.js 15のビルド時に生成されるインラインスクリプトに対応
   // 'unsafe-inline'はNext.jsのビルド時に生成されるインラインスクリプトのために必要
   // 'strict-dynamic'は'unsafe-inline'と併用すると無視されるため削除
-  // Google Analytics: script-src に googletagmanager.com、connect-src / img-src に GA ドメインを許可
+  // Google Analytics: script-src に googletagmanager.com と google-analytics.com（gtag 読み込み用）、connect-src / img-src に GA ドメインを許可
   const cspHeader = `
     default-src 'self';
-    script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://*.googletagmanager.com https://www.youtube.com https://www.youtube-nocookie.com https://platform.twitter.com https://cdn.iframe.ly;
+    script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://*.googletagmanager.com https://www.google-analytics.com https://www.youtube.com https://www.youtube-nocookie.com https://platform.twitter.com https://cdn.iframe.ly;
     style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
     img-src 'self' blob: data: https: https://www.google-analytics.com https://www.googletagmanager.com https://images.microcms-assets.io;
     font-src 'self' https://fonts.gstatic.com;
