@@ -5,8 +5,7 @@ import { createCorsResponse, createCorsOptionsResponse } from '@/lib/api/cors'
 
 // ドメイン検証後: RESEND_FROM="医者と歯医者の交換日記 <info@ishatohaisha.com>"
 // Segment: RESEND_SEGMENT_GENERAL（一般読者）, RESEND_SEGMENT_MEDICAL（医療従事者）
-const WELCOME_PDF_URL =
-  process.env.BASE_URL ?? 'https://www.ishatohaisha.com/pdf_test.pdf'
+const WELCOME_PDF_URL = 'https://www.ishatohaisha.com/pdf_test.pdf'
 
 const FROM_EMAIL = process.env.RESEND_FROM ?? 'onboarding@resend.dev'
 
