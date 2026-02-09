@@ -37,7 +37,7 @@ export function Breadcrumb() {
         articles: '記事一覧',
         about: 'サイトについて',
         contact: 'お問い合わせ',
-        newsletter: 'メルマガ',
+        newsletter: '医科歯科連携マニュアル・フォーマット',
         privacy: 'プライバシーポリシー',
         terms: '利用規約',
         search: '検索結果',

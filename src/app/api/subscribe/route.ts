@@ -136,39 +136,12 @@ export async function POST(request: Request) {
       ? '【医者と歯医者の交換日記】医療従事者向けメルマガ登録ありがとうございます'
       : '【医者と歯医者の交換日記】メルマガ登録ありがとうございます'
 
-    const pdfSection = `
-      <div style="margin:24px 0; padding:20px; background:#f8f9fa; border-radius:8px; border:1px solid #e9ecef;">
-        <p style="margin:0 0 12px; font-size:15px; font-weight:bold; color:#333;">📎 ご登録特典</p>
-        <p style="margin:0 0 16px; font-size:14px; color:#495057; line-height:1.6;">医科歯科連携や現場で役立つ資料をPDFでご用意しました。下のボタンからご覧・ダウンロードいただけます。</p>
-        <table cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:collapse;"><tr>
-          <td style="border-radius:6px; background:#2563eb;"><a href="${WELCOME_PDF_URL}" target="_blank" rel="noopener noreferrer" style="display:inline-block; padding:12px 24px; font-size:14px; font-weight:bold; color:#ffffff; text-decoration:none;">資料を開く（PDF）</a></td>
-        </tr></table>
-        <p style="margin:12px 0 0; font-size:12px; color:#868e96;">※メールによってはPDFが表示されない場合があります。その場合は上記リンクをクリックしてください。</p>
-      </div>
-    `
+    // 短いHTMLにし、Gmail等の「クリップ（…で折りたたみ）」を避ける
+    const pdfBlock = `<p style="margin:16px 0; font-size:14px; color:#495057;">登録特典の<strong>医科歯科連携マニュアル＆フォーマット</strong>（PDF）は<a href="${WELCOME_PDF_URL}" target="_blank" rel="noopener noreferrer" style="color:#2563eb;">こちら</a>からダウンロード・ご覧いただけます。</p>`
 
     const welcomeBody = isMedical
-      ? `
-        <div style="font-family: sans-serif; max-width:560px; color:#212529;">
-          <p style="font-size:16px; line-height:1.7;">${name ? `${name}様` : '登録者様'}</p>
-          <p style="font-size:15px; line-height:1.7;">医者と歯医者の交換日記、医療従事者向けメルマガへご登録いただき、ありがとうございます。</p>
-          ${profession ? `<p style="font-size:14px; color:#495057;">職種：${profession}</p>` : ''}
-          <p style="font-size:15px; line-height:1.7;">今後は医科歯科連携や現場で役立つ情報をお届けしてまいります。</p>
-          ${pdfSection}
-          <hr style="border:none; border-top:1px solid #dee2e6; margin:28px 0;" />
-          <p style="font-size:12px; color:#868e96;">医者と歯医者の交換日記</p>
-        </div>
-      `
-      : `
-        <div style="font-family: sans-serif; max-width:560px; color:#212529;">
-          <p style="font-size:16px; line-height:1.7;">${name ? `${name}様` : '登録者様'}</p>
-          <p style="font-size:15px; line-height:1.7;">医者と歯医者の交換日記メルマガへご登録いただき、ありがとうございます。</p>
-          <p style="font-size:15px; line-height:1.7;">医療・歯科に関するわかりやすい情報をお届けしてまいります。</p>
-          ${pdfSection}
-          <hr style="border:none; border-top:1px solid #dee2e6; margin:28px 0;" />
-          <p style="font-size:12px; color:#868e96;">医者と歯医者の交換日記</p>
-        </div>
-      `
+      ? `<div style="font-family:sans-serif;max-width:560px;color:#212529;"><p style="font-size:16px;line-height:1.6;">${name ? `${name}様` : '登録者様'}</p><p style="font-size:15px;line-height:1.6;">医者と歯医者の交換日記、医療従事者向けメルマガへご登録いただき、ありがとうございます。</p>${profession ? `<p style="font-size:14px;color:#495057;">職種：${profession}</p>` : ''}<p style="font-size:15px;line-height:1.6;">今後は医科歯科連携や現場で役立つ情報をお届けしてまいります。</p>${pdfBlock}<hr style="border:none;border-top:1px solid #dee2e6;margin:24px 0;" /><p style="font-size:12px;color:#868e96;">医者と歯医者の交換日記</p></div>`
+      : `<div style="font-family:sans-serif;max-width:560px;color:#212529;"><p style="font-size:16px;line-height:1.6;">${name ? `${name}様` : '登録者様'}</p><p style="font-size:15px;line-height:1.6;">医者と歯医者の交換日記メルマガへご登録いただき、ありがとうございます。</p><p style="font-size:15px;line-height:1.6;">医療・歯科に関するわかりやすい情報をお届けしてまいります。</p>${pdfBlock}<hr style="border:none;border-top:1px solid #dee2e6;margin:24px 0;" /><p style="font-size:12px;color:#868e96;">医者と歯医者の交換日記</p></div>`
 
     const { data, error } = await resend.emails.send({
       from: FROM_EMAIL,
