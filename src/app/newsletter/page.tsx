@@ -2,22 +2,34 @@ import { Metadata } from 'next'
 import NewsletterForm from '@/components/forms/NewsletterForm'
 
 export const metadata: Metadata = {
-  title: 'メルマガ申し込み',
+  title: '医科歯科連携マニュアル＆フォーマット ダウンロード',
   description:
-    '医者と歯医者の交換日記のメルマガにご登録ください。最新の医療情報や歯科情報をお届けします。',
+    '医科歯科連携マニュアルとフォーマットをダウンロードできます。登録後、メールでダウンロード用リンクをお届けします。医者と歯医者の交換日記のメルマガにも同時にご登録いただきます。',
 }
 
 export default function NewsletterPage() {
   return (
     <div className="min-h-screen bg-white py-12">
       <div className="container mx-auto max-w-4xl px-4">
-        <h1 className="mb-8 text-3xl font-bold text-[color:var(--foreground)]">
-          メルマガ申し込み
+        <h1 className="mb-4 text-3xl font-bold text-[color:var(--foreground)]">
+          医科歯科連携マニュアル＆フォーマット ダウンロードページ
         </h1>
 
-        <p className="mb-8 text-sm text-gray-600">
-          医者と歯医者の交換日記の最新情報をお届けします
-        </p>
+        <div className="mb-8 rounded-lg border border-gray-200 bg-gray-50 px-5 py-4">
+          <h2 className="mb-2 text-lg font-semibold text-[color:var(--foreground)]">
+            登録特典のPDFについて
+          </h2>
+          <p className="mb-3 text-sm leading-7 text-gray-700">
+            ご登録いただいた方には、
+            <strong>医科歯科連携マニュアル＆フォーマット</strong>
+            をPDFでお届けします。
+            現場でそのまま使えるチェックリストや連携のポイント、フォーマット例をまとめた資料です。
+            下のフォームからメルマガに登録すると、登録完了メールにダウンロード用リンクが記載されます。
+          </p>
+          <p className="text-sm text-gray-600">
+            あわせて、医者と歯医者の交換日記の最新情報や医療・歯科のお役立ち情報をメールでお届けします。
+          </p>
+        </div>
 
         <div className="mb-10">
           <NewsletterForm />
