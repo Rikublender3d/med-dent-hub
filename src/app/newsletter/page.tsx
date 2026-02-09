@@ -15,7 +15,7 @@ export default function NewsletterPage() {
           医科歯科連携マニュアル＆フォーマット ダウンロードページ
         </h1>
 
-        <div className="mb-8 rounded-lg border border-gray-200 bg-gray-50 p-5">
+        <div className="mb-8 rounded-lg border border-gray-200 bg-gray-50 px-5 py-4">
           <h2 className="mb-2 text-lg font-semibold text-[color:var(--foreground)]">
             登録特典のPDFについて
           </h2>

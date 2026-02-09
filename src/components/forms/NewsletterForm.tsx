@@ -72,13 +72,7 @@ export default function NewsletterForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="rounded-lg bg-white p-6">
-      <h2 className="mb-6 text-center text-2xl font-bold text-gray-800">
-        医者と歯医者の交換日記
-        <br />
-        メールマガジン登録
-      </h2>
-
+    <form onSubmit={handleSubmit} className="rounded-lg bg-white px-6 py-5">
       <div className="mb-4">
         <label className="mb-2 block text-sm font-medium text-gray-700">
           メールアドレス <span className="text-red-500">*</span>
