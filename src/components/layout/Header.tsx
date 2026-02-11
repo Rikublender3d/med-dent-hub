@@ -24,6 +24,7 @@ function NavLink({
     <Link
       href={href}
       onClick={onClick}
+      suppressHydrationWarning
       className={`flex items-center gap-1 px-3 py-2 text-sm font-medium transition-colors ${
         isActive
           ? 'text-[color:var(--accent)]'
@@ -169,7 +170,6 @@ export function Header() {
             )}
           </div>
           <NavLink href="/about" label="サイトについて" />
-          <NavLink href="/newsletter" label="メルマガ" />
         </nav>
 
         {/* Desktop Search Bar */}
@@ -225,7 +225,7 @@ export function Header() {
             href="/newsletter"
             className="hidden rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 xl:block"
           >
-            メルマガ登録
+            医科歯科連携マニュアルDL
           </Link>
         </div>
       </div>
@@ -271,7 +271,7 @@ export function Header() {
               />
               <NavLink
                 href="/newsletter"
-                label="メルマガ"
+                label="医科歯科連携マニュアルDL"
                 onClick={() => setTimeout(() => setIsOpen(false), 30)}
               />
             </nav>

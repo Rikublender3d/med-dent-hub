@@ -1,8 +1,10 @@
 import { NextResponse } from 'next/server'
+import { Resend } from 'resend'
 import { createCorsResponse, createCorsOptionsResponse } from '@/lib/api/cors'
 
 // 環境変数から取得（.env.localのAPPS_SCRIPT_URLと一致させる）
 const scriptUrl = process.env.APPS_SCRIPT_URL
+const RESEND_FROM = process.env.RESEND_FROM ?? 'onboarding@resend.dev'
 
 interface ContactPayload {
   name: string
@@ -18,6 +20,15 @@ interface ContactPayload {
 interface GoogleScriptResponse {
   success: boolean
   error?: string
+}
+
+function escapeHtml(s: string): string {
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
 }
 
 export async function POST(request: Request) {
@@ -98,6 +109,26 @@ export async function POST(request: Request) {
 
     if (!data.success) {
       throw new Error(data.error || 'フォームの送信に失敗しました。')
+    }
+
+    // 送信者へ確認メール（Resend）
+    const apiKey = process.env.RESEND_API_KEY
+    if (apiKey) {
+      try {
+        const resend = new Resend(apiKey)
+        const confirmHtml = `<div style="font-family:sans-serif;max-width:560px;color:#212529;"><p style="font-size:16px;line-height:1.6;">${body.name}様</p><p style="font-size:15px;line-height:1.6;">お問い合わせいただきありがとうございます。以下の内容で受け付けました。担当者より折り返しご連絡いたします。</p><hr style="border:none;border-top:1px solid #dee2e6;margin:20px 0;" /><p style="font-size:14px;color:#495057;"><strong>件名：</strong>${escapeHtml(body.subject)}</p><p style="font-size:14px;color:#495057;white-space:pre-wrap;"><strong>お問い合わせ内容：</strong><br />${escapeHtml(body.message)}</p><hr style="border:none;border-top:1px solid #dee2e6;margin:20px 0;" /><p style="font-size:12px;color:#868e96;">医者と歯医者の交換日記</p></div>`
+        const { error: sendError } = await resend.emails.send({
+          from: RESEND_FROM,
+          to: body.email,
+          subject: '【医者と歯医者の交換日記】お問い合わせを受け付けました',
+          html: confirmHtml,
+        })
+        if (sendError) {
+          console.warn('Contact confirmation email failed:', sendError.message)
+        }
+      } catch (confirmErr) {
+        console.warn('Contact confirmation email error:', confirmErr)
+      }
     }
 
     return createCorsResponse({ success: true })
