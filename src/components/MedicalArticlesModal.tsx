@@ -39,7 +39,7 @@ export default function MedicalArticlesModal() {
               href="/general"
               className="inline-flex items-center justify-center rounded-lg border-2 border-gray-300 bg-white px-6 py-3 font-semibold text-[color:var(--foreground)] transition-colors hover:bg-gray-50"
             >
-              いいえ
+              一般向けページに移動
             </Link>
           </div>
         </div>
