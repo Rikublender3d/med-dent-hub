@@ -101,10 +101,11 @@ export const ArticleSidebar = ({
             {sidebarPopular.map(({ article, endpoint }, index) => (
               <li
                 key={article.id}
-                className={`relative ${index < sidebarPopular.length - 1
-                  ? 'border-b border-gray-200'
-                  : ''
-                  }`}
+                className={`relative ${
+                  index < sidebarPopular.length - 1
+                    ? 'border-b border-gray-200'
+                    : ''
+                }`}
               >
                 <Link
                   href={`/${endpoint}/${article.id}`}
