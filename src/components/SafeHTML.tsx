@@ -3,6 +3,40 @@
 import DOMPurify from 'isomorphic-dompurify'
 import { useEffect, useState, useRef } from 'react'
 
+/**
+ * microCMS の画像 URL を最適化する（記事本文内の画像専用）
+ * @param url microCMS の画像 URL（既にクエリパラメータが付いている可能性あり）
+ * @param width 表示幅（Retina + 圧縮劣化を補うため3倍サイズを取得）
+ * @returns 最適化された画像 URL
+ */
+function optimizeMicroCMSImage(
+  url: string,
+  width: number
+): string {
+  if (!url) return url
+
+  // microCMS の画像 URL かチェック
+  if (!url.includes('microcms-assets.io')) {
+    return url
+  }
+
+  // 既存のクエリパラメータを除去して元画像URLを取得
+  const [baseUrl] = url.split('?')
+
+  // 3倍サイズを取得（Retina対応 + 圧縮の劣化を補う）
+  const targetWidth = width * 3
+
+  // クエリパラメータを追加
+  const params = new URLSearchParams({
+    w: targetWidth.toString(),
+    q: '95', // 最高画質
+    fm: 'webp', // WebP形式
+    fit: 'scale', // fit=scaleで品質を保つ
+  })
+
+  return `${baseUrl}?${params.toString()}`
+}
+
 interface SafeHTMLProps {
   html: string
   className?: string
@@ -13,8 +47,34 @@ export function SafeHTML({ html, className }: SafeHTMLProps) {
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    let processedHtml = html
+    // 記事本文内のmicroCMS画像URLを最適化
+    processedHtml = processedHtml.replace(
+      /<img[^>]+>/gi,
+      (imgTag) => {
+        // src属性を抽出
+        const srcMatch = imgTag.match(/src=["']([^"']+)["']/i)
+        if (!srcMatch) return imgTag
+
+        const url = srcMatch[1]
+
+        // microCMS画像じゃなければスキップ
+        if (!url.includes('microcms-assets.io')) return imgTag
+
+        // width属性を抽出
+        const widthMatch = imgTag.match(/width=["'](\d+)["']/i)
+        const width = widthMatch ? parseInt(widthMatch[1], 10) : 800
+
+        // 最適化
+        const optimizedUrl = optimizeMicroCMSImage(url, width)
+
+        // srcだけ置き換え
+        return imgTag.replace(/src=["'][^"']*["']/, `src="${optimizedUrl}"`)
+      }
+    )
+
     // DOMPurifyでHTMLをサニタイズ
-    const clean = DOMPurify.sanitize(html, {
+    const clean = DOMPurify.sanitize(processedHtml, {
       ALLOWED_TAGS: [
         'p',
         'br',
