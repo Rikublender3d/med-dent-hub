@@ -19,14 +19,9 @@ export default function NewsletterPage() {
           <h2 className="mb-2 text-lg font-semibold text-[color:var(--foreground)]">
             登録特典のPDFについて
           </h2>
-          <p className="mb-3 text-sm leading-7 text-gray-700">
-            ご登録いただいた方には、
-            <strong>医科歯科連携マニュアル＆フォーマット</strong>
-            をPDFでお届けします。
-            現場でそのまま使えるチェックリストや連携のポイント、フォーマット例をまとめた資料です。
-            下のフォームからメルマガに登録すると、登録完了メールにダウンロード用リンクが記載されます。
-          </p>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm leading-7 text-gray-700">
+            現場でそのまま使えるチェックリストや連携のポイント、フォーマット例をまとめた資料をダウンロードいただけます。
+            登録完了メールにダウンロード用リンクが記載されます。
             あわせて、医者と歯医者の交換日記の最新情報や医療・歯科のお役立ち情報をメールでお届けします。
           </p>
         </div>
@@ -40,7 +35,7 @@ export default function NewsletterPage() {
             個人情報の取り扱いについて
           </h2>
           <p className="leading-7 text-[color:var(--foreground)]">
-            ご登録いただいた個人情報は、メルマガ配信以外の目的では使用いたしません。
+            ご登録いただいた個人情報は、マニュアルの送付・メルマガ配信以外の目的では使用いたしません。
             詳細については、
             <a href="/privacy" className="text-[color:var(--accent)] underline">
               プライバシーポリシー

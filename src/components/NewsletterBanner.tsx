@@ -41,17 +41,17 @@ export default function NewsletterBanner() {
                 <IoClose className="h-5 w-5" />
               </button>
               <div className="pr-6">
-                <h3 className="mb-2 text-xl font-bold">メールマガジン</h3>
+                <h3 className="mb-2 text-xl font-bold">
+                  医科歯科連携マニュアル
+                </h3>
                 <p className="mb-4 text-sm opacity-90">
-                  最新の医療情報をお届けします
-                  <br />
-                  無料でご購読いただけます
+                  現場で使える医科歯科連携マニュアルの無料ダウンロード
                 </p>
                 <Link
                   href="/newsletter"
                   className="inline-block rounded-full bg-white px-6 py-2 text-sm font-semibold text-[#2563EB] transition-colors duration-300 hover:bg-gray-100"
                 >
-                  メルマガ登録へ →
+                  無料ダウンロード →
                 </Link>
               </div>
             </div>
@@ -79,15 +79,17 @@ export default function NewsletterBanner() {
                 <IoClose className="h-5 w-5" />
               </button>
               <div className="flex-1 pr-8">
-                <h3 className="mb-1 text-lg font-bold">メールマガジン</h3>
+                <h3 className="mb-1 text-lg font-bold">
+                  医科歯科連携マニュアル
+                </h3>
                 <p className="mb-3 text-xs opacity-90">
-                  最新の医療情報をお届けします
+                  現場で使える医科歯科連携マニュアルの無料ダウンロード
                 </p>
                 <Link
                   href="/newsletter"
                   className="inline-block rounded-full bg-white px-4 py-2 text-xs font-semibold text-[#2563EB] transition-colors duration-300 hover:bg-gray-100"
                 >
-                  メルマガ登録へ →
+                  無料ダウンロード →
                 </Link>
               </div>
             </div>
