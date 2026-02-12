@@ -81,15 +81,15 @@ export const ArticleSidebar = ({
               />
             </svg>
           </div>
-          <h3 className="mb-2 text-lg font-semibold">メルマガ登録</h3>
+          <h3 className="mb-2 text-lg font-semibold">医科歯科連携マニュアル</h3>
           <p className="mb-4 text-sm opacity-90">
-            最新の医療情報をメールでお届け
+            現場で使える医科歯科連携マニュアルの無料ダウンロード
           </p>
           <Link
-            href="/about"
+            href="/newsletter"
             className="inline-block rounded-lg bg-white px-4 py-2 text-sm font-medium text-[color:var(--accent)] hover:bg-gray-100"
           >
-            登録する
+            無料ダウンロード
           </Link>
         </div>
         {/* 人気記事 */}
