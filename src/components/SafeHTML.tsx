@@ -6,10 +6,10 @@ import { useEffect, useState, useRef } from 'react'
 /**
  * microCMS の画像 URL を最適化する（記事本文内の画像専用）
  * @param url microCMS の画像 URL（既にクエリパラメータが付いている可能性あり）
- * @param width 表示幅（Retina + 圧縮劣化を補うため3倍サイズを取得）
+ * @param width 表示幅
  * @returns 最適化された画像 URL
  */
-function optimizeMicroCMSImage(url: string, width: number): string {
+function optimizeMicroCMSImage(url: string, _width: number): string {
   if (!url) return url
 
   // microCMS の画像 URL かチェック
@@ -20,15 +20,15 @@ function optimizeMicroCMSImage(url: string, width: number): string {
   // 既存のクエリパラメータを除去して元画像URLを取得
   const [baseUrl] = url.split('?')
 
-  // 3倍サイズを取得（Retina対応 + 圧縮の劣化を補う）
-  const targetWidth = width * 3
+  // 指定されたサイズで取得
+  // const targetWidth = width
 
   // クエリパラメータを追加
   const params = new URLSearchParams({
-    w: targetWidth.toString(),
+    // w: targetWidth.toString(),
     q: '95', // 最高画質
     fm: 'webp', // WebP形式
-    fit: 'scale', // fit=scaleで品質を保つ
+    // fit: 'scale', // fit=scaleで品質を保つ
   })
 
   return `${baseUrl}?${params.toString()}`
