@@ -11,6 +11,12 @@ export default function NewsletterPage() {
   return (
     <div className="min-h-screen bg-white py-12">
       <div className="container mx-auto max-w-4xl px-4">
+        <div className="mb-8 rounded-lg border-2 border-amber-200 bg-amber-50 px-5 py-4">
+          <p className="text-base leading-7 text-amber-900">
+            資料は現在準備中です。出来上がり次第メールをお送りいたしますので下記のフォームにご入力ください。
+          </p>
+        </div>
+
         <h1 className="mb-4 text-3xl font-bold text-[color:var(--foreground)]">
           医科歯科連携マニュアル＆フォーマット ダウンロードページ
         </h1>
