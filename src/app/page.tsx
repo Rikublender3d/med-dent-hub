@@ -168,6 +168,7 @@ export default async function Home() {
       )}
 
       {/* Featured Articles - おすすめ記事 */}
+      {(featuredArticles.length > 0 || medicalFeaturedArticles.length > 0) && (
       <section className="bg-white py-16">
         <div className="container mx-auto px-4">
           <h2 className="mb-8 text-2xl font-bold text-[color:var(--foreground)]">
@@ -227,6 +228,7 @@ export default async function Home() {
           )}
         </div>
       </section>
+      )}
 
       {/* Newsletter Floating Banner */}
       <NewsletterBanner />
