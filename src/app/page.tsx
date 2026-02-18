@@ -168,65 +168,67 @@ export default async function Home() {
       )}
 
       {/* Featured Articles - おすすめ記事 */}
-      <section className="bg-white py-16">
-        <div className="container mx-auto px-4">
-          <h2 className="mb-8 text-2xl font-bold text-[color:var(--foreground)]">
-            おすすめ記事
-          </h2>
+      {(featuredArticles.length > 0 || medicalFeaturedArticles.length > 0) && (
+        <section className="bg-white py-16">
+          <div className="container mx-auto px-4">
+            <h2 className="mb-8 text-2xl font-bold text-[color:var(--foreground)]">
+              おすすめ記事
+            </h2>
 
-          {/* 一般向け */}
-          {featuredArticles.length > 0 && (
-            <div className="mb-12">
-              <h3 className="mb-6 text-xl font-bold text-[color:var(--foreground)]">
-                一般の方向け
-              </h3>
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {featuredArticles.slice(0, 9).map((article) => (
-                  <ArticleCard
-                    key={article.id}
-                    article={article}
-                    endpoint="general"
-                  />
-                ))}
+            {/* 一般向け */}
+            {featuredArticles.length > 0 && (
+              <div className="mb-12">
+                <h3 className="mb-6 text-xl font-bold text-[color:var(--foreground)]">
+                  一般の方向け
+                </h3>
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                  {featuredArticles.slice(0, 9).map((article) => (
+                    <ArticleCard
+                      key={article.id}
+                      article={article}
+                      endpoint="general"
+                    />
+                  ))}
+                </div>
+                <div className="mt-8 text-center">
+                  <Link
+                    href="/general"
+                    className="inline-flex items-center gap-2 rounded-lg bg-[color:var(--accent)] px-6 py-3 text-white transition-colors hover:bg-[color:var(--accent)]/90"
+                  >
+                    もっと見る
+                  </Link>
+                </div>
               </div>
-              <div className="mt-8 text-center">
-                <Link
-                  href="/general"
-                  className="inline-flex items-center gap-2 rounded-lg bg-[color:var(--accent)] px-6 py-3 text-white transition-colors hover:bg-[color:var(--accent)]/90"
-                >
-                  もっと見る
-                </Link>
-              </div>
-            </div>
-          )}
+            )}
 
-          {/* 医療従事者向け */}
-          {medicalFeaturedArticles.length > 0 && (
-            <div>
-              <h3 className="mb-6 text-xl font-bold text-[color:var(--foreground)]">
-                医療従事者向け
-              </h3>
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {medicalFeaturedArticles.slice(0, 9).map((article) => (
-                  <ArticleCard
-                    key={article.id}
-                    article={article}
-                    endpoint="medical-articles"
-                  />
-                ))}
+            {/* 医療従事者向け */}
+            {medicalFeaturedArticles.length > 0 && (
+              <div>
+                <h3 className="mb-6 text-xl font-bold text-[color:var(--foreground)]">
+                  医療従事者向け
+                </h3>
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                  {medicalFeaturedArticles.slice(0, 9).map((article) => (
+                    <ArticleCard
+                      key={article.id}
+                      article={article}
+                      endpoint="medical-articles"
+                    />
+                  ))}
+                </div>
+                <div className="mt-8 text-center">
+                  <Link
+                    href="/medical-articles"
+                    className="inline-flex items-center gap-2 rounded-lg bg-[color:var(--accent)] px-6 py-3 text-white transition-colors hover:bg-[color:var(--accent)]/90"
+                  >
+                    もっと見る
+                  </Link>
+                </div>
               </div>
-              <div className="mt-8 text-center">
-                <Link
-                  href="/medical-articles"
-                  className="inline-flex items-center gap-2 rounded-lg bg-[color:var(--accent)] px-6 py-3 text-white transition-colors hover:bg-[color:var(--accent)]/90"
-                >
-                  もっと見る
-                </Link>
-              </div>
-            </div>
-          )}
-        </div>
-      </section>
+            )}
+          </div>
+        </section>
+      )}
 
       {/* Newsletter Floating Banner */}
       <NewsletterBanner />
