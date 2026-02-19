@@ -143,7 +143,7 @@ export default function PrivacyPage() {
           <p className="mb-3 leading-7 text-[color:var(--foreground)]">
             個人情報の取扱いに関するお問い合わせは、以下までご連絡ください。
           </p>
-          <address className="not-italic leading-8 text-[color:var(--foreground)]">
+          <address className="leading-8 text-[color:var(--foreground)] not-italic">
             <p>住所：東京都豊島区西池袋3丁目21番13-1710号</p>
             <p>法人名：一般社団法人正しい医療知識を広める会</p>
             <p>代表者：関　秀行（代表理事）</p>
