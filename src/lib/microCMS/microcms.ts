@@ -274,6 +274,18 @@ export const getMedicalArticleById = async (id: string) => {
   return data
 }
 
+export const getDraftMedicalArticle = async (id: string, draftKey: string) => {
+  const data = await client.get<Article>({
+    endpoint: 'medical-articles',
+    contentId: id,
+    queries: {
+      draftKey,
+      depth: 2,
+    },
+  })
+  return data
+}
+
 /**
  * 下書き記事を取得（プレビュー用）
  * @param id 記事ID

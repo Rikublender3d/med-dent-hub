@@ -9,7 +9,7 @@ import { useEffect, useState, useRef } from 'react'
  * @param width 表示幅
  * @returns 最適化された画像 URL
  */
-function optimizeMicroCMSImage(url: string, _width: number): string {
+function optimizeMicroCMSImage(url: string): string {
   if (!url) return url
 
   // microCMS の画像 URL かチェック
@@ -56,12 +56,8 @@ export function SafeHTML({ html, className }: SafeHTMLProps) {
       // microCMS画像じゃなければスキップ
       if (!url.includes('microcms-assets.io')) return imgTag
 
-      // width属性を抽出
-      const widthMatch = imgTag.match(/width=["'](\d+)["']/i)
-      const width = widthMatch ? parseInt(widthMatch[1], 10) : 800
-
       // 最適化
-      const optimizedUrl = optimizeMicroCMSImage(url, width)
+      const optimizedUrl = optimizeMicroCMSImage(url)
 
       // srcだけ置き換え
       return imgTag.replace(/src=["'][^"']*["']/, `src="${optimizedUrl}"`)
