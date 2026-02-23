@@ -1,9 +1,5 @@
 import { Suspense } from 'react'
-import {
-  getGeneralArticles,
-  getCategories,
-  getTags,
-} from '@/lib/microCMS/microcms'
+import { getArticles, getCategories, getTags } from '@/lib/microCMS/microcms'
 import { ArticleCard } from '@/components/ArticleCard'
 import FilterSidebar from '@/components/FilterSidebar'
 import Link from 'next/link'
@@ -45,10 +41,14 @@ export default async function ArticlesPage({ searchParams }: Props) {
   const categoryId = resolveParam(resolvedParams, 'category')
   const tagIds = resolveArrayParam(resolvedParams, 'tag')
 
-  const { contents } = await getGeneralArticles(
+  const { contents } = await getArticles(
     categoryId || tagIds
-      ? { categoryId, tagIds: tagIds && tagIds.length > 0 ? tagIds : undefined }
-      : undefined
+      ? {
+          endpoint: 'general',
+          categoryId,
+          tagIds: tagIds && tagIds.length > 0 ? tagIds : undefined,
+        }
+      : { endpoint: 'general' }
   )
   const [categoriesRes, tagsRes] = await Promise.all([
     getCategories(),

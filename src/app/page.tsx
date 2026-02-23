@@ -1,7 +1,6 @@
 import {
   getArticles,
   getFeaturedArticles,
-  getMedicalFeaturedArticles,
   getTags,
 } from '@/lib/microCMS/microcms'
 import { ArticleCard } from '@/components/ArticleCard'
@@ -16,8 +15,8 @@ export default async function Home() {
     await Promise.all([
       getArticles(),
       getTags(),
-      getFeaturedArticles(5), // 多めに取得してカテゴリ別に分ける
-      getMedicalFeaturedArticles(5), // 多めに取得してカテゴリ別に分ける
+      getFeaturedArticles(5, 'general'),
+      getFeaturedArticles(5, 'medical-articles'),
     ])
 
   const allContents = allArticlesRes.contents

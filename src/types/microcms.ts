@@ -2,6 +2,11 @@ import { NextRequest, NextResponse } from 'next/server'
 /** 記事のエンドポイント。path は `/${endpoint}/${id}` で組み立てる */
 export type Endpoint = 'general' | 'medical-articles'
 
+/** 文字列が Endpoint か検証 */
+export function isEndpoint(s: string): s is Endpoint {
+  return s === 'general' || s === 'medical-articles'
+}
+
 /** microCMS の関連記事で「ID + エンドポイント」形式にした場合の型 */
 export type RelatedArticleRef = {
   id: string

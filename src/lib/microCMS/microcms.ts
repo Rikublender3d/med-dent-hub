@@ -8,12 +8,20 @@ import {
   TagResponse,
 } from '@/types/microcms'
 
+// ============================================================
+// Client
+// ============================================================
+
 export const client = createClient({
   serviceDomain: process.env.MICROCMS_SERVICE_DOMAIN!,
   apiKey: process.env.MICROCMS_API_KEY!,
 })
 
-export const getGeneralArticles = async (params?: {
+// ============================================================
+// Types
+// ============================================================
+
+type ArticleListParams = {
   q?: string
   limit?: number
   offset?: number
@@ -21,299 +29,230 @@ export const getGeneralArticles = async (params?: {
   tagId?: string
   tagIds?: string[]
   isFeatured?: boolean
-}) => {
+}
+
+type GetArticlesParams = ArticleListParams & {
+  /** 指定時は単一エンドポイントのみ、省略時は両方から取得 */
+  endpoint?: Endpoint
+}
+
+/** サイドバー用データ */
+export type SidebarData = {
+  latestArticles: ArticleWithEndpoint[]
+  categories: CategoryResponse
+  tags: TagResponse
+}
+
+// ============================================================
+// Internal helpers
+// ============================================================
+
+function buildFilters(params?: ArticleListParams): string | undefined {
   const filters: string[] = []
+
   if (params?.categoryId) {
     filters.push(`category[equals]${params.categoryId}`)
   }
-  // 複数タグ対応（tagIdsが優先）
   if (params?.tagIds && params.tagIds.length > 0) {
-    // 複数のタグをAND条件でフィルタリング
     params.tagIds.forEach((tagId) => {
       filters.push(`tags[contains]${tagId}`)
     })
   } else if (params?.tagId) {
-    // 後方互換性のため、単一タグもサポート
     filters.push(`tags[contains]${params.tagId}`)
   }
+  if (params?.isFeatured) {
+    filters.push('isFeatured[equals]true')
+  }
 
-  const data = await client.get<ArticleResponse>({
-    endpoint: 'general',
+  return filters.length > 0 ? filters.join('[and]') : undefined
+}
+
+async function fetchFromEndpoint(
+  endpoint: Endpoint,
+  params?: ArticleListParams
+): Promise<ArticleResponse> {
+  return client.get<ArticleResponse>({
+    endpoint,
     queries: {
       q: params?.q,
       limit: params?.limit,
       offset: params?.offset,
-      filters: filters.length > 0 ? filters.join('[and]') : undefined,
+      filters: buildFilters(params),
+      orders: '-publishedAt',
     },
   })
-  return data
 }
 
-export const getGeneralArticleById = async (id: string) => {
-  const data = await client.get<Article>({
-    endpoint: 'general',
-    contentId: id,
-    queries: {
-      depth: 2, // 関連記事も取得するためにdepthを指定
-    },
-  })
-  return data
+function withEndpoint(
+  contents: Article[],
+  endpoint: Endpoint
+): ArticleWithEndpoint[] {
+  return contents.map((c) => ({ ...c, endpoint }))
 }
 
-export const getCategories = async () => {
-  const data = await client.get<CategoryResponse>({
-    endpoint: 'categories',
-    queries: { limit: 50, fields: ['id', 'name'] as unknown as string },
-  })
-  return data
-}
-
-export const getGeneralArticlesByIds = async (ids: string[]) => {
-  if (!ids.length) return []
-
-  const data = await client.get<ArticleResponse>({
-    endpoint: 'general',
-    queries: {
-      ids: ids.join(','),
-      limit: ids.length,
-    },
-  })
-
-  return data.contents
-}
-
-export const getMedicalArticlesByIds = async (ids: string[]) => {
-  if (!ids.length) return []
-
-  const data = await client.get<ArticleResponse>({
-    endpoint: 'medical-articles',
-    queries: {
-      ids: ids.join(','),
-      limit: ids.length,
-    },
-  })
-
-  return data.contents
-}
+// ============================================================
+// 記事取得（統一API）
+// ============================================================
 
 /**
- * 複数IDの endpoint を一括取得（2リクエストで済む）
+ * 記事一覧を取得
+ * - endpoint 指定時: そのエンドポイントのみ
+ * - endpoint 省略時: general + medical-articles を統合（publishedAt でソート）
  */
-export const getEndpointsForIds = async (
-  ids: string[]
-): Promise<Map<string, Endpoint>> => {
-  if (!ids.length) return new Map()
-  const [general, medical] = await Promise.all([
-    getGeneralArticlesByIds(ids),
-    getMedicalArticlesByIds(ids),
+export async function getArticles(params?: GetArticlesParams) {
+  const { endpoint, ...rest } = params ?? {}
+
+  // 単一エンドポイント
+  if (endpoint) {
+    const data = await fetchFromEndpoint(endpoint, rest)
+    return {
+      contents: withEndpoint(data.contents, endpoint),
+      totalCount: data.totalCount,
+      limit: data.limit,
+      offset: data.offset,
+    }
+  }
+
+  // 両方から取得して統合
+  const [generalRes, medicalRes] = await Promise.all([
+    fetchFromEndpoint('general', rest),
+    fetchFromEndpoint('medical-articles', rest),
   ])
-  const map = new Map<string, Endpoint>()
-  general.forEach((a) => map.set(a.id, 'general'))
-  medical.forEach((a) => map.set(a.id, 'medical-articles'))
-  return map
+
+  const merged = [
+    ...withEndpoint(generalRes.contents, 'general'),
+    ...withEndpoint(medicalRes.contents, 'medical-articles'),
+  ]
+    .sort(
+      (a, b) =>
+        new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+    )
+    .slice(0, rest.limit ?? Infinity)
+
+  return {
+    contents: merged,
+    totalCount: generalRes.totalCount + medicalRes.totalCount,
+    limit: generalRes.limit,
+    offset: generalRes.offset,
+  }
 }
 
 /**
- * 記事IDからendpointを判定（単体用。複数は getEndpointsForIds を使うこと）
+ * ID 指定で記事を1件取得
+ * endpoint は必須（URLで分かるので呼び出し側で必ず渡す）
  */
-export const getEndpointByArticleId = async (id: string): Promise<Endpoint> => {
-  const map = await getEndpointsForIds([id])
-  return map.get(id) ?? 'medical-articles'
+export async function getArticleById(
+  id: string,
+  endpoint: Endpoint
+): Promise<ArticleWithEndpoint> {
+  const data = await client.get<Article>({
+    endpoint,
+    contentId: id,
+    queries: { depth: 2 },
+  })
+  return { ...data, endpoint }
 }
 
 /**
- * 両方のエンドポイントから記事IDで取得（endpoint 付き）
+ * 複数IDの記事を取得（endpoint 付き）
+ * 関連記事の表示などに使用
  */
-export const getAllArticlesByIds = async (
+export async function getArticlesByIds(
   ids: string[]
-): Promise<ArticleWithEndpoint[]> => {
+): Promise<ArticleWithEndpoint[]> {
   if (!ids.length) return []
 
-  const [articles, medicalArticles] = await Promise.all([
-    getGeneralArticlesByIds(ids),
-    getMedicalArticlesByIds(ids),
+  const [generalRes, medicalRes] = await Promise.all([
+    client
+      .get<ArticleResponse>({
+        endpoint: 'general',
+        queries: { ids: ids.join(','), limit: ids.length },
+      })
+      .catch(() => ({ contents: [] as Article[] })),
+    client
+      .get<ArticleResponse>({
+        endpoint: 'medical-articles',
+        queries: { ids: ids.join(','), limit: ids.length },
+      })
+      .catch(() => ({ contents: [] as Article[] })),
   ])
 
   const articleMap = new Map<string, ArticleWithEndpoint>()
-  articles.forEach((a) => articleMap.set(a.id, { ...a, endpoint: 'general' }))
-  medicalArticles.forEach((a) =>
+  generalRes.contents.forEach((a) =>
+    articleMap.set(a.id, { ...a, endpoint: 'general' })
+  )
+  medicalRes.contents.forEach((a) =>
     articleMap.set(a.id, { ...a, endpoint: 'medical-articles' })
   )
+
+  // リクエスト順を維持
   return ids
     .map((id) => articleMap.get(id))
     .filter((a): a is ArticleWithEndpoint => Boolean(a))
 }
 
-export const getFeaturedArticles = async (limit = 6) => {
-  const data = await client.get<ArticleResponse>({
-    endpoint: 'general',
-    queries: {
-      filters: 'isFeatured[equals]true',
-      orders: '-publishedAt',
-      limit,
-    },
-  })
-  const contentsWithEndpoint: ArticleWithEndpoint[] = data.contents.map(
-    (c) => ({
-      ...c,
-      endpoint: 'general' as const,
-    })
-  )
-  return { ...data, contents: contentsWithEndpoint }
-}
-
-export const getMedicalFeaturedArticles = async (limit = 6) => {
-  const data = await client.get<ArticleResponse>({
-    endpoint: 'medical-articles',
-    queries: {
-      filters: 'isFeatured[equals]true',
-      orders: '-publishedAt',
-      limit,
-    },
-  })
-  const contentsWithEndpoint: ArticleWithEndpoint[] = data.contents.map(
-    (c) => ({
-      ...c,
-      endpoint: 'medical-articles' as const,
-    })
-  )
-  return { ...data, contents: contentsWithEndpoint }
-}
-
-export const getTags = async () => {
-  const data = await client.get<TagResponse>({
-    endpoint: 'tags',
-    queries: { limit: 100, fields: ['id', 'name'] as unknown as string },
-  })
-  return data
-}
-
 /**
- * generalとmedical-articlesの両方から取得して統合（endpoint 付き）
+ * おすすめ記事を取得
+ * - endpoint 指定時: そのエンドポイントのおすすめのみ
+ * - endpoint 省略時: 両方から取得
  */
-export const getArticles = async (params?: {
-  q?: string
-  limit?: number
-  offset?: number
-  categoryId?: string
-  tagId?: string
-  tagIds?: string[]
-  isFeatured?: boolean
-}) => {
-  const [articlesRes, medicalArticlesRes] = await Promise.all([
-    getGeneralArticles(params),
-    getMedicalArticles(params),
-  ])
-
-  const generalWithEndpoint: ArticleWithEndpoint[] = articlesRes.contents.map(
-    (c) => ({ ...c, endpoint: 'general' as const })
-  )
-  const medicalWithEndpoint: ArticleWithEndpoint[] =
-    medicalArticlesRes.contents.map((c) => ({
-      ...c,
-      endpoint: 'medical-articles' as const,
-    }))
-  const sorted = [...generalWithEndpoint, ...medicalWithEndpoint].sort(
-    (a, b) =>
-      new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-  )
-
-  return {
-    contents: sorted,
-    totalCount: articlesRes.totalCount + medicalArticlesRes.totalCount,
-    limit: articlesRes.limit,
-    offset: articlesRes.offset,
-  }
-}
-
-// Medical Articles (医療従事者向け)
-export const getMedicalArticles = async (params?: {
-  q?: string
-  limit?: number
-  offset?: number
-  categoryId?: string
-  tagId?: string
-  tagIds?: string[]
-  isFeatured?: boolean
-}) => {
-  const filters: string[] = []
-  if (params?.categoryId) {
-    filters.push(`category[equals]${params.categoryId}`)
-  }
-  // 複数タグ対応（tagIdsが優先）
-  if (params?.tagIds && params.tagIds.length > 0) {
-    // 複数のタグをAND条件でフィルタリング
-    params.tagIds.forEach((tagId) => {
-      filters.push(`tags[contains]${tagId}`)
-    })
-  } else if (params?.tagId) {
-    // 後方互換性のため、単一タグもサポート
-    filters.push(`tags[contains]${params.tagId}`)
-  }
-
-  const data = await client.get<ArticleResponse>({
-    endpoint: 'medical-articles',
-    queries: {
-      q: params?.q,
-      limit: params?.limit,
-      offset: params?.offset,
-      filters: filters.length > 0 ? filters.join('[and]') : undefined,
-    },
-  })
-  return data
-}
-
-export const getMedicalArticleById = async (id: string) => {
-  const data = await client.get<Article>({
-    endpoint: 'medical-articles',
-    contentId: id,
-    queries: {
-      depth: 2, // 関連記事も取得するためにdepthを指定
-    },
-  })
-  return data
-}
-
-export const getDraftMedicalArticle = async (id: string, draftKey: string) => {
-  const data = await client.get<Article>({
-    endpoint: 'medical-articles',
-    contentId: id,
-    queries: {
-      draftKey,
-      depth: 2,
-    },
-  })
-  return data
+export async function getFeaturedArticles(limit = 6, endpoint?: Endpoint) {
+  return getArticles({ endpoint, isFeatured: true, limit })
 }
 
 /**
  * 下書き記事を取得（プレビュー用）
- * @param id 記事ID
- * @param draftKey 下書きキー
- * @returns 下書き記事データ
+ * endpoint は必須（プレビューURLに ?endpoint=general などを含める）
  */
-export const getDraftArticle = async (id: string, draftKey: string) => {
-  // まずgeneralエンドポイントで試す
-  try {
-    const data = await client.get<Article>({
-      endpoint: 'general',
-      contentId: id,
-      queries: {
-        draftKey,
-        depth: 2, // 関連記事も取得するためにdepthを指定
-      },
-    })
-    return data
-  } catch {
-    // generalで見つからない場合はmedical-articlesで試す
-    const data = await client.get<Article>({
-      endpoint: 'medical-articles',
-      contentId: id,
-      queries: {
-        draftKey,
-        depth: 2, // 関連記事も取得するためにdepthを指定
-      },
-    })
-    return data
+export async function getDraftArticle(
+  id: string,
+  draftKey: string,
+  endpoint: Endpoint
+): Promise<ArticleWithEndpoint> {
+  const data = await client.get<Article>({
+    endpoint,
+    contentId: id,
+    queries: { draftKey, depth: 2 },
+  })
+  return { ...data, endpoint }
+}
+
+// ============================================================
+// マスターデータ
+// ============================================================
+
+export async function getCategories() {
+  return client.get<CategoryResponse>({
+    endpoint: 'categories',
+    queries: { limit: 50, fields: ['id', 'name'] as unknown as string },
+  })
+}
+
+export async function getTags() {
+  return client.get<TagResponse>({
+    endpoint: 'tags',
+    queries: { limit: 100, fields: ['id', 'name'] as unknown as string },
+  })
+}
+
+// ============================================================
+// サイドバー共通データ
+// ============================================================
+
+/**
+ * サイドバーで使う共通データをまとめて取得
+ * 記事詳細・下書きプレビューなどで使用
+ */
+export async function getSidebarData(latestLimit = 5): Promise<SidebarData> {
+  const [articlesRes, categories, tags] = await Promise.all([
+    getArticles({ limit: latestLimit }),
+    getCategories(),
+    getTags(),
+  ])
+
+  return {
+    latestArticles: articlesRes.contents,
+    categories,
+    tags,
   }
 }

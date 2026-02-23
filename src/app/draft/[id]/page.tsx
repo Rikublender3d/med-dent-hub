@@ -1,10 +1,9 @@
 import {
   getDraftArticle,
-  getArticles,
-  getCategories,
-  getTags,
-  getAllArticlesByIds,
+  getSidebarData,
+  getArticlesByIds,
 } from '@/lib/microCMS/microcms'
+import { isEndpoint } from '@/types/microcms'
 import type { Tag } from '@/types/microcms'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -18,7 +17,9 @@ export const dynamic = 'force-dynamic'
 
 interface Props {
   params: Promise<{ id: string }> | { id: string }
-  searchParams: Promise<{ draftKey?: string }> | { draftKey?: string }
+  searchParams:
+    | Promise<{ draftKey?: string; endpoint?: string }>
+    | { draftKey?: string; endpoint?: string }
 }
 
 export default async function DraftPage({ params, searchParams }: Props) {
@@ -27,48 +28,23 @@ export default async function DraftPage({ params, searchParams }: Props) {
     searchParams instanceof Promise ? await searchParams : searchParams
 
   const { id } = resolvedParams
-  const { draftKey } = resolvedSearchParams
+  const { draftKey, endpoint } = resolvedSearchParams
 
-  // draftKeyが必須
-  if (!draftKey) {
+  // draftKey と endpoint が必須（プレビューURL例: /draft/xxx?draftKey=yyy&endpoint=general）
+  if (!draftKey || !endpoint || !isEndpoint(endpoint)) {
     notFound()
   }
 
   try {
-    // 下書き記事と関連データを取得
-    const [article, { contents: allArticles }, categoriesRes, tagsRes] =
-      await Promise.all([
-        getDraftArticle(id, draftKey),
-        getArticles(),
-        getCategories(),
-        getTags(),
-      ])
+    const [article, sidebarData] = await Promise.all([
+      getDraftArticle(id, draftKey, endpoint),
+      getSidebarData(5),
+    ])
 
-    const categories = categoriesRes.contents
-    const allTags = tagsRes.contents
-    const sortedByNewest = [...allArticles].sort(
-      (a, b) =>
-        new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-    )
-
-    // 関連記事（microCMSのrelatedarticlesフィールドから取得）
     const relatedArticles = article.relatedarticles || []
-
-    // サイドバー「人気記事」は一旦最新記事と同じ（後ほどGTMで差し替え予定）
-    const sidebarPopular = sortedByNewest.slice(0, 5)
-
-    const sidebarPopularWithEndpoint = sidebarPopular.map((a) => ({
-      article: a,
-      endpoint: a.endpoint,
-    }))
-    const sortedByNewestWithEndpoint = sortedByNewest.map((a) => ({
-      article: a,
-      endpoint: a.endpoint,
-    }))
-
     const relatedIds = relatedArticles.map((a) => a.id)
     const relatedFetched =
-      relatedIds.length > 0 ? await getAllArticlesByIds(relatedIds) : []
+      relatedIds.length > 0 ? await getArticlesByIds(relatedIds) : []
     const relatedArticlesWithEndpoint = relatedFetched.map((article) => ({
       article,
       endpoint: article.endpoint,
@@ -299,12 +275,7 @@ export default async function DraftPage({ params, searchParams }: Props) {
             </article>
 
             {/* サイドバー */}
-            <ArticleSidebar
-              categories={categories}
-              allTags={allTags}
-              sortedByNewest={sortedByNewestWithEndpoint}
-              sidebarPopular={sidebarPopularWithEndpoint}
-            />
+            <ArticleSidebar sidebarData={sidebarData} />
           </div>
         </div>
       </div>
