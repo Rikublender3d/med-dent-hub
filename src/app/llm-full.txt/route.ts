@@ -59,7 +59,8 @@ export async function GET() {
     ]
       .filter(Boolean)
       .join(' | ')
-    const body = a.content ? stripHtml(a.content) : (a.description ?? '')
+    const body =
+      (a.content ? stripHtml(a.content) : '') || (a.description ?? '')
     return `
 ### [${a.title}](${url})
 ${meta}

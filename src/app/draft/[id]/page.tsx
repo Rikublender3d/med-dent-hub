@@ -3,7 +3,7 @@ import {
   getSidebarData,
   getArticlesByIds,
 } from '@/lib/microCMS/microcms'
-import type { Endpoint } from '@/types/microcms'
+import { isEndpoint } from '@/types/microcms'
 import type { Tag } from '@/types/microcms'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -14,8 +14,6 @@ import { ArticleSidebar } from '@/components/ArticleSidebar'
 import { notFound } from 'next/navigation'
 
 export const dynamic = 'force-dynamic'
-
-const VALID_ENDPOINTS: Endpoint[] = ['general', 'medical-articles']
 
 interface Props {
   params: Promise<{ id: string }> | { id: string }
@@ -33,19 +31,13 @@ export default async function DraftPage({ params, searchParams }: Props) {
   const { draftKey, endpoint } = resolvedSearchParams
 
   // draftKey と endpoint が必須（プレビューURL例: /draft/xxx?draftKey=yyy&endpoint=general）
-  if (
-    !draftKey ||
-    !endpoint ||
-    !VALID_ENDPOINTS.includes(endpoint as Endpoint)
-  ) {
+  if (!draftKey || !endpoint || !isEndpoint(endpoint)) {
     notFound()
   }
 
-  const endpointTyped = endpoint as Endpoint
-
   try {
     const [article, sidebarData] = await Promise.all([
-      getDraftArticle(id, draftKey, endpointTyped),
+      getDraftArticle(id, draftKey, endpoint),
       getSidebarData(5),
     ])
 

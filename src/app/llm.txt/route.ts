@@ -29,6 +29,13 @@ export async function GET() {
   const categories = categoriesRes.contents
   const tags = tagsRes.contents
 
+  const excerpt = (a: (typeof generalRes.contents)[0]) => {
+    const src =
+      a.description ??
+      (a.content || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ')
+    return src.trim().slice(0, 100)
+  }
+
   const content = `# 医者と歯医者の交換日記
 
 > 医療の明日を、現場からよくする。医科歯科連携の判断に迷う場面で役立つ「現場で使える視点」をまとめたメディアです。医師・歯科医師、そして患者さんやそのご家族の判断を支える情報を発信します。詳細版は [LLM向け全文ドキュメント](${BASE_URL}/llm-full.txt) を参照してください。
@@ -66,11 +73,21 @@ ${tags.map((t) => `- [${t.name}](${BASE_URL}/articles?tag=${t.id})`).join('\n')}
 
 ## 一般向け記事（${generalRes.contents.length}件）
 
-${generalRes.contents.map((a) => `- [${a.title}](${BASE_URL}/general/${a.id})${a.description ? `: ${a.description.replace(/\n/g, ' ').slice(0, 100)}` : ''}`).join('\n')}
+${generalRes.contents
+  .map((a) => {
+    const e = excerpt(a)
+    return `- [${a.title}](${BASE_URL}/general/${a.id})${e ? `: ${e}` : ''}`
+  })
+  .join('\n')}
 
 ## 医療従事者向け記事（${medicalRes.contents.length}件）
 
-${medicalRes.contents.map((a) => `- [${a.title}](${BASE_URL}/medical-articles/${a.id})${a.description ? `: ${a.description.replace(/\n/g, ' ').slice(0, 100)}` : ''}`).join('\n')}
+${medicalRes.contents
+  .map((a) => {
+    const e = excerpt(a)
+    return `- [${a.title}](${BASE_URL}/medical-articles/${a.id})${e ? `: ${e}` : ''}`
+  })
+  .join('\n')}
 
 ## 運営
 
