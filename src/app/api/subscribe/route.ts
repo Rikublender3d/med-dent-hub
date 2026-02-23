@@ -41,6 +41,7 @@ export async function POST(request: Request) {
       yearsOfExperience,
       qualifications,
       registrationRoute,
+      fieldConcerns,
     } = body as {
       email?: string
       name?: string
@@ -51,6 +52,7 @@ export async function POST(request: Request) {
       yearsOfExperience?: string
       qualifications?: string
       registrationRoute?: string
+      fieldConcerns?: string
     }
 
     if (!email || typeof email !== 'string') {
@@ -76,6 +78,7 @@ export async function POST(request: Request) {
       yearsOfExperience: str(yearsOfExperience),
       qualifications: str(qualifications),
       registrationRoute: str(registrationRoute),
+      fieldConcerns: str(fieldConcerns),
     })
     try {
       const googleRes = await fetch(`${scriptUrl}?${params.toString()}`)
