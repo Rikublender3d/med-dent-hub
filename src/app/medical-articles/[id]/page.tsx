@@ -1,10 +1,8 @@
 import {
-  getMedicalArticleById,
-  getDraftMedicalArticle,
-  getArticles,
-  getCategories,
-  getTags,
-  getAllArticlesByIds,
+  getArticleById,
+  getDraftArticle,
+  getSidebarData,
+  getArticlesByIds,
 } from '@/lib/microCMS/microcms'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -37,41 +35,17 @@ export default async function MedicalArticlePage({
   const draftKey = resolvedSearch.draftKey
 
   try {
-    const [article, { contents: allArticles }, categoriesRes, tagsRes] =
-      await Promise.all([
-        draftKey
-          ? getDraftMedicalArticle(id, draftKey)
-          : getMedicalArticleById(id),
-        getArticles(),
-        getCategories(),
-        getTags(),
-      ])
+    const [article, sidebarData] = await Promise.all([
+      draftKey
+        ? getDraftArticle(id, draftKey, 'medical-articles')
+        : getArticleById(id, 'medical-articles'),
+      getSidebarData(5),
+    ])
 
-    const categories = categoriesRes.contents
-    const allTags = tagsRes.contents
-    const sortedByNewest = [...allArticles].sort(
-      (a, b) =>
-        new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-    )
-
-    // 関連記事（microCMSのrelatedarticlesフィールドから取得）
     const relatedArticles = article.relatedarticles || []
-
-    // サイドバー「人気記事」は一旦最新記事と同じ（後ほどGTMで差し替え予定）
-    const sidebarPopular = sortedByNewest.slice(0, 5)
-
-    const sidebarPopularWithEndpoint = sidebarPopular.map((a) => ({
-      article: a,
-      endpoint: a.endpoint,
-    }))
-    const sortedByNewestWithEndpoint = sortedByNewest.map((a) => ({
-      article: a,
-      endpoint: a.endpoint,
-    }))
-
     const relatedIds = relatedArticles.map((a) => a.id)
     const relatedFetched =
-      relatedIds.length > 0 ? await getAllArticlesByIds(relatedIds) : []
+      relatedIds.length > 0 ? await getArticlesByIds(relatedIds) : []
     const relatedArticlesWithEndpoint = relatedFetched.map((article) => ({
       article,
       endpoint: article.endpoint,
@@ -303,10 +277,7 @@ export default async function MedicalArticlePage({
 
             {/* サイドバー */}
             <ArticleSidebar
-              categories={categories}
-              allTags={allTags}
-              sortedByNewest={sortedByNewestWithEndpoint}
-              sidebarPopular={sidebarPopularWithEndpoint}
+              sidebarData={sidebarData}
               basePath="/medical-articles"
             />
           </div>

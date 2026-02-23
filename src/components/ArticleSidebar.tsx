@@ -1,28 +1,21 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import type { Article, Category, Endpoint, Tag } from '@/types/microcms'
-
-interface ArticleWithEndpoint {
-  article: Article
-  endpoint: Endpoint
-}
+import type { SidebarData } from '@/lib/microCMS/microcms'
 
 interface ArticleSidebarProps {
-  categories: Category[]
-  allTags: Tag[]
-  sortedByNewest: ArticleWithEndpoint[]
-  sidebarPopular: ArticleWithEndpoint[]
+  /** getSidebarData() の戻り値をそのまま渡す */
+  sidebarData: SidebarData
   /** フィルター・一覧リンク用のパス（例: /articles, /general） */
   basePath?: string
 }
 
 export const ArticleSidebar = ({
-  categories,
-  allTags,
-  sortedByNewest,
-  sidebarPopular,
+  sidebarData,
   basePath = '/articles',
 }: ArticleSidebarProps) => {
+  const categories = sidebarData.categories.contents
+  const allTags = sidebarData.tags.contents
+  const latestArticles = sidebarData.latestArticles
   return (
     <aside className="lg:col-span-3">
       {/* カテゴリー */}
@@ -98,27 +91,27 @@ export const ArticleSidebar = ({
             人気記事
           </h3>
           <ul>
-            {sidebarPopular.map(({ article, endpoint }, index) => (
+            {latestArticles.map((item, index) => (
               <li
-                key={article.id}
+                key={item.id}
                 className={`relative ${
-                  index < sidebarPopular.length - 1
+                  index < latestArticles.length - 1
                     ? 'border-b border-gray-200'
                     : ''
                 }`}
               >
                 <Link
-                  href={`/${endpoint}/${article.id}`}
+                  href={`/${item.endpoint}/${item.id}`}
                   className="flex items-center gap-3 py-4 transition-opacity hover:opacity-80"
                 >
                   <span className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-blue-500 text-sm font-bold text-white">
                     {index + 1}
                   </span>
-                  {article.eyecatch && (
+                  {item.eyecatch && (
                     <div className="relative h-16 w-24 flex-shrink-0 overflow-hidden rounded">
                       <Image
-                        src={article.eyecatch.url}
-                        alt={article.title}
+                        src={item.eyecatch.url}
+                        alt={item.title}
                         fill
                         className="object-cover"
                         sizes="96px"
@@ -126,7 +119,7 @@ export const ArticleSidebar = ({
                     </div>
                   )}
                   <span className="line-clamp-2 flex-1 text-sm font-medium text-[color:var(--foreground)]">
-                    {article.title}
+                    {item.title}
                   </span>
                 </Link>
               </li>
@@ -140,17 +133,17 @@ export const ArticleSidebar = ({
             最新記事
           </h3>
           <ul className="space-y-4">
-            {sortedByNewest.slice(0, 5).map(({ article, endpoint }) => (
-              <li key={article.id}>
+            {latestArticles.slice(0, 5).map((item) => (
+              <li key={item.id}>
                 <Link
-                  href={`/${endpoint}/${article.id}`}
+                  href={`/${item.endpoint}/${item.id}`}
                   className="block rounded-lg p-3 hover:bg-gray-50"
                 >
                   <h4 className="mb-1 line-clamp-2 text-sm font-medium text-[color:var(--foreground)]">
-                    {article.title}
+                    {item.title}
                   </h4>
                   <time className="text-xs text-gray-500">
-                    {new Date(article.publishedAt).toLocaleDateString('ja-JP')}
+                    {new Date(item.publishedAt).toLocaleDateString('ja-JP')}
                   </time>
                 </Link>
               </li>
