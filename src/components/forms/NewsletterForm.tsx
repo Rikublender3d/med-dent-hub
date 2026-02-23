@@ -13,6 +13,7 @@ export default function NewsletterForm() {
     yearsOfExperience: '',
     qualifications: '',
     registrationRoute: '',
+    fieldConcerns: '',
   }
   const [formData, setFormData] = useState(initialFormData)
   const [agreedToTerms, setAgreedToTerms] = useState(false)
@@ -255,6 +256,22 @@ export default function NewsletterForm() {
           <option value="紹介">紹介</option>
           <option value="セミナー">セミナー</option>
         </select>
+      </div>
+
+      <div className="mb-6">
+        <label className="mb-2 block text-sm font-medium text-gray-700">
+          現場でのお悩み（任意）
+        </label>
+        <textarea
+          value={formData.fieldConcerns}
+          onChange={(e) =>
+            setFormData({ ...formData, fieldConcerns: e.target.value })
+          }
+          disabled={isLoading}
+          rows={3}
+          className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
+          placeholder="臨床現場で感じているお悩み等"
+        />
       </div>
 
       <div className="mb-6">
