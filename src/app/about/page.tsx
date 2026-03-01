@@ -344,7 +344,7 @@ export default function AboutPage() {
                   </div>
                   <div className="rounded-lg border border-gray-200 bg-white p-6">
                     <h3 className="mb-2 text-xl font-semibold text-[color:var(--foreground)]">
-                      医療法人社団芯聖会
+                      一般社団法人 未来医療連携機構
                     </h3>
                     <Link
                       href="https://shinsei-kai.jp/"

@@ -31,6 +31,7 @@ export interface Article {
   }
   tags?: Tag[]
   relatedarticles?: (Article | RelatedArticleRef)[]
+  author?: Author
 }
 
 /** 一覧取得時に付与。path は `/${endpoint}/${id}` */
@@ -71,6 +72,33 @@ export interface TagResponse {
   totalCount: number
   offset: number
   limit: number
+}
+
+export type SnsPlatform =
+  | 'Twitter(新X)'
+  | 'Facebook'
+  | 'Instagram'
+  | 'Youtube'
+  | 'Note'
+  | 'LinkedIn'
+  | 'Other'
+
+export interface SnsLink {
+  fieldId: 'snsLink'
+  platform?: SnsPlatform[]
+  link?: string
+}
+
+export interface Author {
+  name: string
+  avatar: {
+    url: string
+    width: number
+    height: number
+  }
+  role: string
+  bio?: string
+  sns?: SnsLink[]
 }
 export function middleware(request: NextRequest) {
   const referer = request.headers.get('referer')

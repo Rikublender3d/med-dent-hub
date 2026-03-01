@@ -5,6 +5,7 @@ import './globals.css'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { Breadcrumb } from '@/components/layout/Breadcrumb'
+import { getTags } from '@/lib/microCMS/microcms'
 import { GoogleTagManager } from '@/components/analytics/GoogleTagManager'
 import { GoogleTagManagerNoScript } from '@/components/analytics/GoogleTagManager'
 import { AutoBtnId } from '@/components/analytics/AutoBtnId'
@@ -49,11 +50,14 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const tagsRes = await getTags()
+  const tags = tagsRes.contents.map(({ id, name }) => ({ id, name }))
+
   return (
     <html lang="ja" suppressHydrationWarning>
       <head>
@@ -62,7 +66,7 @@ export default function RootLayout({
       <body className={`${zenKakuGothicNew.variable} antialiased`}>
         <GoogleTagManagerNoScript />
         <AutoBtnId />
-        <Header />
+        <Header tags={tags} />
         <Suspense fallback={null}>
           <Breadcrumb />
         </Suspense>

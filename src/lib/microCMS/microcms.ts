@@ -7,6 +7,7 @@ import {
   CategoryResponse,
   TagResponse,
 } from '@/types/microcms'
+import { fetchPopularArticleIds } from '@/lib/analytics/ga4'
 
 // ============================================================
 // Client
@@ -39,6 +40,8 @@ type GetArticlesParams = ArticleListParams & {
 /** サイドバー用データ */
 export type SidebarData = {
   latestArticles: ArticleWithEndpoint[]
+  /** 人気記事（編集部指定 or 今後GA4等で差し替え可能）。未設定時は [] */
+  popularArticles: ArticleWithEndpoint[]
   categories: CategoryResponse
   tags: TagResponse
 }
@@ -154,6 +157,19 @@ export async function getArticleById(
 }
 
 /**
+ * 人気記事を GA4 の直近30日PV順で取得。
+ * GA4 未設定・エラー時は空配列を返す（呼び出し側でフォールバック）。
+ */
+export async function getPopularArticles(
+  limit = 5
+): Promise<ArticleWithEndpoint[]> {
+  const popular = await fetchPopularArticleIds(limit)
+  if (!popular.length) return []
+  const ids = popular.map((p) => p.id)
+  return getArticlesByIds(ids)
+}
+
+/**
  * 複数IDの記事を取得（endpoint 付き）
  * 関連記事の表示などに使用
  */
@@ -243,15 +259,20 @@ export async function getTags() {
  * サイドバーで使う共通データをまとめて取得
  * 記事詳細・下書きプレビューなどで使用
  */
-export async function getSidebarData(latestLimit = 5): Promise<SidebarData> {
-  const [articlesRes, categories, tags] = await Promise.all([
+export async function getSidebarData(
+  latestLimit = 5,
+  popularLimit = 5
+): Promise<SidebarData> {
+  const [articlesRes, popularArticles, categories, tags] = await Promise.all([
     getArticles({ limit: latestLimit }),
+    getPopularArticles(popularLimit),
     getCategories(),
     getTags(),
   ])
 
   return {
     latestArticles: articlesRes.contents,
+    popularArticles,
     categories,
     tags,
   }
