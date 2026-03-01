@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 import { Squash as Hamburger } from 'hamburger-react'
+import { SearchBar } from '@/components/SearchBar'
 
 function NavLink({
   href,
@@ -51,8 +52,11 @@ function NavLink({
   )
 }
 
-export function Header() {
-  const [query, setQuery] = useState('')
+interface HeaderProps {
+  tags?: { id: string; name: string }[]
+}
+
+export function Header({ tags = [] }: HeaderProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [isArticlesDropdownOpen, setIsArticlesDropdownOpen] = useState(false)
   const panelRef = useRef<HTMLDivElement | null>(null)
@@ -109,7 +113,7 @@ export function Header() {
 
   return (
     <header className="relative sticky top-0 z-50 bg-white shadow-sm">
-      <div className="container mx-auto flex items-center justify-between gap-6 px-6 py-2">
+      <div className="container mx-auto flex items-center justify-between gap-6 px-4 py-2 md:px-6">
         {/* Logo */}
         <Link href="/" className="flex flex-shrink-0 items-center">
           <div className="h-16 w-auto">
@@ -174,43 +178,7 @@ export function Header() {
 
         {/* Desktop Search Bar */}
         <div className="mx-8 hidden max-w-lg flex-1 lg:block">
-          <form
-            action="/search"
-            method="get"
-            className="relative"
-            onSubmit={(e) => {
-              if (!query.trim()) {
-                e.preventDefault()
-              }
-            }}
-          >
-            <input
-              type="text"
-              name="q"
-              placeholder="記事を検索..."
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 pr-9 text-sm text-[color:var(--foreground)] placeholder-gray-500 focus:border-[color:var(--accent)] focus:bg-white focus:ring-2 focus:ring-[color:var(--accent)]/20 focus:outline-none"
-            />
-            <button
-              type="submit"
-              className="absolute top-1/2 right-2 -translate-y-1/2 rounded-md p-1 text-gray-500 hover:text-[color:var(--accent)] focus:outline-none"
-            >
-              <svg
-                className="h-4 w-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-            </button>
-          </form>
+          <SearchBar tags={tags} />
         </div>
 
         {/* Actions / Mobile toggles */}
@@ -234,84 +202,66 @@ export function Header() {
       {isOpen && (
         <div
           ref={panelRef}
-          className="absolute inset-x-0 top-full z-40 max-h-[calc(100vh-72px)] overflow-y-auto border-t border-gray-100 bg-white lg:hidden"
+          className="absolute inset-x-0 top-full z-40 max-h-[calc(100vh-72px)] overflow-y-auto border-t border-[color:var(--frame)] bg-white shadow-lg lg:hidden"
         >
-          <div className="container mx-auto px-6 py-4">
-            <nav className="mb-3 grid gap-1">
-              <NavLink
+          <div className="container mx-auto px-4 py-3">
+            {/* ナビゲーション — 最小44pxタップターゲット */}
+            <nav>
+              <Link
                 href="/"
-                label="ホーム"
                 onClick={() => setTimeout(() => setIsOpen(false), 30)}
-              />
-              <div className="px-3 py-2">
-                <div className="mb-2 text-sm font-medium text-[color:var(--foreground)]">
+                className="flex min-h-[44px] items-center border-b border-[color:var(--frame)] px-2 text-[15px] font-medium text-[color:var(--foreground)] active:bg-gray-50"
+              >
+                ホーム
+              </Link>
+
+              {/* 記事一覧 */}
+              <div className="border-b border-[color:var(--frame)]">
+                <span className="flex min-h-[44px] items-center px-2 text-[15px] font-medium text-[color:var(--foreground)]">
                   記事一覧
-                </div>
-                <div className="ml-2 flex flex-col gap-1">
+                </span>
+                <div className="mb-2 ml-4 border-l-2 border-[color:var(--accent)]/25">
                   <Link
                     href="/medical-articles"
                     onClick={() => setTimeout(() => setIsOpen(false), 30)}
-                    className="px-3 py-1 text-sm text-gray-600 hover:text-[color:var(--accent)]"
+                    className="flex min-h-[44px] items-center px-4 text-sm text-gray-500 active:bg-gray-50 active:text-[color:var(--accent)]"
                   >
                     医療従事者向け
                   </Link>
                   <Link
                     href="/general"
                     onClick={() => setTimeout(() => setIsOpen(false), 30)}
-                    className="px-3 py-1 text-sm text-gray-600 hover:text-[color:var(--accent)]"
+                    className="flex min-h-[44px] items-center px-4 text-sm text-gray-500 active:bg-gray-50 active:text-[color:var(--accent)]"
                   >
                     一般向け
                   </Link>
                 </div>
               </div>
-              <NavLink
+
+              <Link
                 href="/about"
-                label="サイトについて"
                 onClick={() => setTimeout(() => setIsOpen(false), 30)}
-              />
-              <NavLink
-                href="/newsletter"
-                label="医科歯科連携マニュアルDL"
-                onClick={() => setTimeout(() => setIsOpen(false), 30)}
-              />
-            </nav>
-            <form
-              action="/search"
-              method="get"
-              className="relative"
-              onSubmit={(e) => {
-                if (!query.trim()) {
-                  e.preventDefault()
-                }
-              }}
-            >
-              <input
-                type="text"
-                name="q"
-                placeholder="記事を検索..."
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 pr-9 text-sm text-[color:var(--foreground)] placeholder-gray-500 focus:border-[color:var(--accent)] focus:bg-white focus:ring-2 focus:ring-[color:var(--accent)]/20 focus:outline-none"
-              />
-              <button
-                type="submit"
-                className="absolute top-1/2 right-2 -translate-y-1/2 rounded-md p-1 text-gray-500 hover:text-[color:var(--accent)] focus:outline-none"
+                className="flex min-h-[44px] items-center border-b border-[color:var(--frame)] px-2 text-[15px] font-medium text-[color:var(--foreground)] active:bg-gray-50"
               >
-                <svg
-                  className="h-4 w-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
-                </svg>
-              </button>
-            </form>
+                サイトについて
+              </Link>
+            </nav>
+
+            {/* 検索 + タグ常時表示 */}
+            <div className="pt-4 pb-3">
+              <SearchBar tags={tags} alwaysShowTags />
+            </div>
+
+            {/* CTA */}
+            <div className="border-t border-[color:var(--frame)] pt-4 pb-1">
+              <Link
+                href="/newsletter"
+                onClick={() => setTimeout(() => setIsOpen(false), 30)}
+                className="flex min-h-[48px] w-full items-center justify-center rounded-lg bg-[color:var(--accent)] text-sm font-medium text-white active:bg-[color:var(--accent)]/85"
+              >
+                医科歯科連携マニュアルDL
+              </Link>
+            </div>
           </div>
         </div>
       )}
