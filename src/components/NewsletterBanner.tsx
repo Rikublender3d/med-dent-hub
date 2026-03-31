@@ -2,26 +2,15 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { IoClose } from 'react-icons/io5'
 import Link from 'next/link'
-
-const STORAGE_KEY = 'newsletter-banner-dismissed'
 
 export default function NewsletterBanner() {
   const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
-    // セッション中に閉じていたら表示しない
-    if (sessionStorage.getItem(STORAGE_KEY)) return
-
     const timer = setTimeout(() => setIsVisible(true), 500)
     return () => clearTimeout(timer)
   }, [])
-
-  const handleClose = () => {
-    setIsVisible(false)
-    sessionStorage.setItem(STORAGE_KEY, '1')
-  }
 
   return (
     <>
@@ -48,14 +37,6 @@ export default function NewsletterBanner() {
               </div>
 
               <div className="relative px-6 py-6">
-                <button
-                  onClick={handleClose}
-                  className="absolute top-3 right-3 flex h-7 w-7 items-center justify-center rounded-full bg-white/10 text-white/70 backdrop-blur-sm transition-all hover:bg-white/20 hover:text-white"
-                  aria-label="閉じる"
-                >
-                  <IoClose className="h-4 w-4" />
-                </button>
-
                 <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-white/15 backdrop-blur-sm">
                   <svg
                     className="h-5 w-5 text-white"
@@ -78,25 +59,33 @@ export default function NewsletterBanner() {
                 <p className="mb-5 text-[0.8125rem] leading-relaxed text-white/70">
                   現場で使える実践ガイドを無料でお届け
                 </p>
-                <Link
-                  href="/newsletter"
-                  className="inline-flex items-center gap-2 rounded-lg bg-white px-5 py-2.5 text-[0.8125rem] font-semibold text-[color:var(--accent)] transition-all hover:gap-3 hover:shadow-lg"
-                >
-                  無料ダウンロード
-                  <svg
-                    className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={2.5}
-                    viewBox="0 0 24 24"
+                <div className="flex items-center gap-3">
+                  <Link
+                    href="/newsletter"
+                    className="inline-flex items-center gap-2 rounded-lg bg-white px-5 py-2.5 text-[0.8125rem] font-semibold text-[color:var(--accent)] transition-all hover:gap-3 hover:shadow-lg"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M13 7l5 5m0 0l-5 5m5-5H6"
-                    />
-                  </svg>
-                </Link>
+                    無料ダウンロード
+                    <svg
+                      className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={2.5}
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M13 7l5 5m0 0l-5 5m5-5H6"
+                      />
+                    </svg>
+                  </Link>
+                  <Link
+                    href="/contact"
+                    className="text-[0.8125rem] font-medium text-white/70 underline underline-offset-2 transition-colors hover:text-white"
+                  >
+                    お問い合わせ
+                  </Link>
+                </div>
               </div>
             </div>
           </motion.div>
@@ -127,13 +116,12 @@ export default function NewsletterBanner() {
               >
                 無料DL
               </Link>
-              <button
-                onClick={handleClose}
-                className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-white/15 text-white/80"
-                aria-label="閉じる"
+              <Link
+                href="/contact"
+                className="flex-shrink-0 text-xs font-medium text-white/70 underline underline-offset-2"
               >
-                <IoClose className="h-3.5 w-3.5" />
-              </button>
+                お問い合わせ
+              </Link>
             </div>
           </motion.div>
         )}

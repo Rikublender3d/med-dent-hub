@@ -1,3 +1,9 @@
+import { redirect } from 'next/navigation'
+
+// generalページ廃止のためリダイレクト対応
+// 元のコードは以下の通り：
+
+/*
 import {
   getArticleById,
   getSidebarData,
@@ -81,7 +87,6 @@ export default async function ArticlePage({ params }: Props) {
     return (
       <div className="min-h-screen bg-white">
         <div className="mx-auto max-w-7xl py-8">
-          {/* 記事ヘッダー（画像より上） */}
           <div className="mb-8">
             <div className="mb-4 flex flex-wrap items-center gap-2">
               {article.category && (
@@ -114,7 +119,6 @@ export default async function ArticlePage({ params }: Props) {
             </time>
           </div>
 
-          {/* ヒーロー画像セクション */}
           {article.eyecatch && (
             <div className="mb-8">
               <div className="relative aspect-video w-full overflow-hidden rounded-3xl">
@@ -130,28 +134,22 @@ export default async function ArticlePage({ params }: Props) {
             </div>
           )}
 
-          {/* 目次 */}
           <div className="mb-8">
             <TableOfContents html={article.content} />
           </div>
 
-          {/* メインコンテンツとサイドバー */}
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-10">
-            {/* メインコンテンツ */}
             <article className="lg:col-span-7">
-              {/* 記事本文 */}
               <div className="prose prose-lg max-w-none">
                 <SafeHTML html={article.content} />
               </div>
 
-              {/* 著者情報セクション */}
               <AuthorInfo author={article.author} />
 
               <ShareButtons
                 url={`https://www.ishatohaisha.com/general/${article.id}`}
                 title={article.title}
               />
-              {/* 関連記事 */}
               {relatedArticlesWithEndpoint.length > 0 && (
                 <div className="mt-12">
                   <h2 className="mb-6 text-2xl font-bold text-[color:var(--foreground)]">
@@ -171,7 +169,6 @@ export default async function ArticlePage({ params }: Props) {
                 </div>
               )}
 
-              {/* CTA セクション */}
               <div className="mt-12 rounded-2xl bg-gradient-to-r from-[color:var(--accent)] to-[color:var(--accent)]/90 p-8 text-center text-white">
                 <h2 className="mb-4 text-2xl font-bold">
                   医療の未来を一緒に創りませんか？
@@ -209,7 +206,6 @@ export default async function ArticlePage({ params }: Props) {
               </div>
             </article>
 
-            {/* サイドバー */}
             <ArticleSidebar sidebarData={sidebarData} basePath="/general" />
           </div>
         </div>
@@ -219,4 +215,9 @@ export default async function ArticlePage({ params }: Props) {
     console.error('❌ 記事の取得に失敗しました:', error)
     notFound()
   }
+}
+*/
+
+export default function GeneralArticlePage() {
+  redirect('/')
 }

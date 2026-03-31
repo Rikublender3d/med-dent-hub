@@ -163,7 +163,7 @@ export default function ContactForm() {
             className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:bg-gray-100"
           >
             <option value="">選択してください</option>
-            <option value="医者">医者</option>
+            <option value="医師">医師</option>
             <option value="歯科医師">歯科医師</option>
             <option value="看護師">看護師</option>
             <option value="歯科衛生士">歯科衛生士</option>

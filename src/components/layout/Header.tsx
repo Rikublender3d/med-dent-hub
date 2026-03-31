@@ -132,6 +132,8 @@ export function Header({ tags = [] }: HeaderProps) {
         {/* Desktop Navigation */}
         <nav className="ml-4 hidden flex-shrink-0 items-center gap-6 lg:flex">
           <NavLink href="/" label="ホーム" />
+          <NavLink href="/medical-articles" label="記事一覧" />
+          {/* generalページ廃止のためドロップダウンをコメントアウト
           <div ref={dropdownRef} className="relative">
             <button
               onClick={() => setIsArticlesDropdownOpen(!isArticlesDropdownOpen)}
@@ -173,6 +175,7 @@ export function Header({ tags = [] }: HeaderProps) {
               </div>
             )}
           </div>
+          */}
           <NavLink href="/about" label="サイトについて" />
         </nav>
 
@@ -215,7 +218,14 @@ export function Header({ tags = [] }: HeaderProps) {
                 ホーム
               </Link>
 
-              {/* 記事一覧 */}
+              <Link
+                href="/medical-articles"
+                onClick={() => setTimeout(() => setIsOpen(false), 30)}
+                className="flex min-h-[44px] items-center border-b border-[color:var(--frame)] px-2 text-[15px] font-medium text-[color:var(--foreground)] active:bg-gray-50"
+              >
+                記事一覧
+              </Link>
+              {/* generalページ廃止のためサブメニューをコメントアウト
               <div className="border-b border-[color:var(--frame)]">
                 <span className="flex min-h-[44px] items-center px-2 text-[15px] font-medium text-[color:var(--foreground)]">
                   記事一覧
@@ -237,6 +247,7 @@ export function Header({ tags = [] }: HeaderProps) {
                   </Link>
                 </div>
               </div>
+              */}
 
               <Link
                 href="/about"

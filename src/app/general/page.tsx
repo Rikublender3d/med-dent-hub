@@ -1,3 +1,9 @@
+import { redirect } from 'next/navigation'
+
+// generalページ廃止のためリダイレクト対応
+// 元のコードは以下の通り：
+
+/*
 import { Suspense } from 'react'
 import { getArticles, getCategories, getTags } from '@/lib/microCMS/microcms'
 import { ArticleCard } from '@/components/ArticleCard'
@@ -69,9 +75,7 @@ export default async function ArticlesPage({ searchParams }: Props) {
         </h1>
 
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
-          {/* メインコンテンツ */}
           <div className="lg:col-span-3">
-            {/* SP版: 絞り込みフィルター（上部） */}
             <div className="mb-8 lg:hidden">
               <Suspense
                 fallback={
@@ -88,7 +92,6 @@ export default async function ArticlesPage({ searchParams }: Props) {
               </Suspense>
             </div>
 
-            {/* 記事一覧 */}
             <div className="mb-4 flex items-center justify-between">
               <p className="text-sm text-gray-600">
                 {sorted.length}件の記事が見つかりました
@@ -119,7 +122,6 @@ export default async function ArticlesPage({ searchParams }: Props) {
             )}
           </div>
 
-          {/* PC版: サイドバー */}
           <aside className="hidden lg:col-span-1 lg:block">
             <div className="sticky top-24">
               <Suspense
@@ -141,4 +143,9 @@ export default async function ArticlesPage({ searchParams }: Props) {
       </div>
     </div>
   )
+}
+*/
+
+export default function GeneralPage() {
+  redirect('/')
 }
