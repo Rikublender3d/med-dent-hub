@@ -97,7 +97,7 @@ export const ArticleSidebar = ({
               医科歯科連携マニュアル
             </h3>
             <p className="mb-4 text-[0.8125rem] leading-relaxed text-white/75 lg:text-sm">
-              現場で使える実践ガイドを無料でお届け
+              現場で使える医科歯科連携マニュアルを無料でお届け
             </p>
             <span className="inline-flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-[0.8125rem] font-semibold text-[color:var(--accent)] transition-all group-hover:gap-3 group-hover:shadow-md">
               無料ダウンロード

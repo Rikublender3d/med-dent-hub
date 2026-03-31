@@ -12,6 +12,20 @@ const nextConfig: NextConfig = {
   },
   // X-Powered-Byヘッダーを無効化
   poweredByHeader: false,
+  async redirects() {
+    return [
+      {
+        source: '/general',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/general/:id',
+        destination: '/',
+        permanent: true,
+      },
+    ]
+  },
   async headers() {
     // CSPヘッダーを設定（proxy.tsと統一させる）
     // Google Analytics: script-src に googletagmanager.com + unsafe-eval、connect-src / img-src に GA ドメインを許可

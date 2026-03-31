@@ -145,9 +145,12 @@ export default async function Home() {
       {/* Latest Articles - 新着記事 */}
       <section className="bg-white py-16">
         <div className="container mx-auto px-4">
-          <h2 className="mb-8 text-2xl font-bold text-[color:var(--foreground)]">
-            新着記事
-          </h2>
+          <div className="mb-8 flex items-center gap-3">
+            <span className="h-6 w-1 rounded-full bg-[color:var(--accent)]" />
+            <h2 className="text-2xl font-bold text-[color:var(--foreground)]">
+              新着記事
+            </h2>
+          </div>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {newestArticlesWithEndpoint.map(({ article, endpoint }) => (
               <ArticleCard
@@ -159,10 +162,23 @@ export default async function Home() {
           </div>
           <div className="mt-8 text-center">
             <Link
-              href="/articles"
-              className="inline-flex items-center gap-2 rounded-lg bg-[color:var(--accent)] px-6 py-3 text-white transition-colors hover:bg-[color:var(--accent)]/90"
+              href="/medical-articles"
+              className="inline-flex items-center gap-2 rounded-lg border border-[color:var(--accent)]/20 bg-white px-6 py-3 text-sm font-medium text-[color:var(--accent)] transition-all hover:border-[color:var(--accent)] hover:shadow-sm"
             >
               もっと見る
+              <svg
+                className="h-3.5 w-3.5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
             </Link>
           </div>
         </div>
@@ -170,11 +186,14 @@ export default async function Home() {
 
       {/* Featured Keywords - 話題のキーワード */}
       {tags.length > 0 && (
-        <section className="bg-white py-12">
+        <section className="bg-[#f8f9fb] py-12">
           <div className="container mx-auto px-4">
-            <h2 className="mb-6 text-2xl font-bold text-[color:var(--foreground)]">
-              話題のキーワード
-            </h2>
+            <div className="mb-6 flex items-center gap-3">
+              <span className="h-6 w-1 rounded-full bg-[color:var(--accent)]" />
+              <h2 className="text-2xl font-bold text-[color:var(--foreground)]">
+                話題のキーワード
+              </h2>
+            </div>
             <div className="flex flex-wrap gap-3">
               {tags.map((tag) => (
                 <Link
@@ -194,9 +213,12 @@ export default async function Home() {
       {popularArticles.length > 0 && (
         <section className="bg-white py-16">
           <div className="container mx-auto px-4">
-            <h2 className="mb-8 text-2xl font-bold text-[color:var(--foreground)]">
-              人気の記事
-            </h2>
+            <div className="mb-8 flex items-center gap-3">
+              <span className="h-6 w-1 rounded-full bg-[color:var(--accent)]" />
+              <h2 className="text-2xl font-bold text-[color:var(--foreground)]">
+                人気の記事
+              </h2>
+            </div>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
               {popularArticlesWithEndpoint.map(({ article, endpoint }) => (
                 <ArticleCard
@@ -208,7 +230,7 @@ export default async function Home() {
             </div>
             <div className="mt-8 text-center">
               <Link
-                href="/articles"
+                href="/medical-articles"
                 className="inline-flex items-center gap-2 rounded-lg bg-[color:var(--accent)] px-6 py-3 text-white transition-colors hover:bg-[color:var(--accent)]/90"
               >
                 もっと見る
@@ -220,11 +242,14 @@ export default async function Home() {
 
       {/* Featured Articles - おすすめ記事 */}
       {(featuredArticles.length > 0 || medicalFeaturedArticles.length > 0) && (
-        <section className="bg-white py-16">
+        <section className="bg-[#f8f9fb] py-16">
           <div className="container mx-auto px-4">
-            <h2 className="mb-8 text-2xl font-bold text-[color:var(--foreground)]">
-              おすすめ記事
-            </h2>
+            <div className="mb-8 flex items-center gap-3">
+              <span className="h-6 w-1 rounded-full bg-[color:var(--accent)]" />
+              <h2 className="text-2xl font-bold text-[color:var(--foreground)]">
+                おすすめ記事
+              </h2>
+            </div>
 
             {/* 一般向け */}
             {featuredArticles.length > 0 && (

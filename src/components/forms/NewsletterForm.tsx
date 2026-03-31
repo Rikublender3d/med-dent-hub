@@ -120,6 +120,7 @@ export default function NewsletterForm() {
           <option value="">選択してください</option>
           <option value="医師">医師</option>
           <option value="歯科医師">歯科医師</option>
+          <option value="薬剤師">薬剤師</option>
           <option value="看護師">看護師</option>
           <option value="歯科衛生士">歯科衛生士</option>
           <option value="医療事務">医療事務</option>

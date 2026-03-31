@@ -150,10 +150,10 @@ export default function PrivacyPage() {
             <p>
               Email:{' '}
               <a
-                href="mailto:info@tadashiiiryou.or.jp"
+                href="mailto:info@ishatohaisha.com"
                 className="text-[color:var(--accent)] underline"
               >
-                info@tadashiiiryou.or.jp
+                info@ishatohaisha.com
               </a>
             </p>
           </address>

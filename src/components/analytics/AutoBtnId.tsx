@@ -42,10 +42,11 @@ export function AutoBtnId() {
       if (link.href.includes('btn_id=')) return
 
       const sourcePage = toPathId(pathnameRef.current)
-      const clickLocation = link.getAttribute('data-location') ?? 'auto'
+      const url = new URL(link.href, window.location.origin)
+      const clickLocation =
+        link.getAttribute('data-location') ?? toPathId(url.pathname)
       const btnId = `${sourcePage}--${clickLocation}`
 
-      const url = new URL(link.href, window.location.origin)
       url.searchParams.set('btn_id', btnId)
       // 相対パスで上書きし、preventDefault しないので通常のリンク遷移になる
       link.href = url.pathname + url.search + url.hash
