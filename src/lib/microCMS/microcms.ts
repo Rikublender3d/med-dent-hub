@@ -100,7 +100,7 @@ function withEndpoint(
 /**
  * 記事一覧を取得
  * - endpoint 指定時: そのエンドポイントのみ
- * - endpoint 省略時: general + medical-articles を統合（publishedAt でソート）
+ * - endpoint 省略時: medical-articles のみ（general は廃止）
  */
 export async function getArticles(params?: GetArticlesParams) {
   const { endpoint, ...rest } = params ?? {}
@@ -116,28 +116,37 @@ export async function getArticles(params?: GetArticlesParams) {
     }
   }
 
-  // 両方から取得して統合
-  const [generalRes, medicalRes] = await Promise.all([
-    fetchFromEndpoint('general', rest),
-    fetchFromEndpoint('medical-articles', rest),
-  ])
-
-  const merged = [
-    ...withEndpoint(generalRes.contents, 'general'),
-    ...withEndpoint(medicalRes.contents, 'medical-articles'),
-  ]
-    .sort(
-      (a, b) =>
-        new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-    )
-    .slice(0, rest.limit ?? Infinity)
-
+  // general 系廃止により medical-articles のみ取得
+  const medicalRes = await fetchFromEndpoint('medical-articles', rest)
   return {
-    contents: merged,
-    totalCount: generalRes.totalCount + medicalRes.totalCount,
-    limit: generalRes.limit,
-    offset: generalRes.offset,
+    contents: withEndpoint(medicalRes.contents, 'medical-articles'),
+    totalCount: medicalRes.totalCount,
+    limit: medicalRes.limit,
+    offset: medicalRes.offset,
   }
+
+  // --- general + medical-articles 統合版（廃止）---
+  // const [generalRes, medicalRes] = await Promise.all([
+  //   fetchFromEndpoint('general', rest),
+  //   fetchFromEndpoint('medical-articles', rest),
+  // ])
+  //
+  // const merged = [
+  //   ...withEndpoint(generalRes.contents, 'general'),
+  //   ...withEndpoint(medicalRes.contents, 'medical-articles'),
+  // ]
+  //   .sort(
+  //     (a, b) =>
+  //       new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+  //   )
+  //   .slice(0, rest.limit ?? Infinity)
+  //
+  // return {
+  //   contents: merged,
+  //   totalCount: generalRes.totalCount + medicalRes.totalCount,
+  //   limit: generalRes.limit,
+  //   offset: generalRes.offset,
+  // }
 }
 
 /**
@@ -178,28 +187,37 @@ export async function getArticlesByIds(
 ): Promise<ArticleWithEndpoint[]> {
   if (!ids.length) return []
 
-  const [generalRes, medicalRes] = await Promise.all([
-    client
-      .get<ArticleResponse>({
-        endpoint: 'general',
-        queries: { ids: ids.join(','), limit: ids.length },
-      })
-      .catch(() => ({ contents: [] as Article[] })),
-    client
-      .get<ArticleResponse>({
-        endpoint: 'medical-articles',
-        queries: { ids: ids.join(','), limit: ids.length },
-      })
-      .catch(() => ({ contents: [] as Article[] })),
-  ])
+  // general 系廃止により medical-articles のみ取得
+  const medicalRes = await client
+    .get<ArticleResponse>({
+      endpoint: 'medical-articles',
+      queries: { ids: ids.join(','), limit: ids.length },
+    })
+    .catch(() => ({ contents: [] as Article[] }))
 
   const articleMap = new Map<string, ArticleWithEndpoint>()
-  generalRes.contents.forEach((a) =>
-    articleMap.set(a.id, { ...a, endpoint: 'general' })
-  )
   medicalRes.contents.forEach((a) =>
     articleMap.set(a.id, { ...a, endpoint: 'medical-articles' })
   )
+
+  // --- general + medical-articles 統合版（廃止）---
+  // const [generalRes, medicalRes] = await Promise.all([
+  //   client
+  //     .get<ArticleResponse>({
+  //       endpoint: 'general',
+  //       queries: { ids: ids.join(','), limit: ids.length },
+  //     })
+  //     .catch(() => ({ contents: [] as Article[] })),
+  //   client
+  //     .get<ArticleResponse>({
+  //       endpoint: 'medical-articles',
+  //       queries: { ids: ids.join(','), limit: ids.length },
+  //     })
+  //     .catch(() => ({ contents: [] as Article[] })),
+  // ])
+  // generalRes.contents.forEach((a) =>
+  //   articleMap.set(a.id, { ...a, endpoint: 'general' })
+  // )
 
   // リクエスト順を維持
   return ids

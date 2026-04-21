@@ -5,7 +5,9 @@ import { createCorsResponse, createCorsOptionsResponse } from '@/lib/api/cors'
 
 // ドメイン検証後: RESEND_FROM="医者と歯医者の交換日記 <info@ishatohaisha.com>"
 // Segment: RESEND_SEGMENT_GENERAL（一般読者）, RESEND_SEGMENT_MEDICAL（医療従事者）
-const WELCOME_PDF_URL = 'https://www.ishatohaisha.com/pdf_test.pdf'
+const WELCOME_PDF_URL = 'https://www.ishatohaisha.com/medical-dental-manual.pdf'
+const WELCOME_TEMPLATE_URL =
+  'https://www.ishatohaisha.com/medical-dental-manual-template.docx'
 
 const FROM_EMAIL =
   process.env.RESEND_FROM ?? '医者と歯医者の交換日記 <info@ishatohaisha.com>'
@@ -141,7 +143,7 @@ export async function POST(request: Request) {
       : '【医者と歯医者の交換日記】メルマガ登録ありがとうございます'
 
     // 短いHTMLにし、Gmail等の「クリップ（…で折りたたみ）」を避ける
-    const pdfBlock = `<p style="margin:16px 0; font-size:14px; color:#495057;">登録特典の<strong>医科歯科連携マニュアル＆フォーマット</strong>（PDF）は<a href="${WELCOME_PDF_URL}" target="_blank" rel="noopener noreferrer" style="color:#2563eb;">こちら</a>からダウンロード・ご覧いただけます。</p>`
+    const pdfBlock = `<p style="margin:16px 0; font-size:14px; color:#495057;">登録特典の<strong>医科歯科連携マニュアル＆フォーマット</strong>は、<a href="${WELCOME_PDF_URL}" target="_blank" rel="noopener noreferrer" style="color:#2563eb;">PDF（第1-2章）</a>と<a href="${WELCOME_TEMPLATE_URL}" target="_blank" rel="noopener noreferrer" style="color:#2563eb;">原本テンプレート（Word）</a>からダウンロード・ご覧いただけます。</p>`
 
     const welcomeBody = isMedical
       ? `<div style="font-family:sans-serif;max-width:560px;color:#212529;"><p style="font-size:16px;line-height:1.6;">${name ? `${name}様` : '登録者様'}</p><p style="font-size:15px;line-height:1.6;">医者と歯医者の交換日記、医療従事者向けメルマガへご登録いただき、ありがとうございます。</p>${profession ? `<p style="font-size:14px;color:#495057;">職種：${profession}</p>` : ''}<p style="font-size:15px;line-height:1.6;">今後は医科歯科連携や現場で役立つ情報をお届けしてまいります。</p>${pdfBlock}<hr style="border:none;border-top:1px solid #dee2e6;margin:24px 0;" /><p style="font-size:12px;color:#868e96;">医者と歯医者の交換日記</p></div>`
