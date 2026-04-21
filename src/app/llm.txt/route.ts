@@ -10,11 +10,12 @@ import type {
 const BASE_URL = process.env.BASE_URL ?? 'https://www.ishatohaisha.com'
 
 export async function GET() {
-  const [generalRes, medicalRes, categoriesRes, tagsRes] = await Promise.all([
-    client.get<ArticleResponse>({
-      endpoint: 'general',
-      queries: { limit: 100, orders: '-publishedAt' },
-    }),
+  // general 系廃止により medical-articles のみ取得
+  const [medicalRes, categoriesRes, tagsRes] = await Promise.all([
+    // client.get<ArticleResponse>({
+    //   endpoint: 'general',
+    //   queries: { limit: 100, orders: '-publishedAt' },
+    // }),
     client.get<ArticleResponse>({
       endpoint: 'medical-articles',
       queries: { limit: 100, orders: '-publishedAt' },
@@ -29,7 +30,7 @@ export async function GET() {
   const categories = categoriesRes.contents
   const tags = tagsRes.contents
 
-  const excerpt = (a: (typeof generalRes.contents)[0]) => {
+  const excerpt = (a: (typeof medicalRes.contents)[0]) => {
     const src =
       a.description ??
       (a.content || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ')
@@ -47,8 +48,7 @@ export async function GET() {
 ## 主要ページ
 
 - [ホームページ](${BASE_URL}/): おすすめ記事・最新記事の一覧
-- [全記事一覧](${BASE_URL}/articles): 一般・医療従事者向け記事を統合表示。カテゴリ・タグでの絞り込みに対応
-- [一般向け記事](${BASE_URL}/general): 患者やご家族向けの健康・医療情報
+- [全記事一覧](${BASE_URL}/articles): 医療従事者向け記事一覧。カテゴリ・タグでの絞り込みに対応
 - [医療従事者向け記事](${BASE_URL}/medical-articles): 医師・歯科医師向けの専門記事
 - [記事検索](${BASE_URL}/search): キーワードによる記事検索
 - [このサイトについて](${BASE_URL}/about): サイトの理念と運営情報
@@ -61,7 +61,6 @@ export async function GET() {
 
 - [医師向け](${BASE_URL}/medical-articles): 口腔ケアの必要性を理解し、外来・病棟・在宅で役立つ視点を提供。糖尿病患者の歯周治療、誤嚥性肺炎予防、心疾患・抗凝固薬患者の歯科治療連携など
 - [歯科医師向け](${BASE_URL}/medical-articles): 全身管理を学ぶ入り口として、抗凝固薬の判断、高血圧・心不全患者のリスク管理、糖尿病患者の治癒遅延の医学的背景などを解説
-- [患者・ご家族向け](${BASE_URL}/general): 「医科に行くべき？歯科に相談すべき？」「持病があっても治療して大丈夫？」といった疑問に答える実用的な情報
 
 ## カテゴリ
 
@@ -71,6 +70,8 @@ ${categories.map((c) => `- [${c.name}](${BASE_URL}/articles?category=${c.id})`).
 
 ${tags.map((t) => `- [${t.name}](${BASE_URL}/articles?tag=${t.id})`).join('\n')}
 
+${
+  /* general 系廃止により 一般向け記事セクションは出力しない
 ## 一般向け記事（${generalRes.contents.length}件）
 
 ${generalRes.contents
@@ -79,7 +80,8 @@ ${generalRes.contents
     return `- [${a.title}](${BASE_URL}/general/${a.id})${e ? `: ${e}` : ''}`
   })
   .join('\n')}
-
+*/ ''
+}
 ## 医療従事者向け記事（${medicalRes.contents.length}件）
 
 ${medicalRes.contents

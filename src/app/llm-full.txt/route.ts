@@ -22,11 +22,12 @@ function stripHtml(html: string): string {
 }
 
 export async function GET() {
-  const [generalRes, medicalRes, categoriesRes, tagsRes] = await Promise.all([
-    client.get<ArticleResponse>({
-      endpoint: 'general',
-      queries: { limit: 100, orders: '-publishedAt', depth: 2 },
-    }),
+  // general 系廃止により medical-articles のみ取得
+  const [medicalRes, categoriesRes, tagsRes] = await Promise.all([
+    // client.get<ArticleResponse>({
+    //   endpoint: 'general',
+    //   queries: { limit: 100, orders: '-publishedAt', depth: 2 },
+    // }),
     client.get<ArticleResponse>({
       endpoint: 'medical-articles',
       queries: { limit: 100, orders: '-publishedAt', depth: 2 },
@@ -48,7 +49,7 @@ export async function GET() {
     })
 
   const articleBlock = (
-    a: (typeof generalRes.contents)[0],
+    a: (typeof medicalRes.contents)[0],
     endpoint: 'general' | 'medical-articles'
   ) => {
     const url = `${BASE_URL}/${endpoint}/${a.id}`
@@ -87,8 +88,7 @@ ${body}
 4. 資料ダウンロード（newsletter）
 5. プライバシーポリシー（privacy）
 6. 利用規約（terms）
-7. 一般向け記事（全文）
-8. 医療従事者向け記事（全文）
+7. 医療従事者向け記事（全文）
 
 ---
 
@@ -98,7 +98,6 @@ ${body}
 |--------|-----|
 | ホーム | ${BASE_URL}/ |
 | 全記事一覧 | ${BASE_URL}/articles |
-| 一般向け記事 | ${BASE_URL}/general |
 | 医療従事者向け | ${BASE_URL}/medical-articles |
 | 検索 | ${BASE_URL}/search |
 | このサイトについて | ${BASE_URL}/about |
@@ -180,18 +179,16 @@ URL: ${BASE_URL}/terms
 
 ---
 
-## 7. 一般向け記事（全文）${generalRes.contents.length}件
-
 `)
 
-  generalRes.contents.forEach((a) => {
-    parts.push(articleBlock(a, 'general'))
-  })
+  // general 系廃止により 一般向け記事セクションは出力しない
+  // parts.push(`## 7. 一般向け記事（全文）${generalRes.contents.length}件\n\n`)
+  // generalRes.contents.forEach((a) => {
+  //   parts.push(articleBlock(a, 'general'))
+  // })
 
   parts.push(`
----
-
-## 8. 医療従事者向け記事（全文）${medicalRes.contents.length}件
+## 7. 医療従事者向け記事（全文）${medicalRes.contents.length}件
 
 `)
 

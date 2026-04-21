@@ -7,7 +7,11 @@ interface Props {
   endpoint?: Endpoint
 }
 
-export const ArticleCard = ({ article, endpoint = 'general' }: Props) => {
+// general 系廃止により default endpoint を medical-articles に変更
+export const ArticleCard = ({
+  article,
+  endpoint = 'medical-articles',
+}: Props) => {
   return (
     <Link href={`/${endpoint}/${article.id}`} className="block">
       <article className="group h-full overflow-hidden rounded-xl bg-white shadow-sm transition-shadow hover:shadow-lg">

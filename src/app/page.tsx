@@ -13,19 +13,15 @@ import Link from 'next/link'
 export const revalidate = 60
 
 export default async function Home() {
-  const [
-    allArticlesRes,
-    tagsRes,
-    featuredRes,
-    medicalFeaturedRes,
-    popularFromIds,
-  ] = await Promise.all([
-    getArticles(),
-    getTags(),
-    getFeaturedArticles(5, 'general'),
-    getFeaturedArticles(5, 'medical-articles'),
-    getPopularArticles(9),
-  ])
+  // general 系廃止のため getFeaturedArticles(5, 'general') は呼び出さない
+  const [allArticlesRes, tagsRes, medicalFeaturedRes, popularFromIds] =
+    await Promise.all([
+      getArticles(),
+      getTags(),
+      // getFeaturedArticles(5, 'general'),
+      getFeaturedArticles(5, 'medical-articles'),
+      getPopularArticles(9),
+    ])
 
   const allContents = allArticlesRes.contents
   const tags = tagsRes.contents
@@ -38,7 +34,7 @@ export default async function Home() {
   const popularArticles =
     popularFromIds.length > 0 ? popularFromIds : sortedByNewest.slice(0, 6)
 
-  const featuredArticles = featuredRes.contents
+  // const featuredArticles = featuredRes.contents
   const medicalFeaturedArticles = medicalFeaturedRes.contents
 
   const popularArticlesWithEndpoint = popularArticles.map((article) => ({
@@ -241,7 +237,7 @@ export default async function Home() {
       )}
 
       {/* Featured Articles - おすすめ記事 */}
-      {(featuredArticles.length > 0 || medicalFeaturedArticles.length > 0) && (
+      {medicalFeaturedArticles.length > 0 && (
         <section className="bg-[#f8f9fb] py-16">
           <div className="container mx-auto px-4">
             <div className="mb-8 flex items-center gap-3">
@@ -251,7 +247,8 @@ export default async function Home() {
               </h2>
             </div>
 
-            {/* 一般向け */}
+            {/* 一般向けセクションは general 系廃止により無効化 */}
+            {/*
             {featuredArticles.length > 0 && (
               <div className="mb-12">
                 <h3 className="mb-6 text-xl font-bold text-[color:var(--foreground)]">
@@ -276,6 +273,7 @@ export default async function Home() {
                 </div>
               </div>
             )}
+            */}
 
             {/* 医療従事者向け */}
             {medicalFeaturedArticles.length > 0 && (

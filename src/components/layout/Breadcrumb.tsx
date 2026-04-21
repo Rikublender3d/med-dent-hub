@@ -44,7 +44,7 @@ export function Breadcrumb() {
         categories: 'カテゴリー',
         profile: 'プロフィール',
         'medical-articles': '医療従事者向け',
-        general: '一般の方向け',
+        // general: '一般の方向け', // general 系廃止
         draft: '下書きプレビュー',
       }
 
@@ -53,7 +53,7 @@ export function Breadcrumb() {
       } else if (
         index === paths.length - 1 &&
         (paths[0] === 'articles' ||
-          paths[0] === 'general' ||
+          // paths[0] === 'general' || // general 系廃止
           paths[0] === 'medical-articles' ||
           paths[0] === 'draft')
       ) {

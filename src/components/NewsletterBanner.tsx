@@ -6,17 +6,22 @@ import Link from 'next/link'
 
 export default function NewsletterBanner() {
   const [isVisible, setIsVisible] = useState(false)
+  const [isDismissed, setIsDismissed] = useState(false)
 
   useEffect(() => {
     const timer = setTimeout(() => setIsVisible(true), 500)
     return () => clearTimeout(timer)
   }, [])
 
+  const handleDismiss = () => setIsDismissed(true)
+
+  const show = isVisible && !isDismissed
+
   return (
     <>
       {/* ━━ デスクトップ: フローティングカード ━━ */}
       <AnimatePresence>
-        {isVisible && (
+        {show && (
           <motion.div
             initial={{ opacity: 0, y: 40, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -28,6 +33,27 @@ export default function NewsletterBanner() {
             className="fixed right-6 bottom-6 z-50 hidden w-[340px] md:block"
           >
             <div className="group relative overflow-hidden rounded-lg bg-gradient-to-br from-[#1E3A8A] to-[#2563EB] shadow-2xl shadow-blue-900/25">
+              {/* 閉じるボタン */}
+              <button
+                onClick={handleDismiss}
+                className="absolute top-2 right-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-white/15 text-white/80 transition-colors hover:bg-white/25 hover:text-white"
+                aria-label="閉じる"
+              >
+                <svg
+                  className="h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+
               {/* ジオメトリック装飾 */}
               <div className="pointer-events-none absolute inset-0">
                 <div className="absolute -top-10 -right-10 h-36 w-36 rounded-full bg-white/[0.06]" />
@@ -94,7 +120,7 @@ export default function NewsletterBanner() {
 
       {/* ━━ SP: スリムバー ━━ */}
       <AnimatePresence>
-        {isVisible && (
+        {show && (
           <motion.div
             initial={{ opacity: 0, y: 60 }}
             animate={{ opacity: 1, y: 0 }}
@@ -122,6 +148,25 @@ export default function NewsletterBanner() {
               >
                 お問い合わせ
               </Link>
+              <button
+                onClick={handleDismiss}
+                className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-white/15 text-white/80 transition-colors hover:bg-white/25 hover:text-white"
+                aria-label="閉じる"
+              >
+                <svg
+                  className="h-3.5 w-3.5"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
             </div>
           </motion.div>
         )}

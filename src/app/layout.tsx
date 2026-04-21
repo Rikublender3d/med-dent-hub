@@ -16,12 +16,15 @@ const zenKakuGothicNew = Zen_Kaku_Gothic_New({
   variable: '--font-zen-kaku-gothic-new',
 })
 
+const SITE_DESCRIPTION =
+  '医療の明日を、現場からよくする。医科歯科連携の判断に迷う場面で役立つ「現場で使える視点」をまとめたメディア。医師・歯科医師・患者の判断を支える情報を発信します。'
+
 export const metadata: Metadata = {
   title: {
     default: '医者と歯医者の交換日記',
     template: '%s - 医者と歯医者の交換日記',
   },
-  description: '医者と歯医者の交換日記',
+  description: SITE_DESCRIPTION,
   icons: {
     icon: '/favicon.png',
     shortcut: '/favicon.png',
@@ -31,6 +34,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     siteName: '医者と歯医者の交換日記',
+    description: SITE_DESCRIPTION,
     url: 'https://med-dent-hub.vercel.app',
     locale: 'ja_JP',
     images: [
@@ -44,6 +48,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
+    description: SITE_DESCRIPTION,
     creator: '@',
     site: '@',
     images: ['/1.png'],
