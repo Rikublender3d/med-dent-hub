@@ -68,9 +68,7 @@ export async function POST(request: Request) {
     const str = (v: unknown) => (typeof v === 'string' ? v : '') || ''
 
     // Google Apps Script にリクエストをプロキシ（メルマガ用。Resend と併用）
-    const scriptUrl =
-      process.env.SUBSCRIBE_SCRIPT_URL ??
-      'https://script.google.com/macros/s/AKfycbxDnimr6ZXAdCX0mHd20Z4zJvIpyj7N9IYEemqnfYFChoqnmWqcvEYW32C4Yv5yj54/exec'
+    const scriptUrl = process.env.SUBSCRIBE_SCRIPT_URL
     const params = new URLSearchParams({
       email,
       name: str(name),
@@ -84,6 +82,7 @@ export async function POST(request: Request) {
       fieldConcerns: str(fieldConcerns),
     })
     try {
+      if (!scriptUrl) throw new Error('SUBSCRIBE_SCRIPT_URL is not configured')
       const googleRes = await fetch(`${scriptUrl}?${params.toString()}`)
       const googleData = await googleRes.json()
       if (!googleRes.ok) {

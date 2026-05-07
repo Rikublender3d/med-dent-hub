@@ -30,12 +30,12 @@ export const metadata: Metadata = {
     shortcut: '/favicon.png',
     apple: '/favicon.png',
   },
-  metadataBase: new URL('https://med-dent-hub.vercel.app'),
+  metadataBase: new URL('https://www.ishatohaisha.com'),
   openGraph: {
     type: 'website',
     siteName: '医者と歯医者の交換日記',
     description: SITE_DESCRIPTION,
-    url: 'https://med-dent-hub.vercel.app',
+    url: 'https://www.ishatohaisha.com',
     locale: 'ja_JP',
     images: [
       {
