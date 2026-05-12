@@ -34,8 +34,28 @@ function applySecurityHeaders(response: NextResponse) {
   // X-Powered-Byヘッダーはnext.config.tsで無効化
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function proxy(_request: NextRequest) {
+export function proxy(request: NextRequest) {
+  if (process.env.VERCEL_ENV === 'preview') {
+    const authHeader = request.headers.get('authorization')
+    if (authHeader) {
+      const [scheme, encoded] = authHeader.split(' ')
+      if (scheme === 'Basic' && encoded) {
+        const [user, pass] = atob(encoded).split(':')
+        const validUser = process.env.BASIC_AUTH_USER ?? 'admin'
+        const validPass = process.env.BASIC_AUTH_PASS
+        if (validPass && user === validUser && pass === validPass) {
+          const response = NextResponse.next()
+          applySecurityHeaders(response)
+          return response
+        }
+      }
+    }
+    return new NextResponse('Unauthorized', {
+      status: 401,
+      headers: { 'WWW-Authenticate': 'Basic realm="Staging"' },
+    })
+  }
+
   const response = NextResponse.next()
   applySecurityHeaders(response)
   return response
