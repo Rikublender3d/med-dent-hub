@@ -347,7 +347,7 @@ export default function AboutPage() {
                       一般社団法人 未来医療連携機構
                     </h3>
                     <Link
-                      href="https://shinsei-kai.jp/"
+                      href="https://www.future-medical.jp/"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1 text-sm font-medium text-[color:var(--accent)] hover:underline"
