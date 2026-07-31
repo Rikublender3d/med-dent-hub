@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next'
-import { getArticles } from '@/lib/microCMS/microcms'
+import { getAllArticles } from '@/lib/microCMS/microcms'
 
 export const revalidate = 3600 // 1時間ごとに再生成
 
@@ -55,7 +55,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // 記事ページを取得
   let articlePages: MetadataRoute.Sitemap = []
   try {
-    const { contents } = await getArticles()
+    const { contents } = await getAllArticles()
     articlePages = contents.map((article) => ({
       url: `${baseUrl}/${article.endpoint}/${article.id}`,
       lastModified: new Date(article.updatedAt || article.publishedAt),
