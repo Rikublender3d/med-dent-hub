@@ -42,15 +42,11 @@ export default async function MedicalArticlesPage({ searchParams }: Props) {
   const categoryId = resolveParam(resolvedParams, 'category')
   const tagIds = resolveArrayParam(resolvedParams, 'tag')
 
-  const { contents } = await getArticles(
-    categoryId || tagIds
-      ? {
-          endpoint: 'medical-articles',
-          categoryId,
-          tagIds: tagIds && tagIds.length > 0 ? tagIds : undefined,
-        }
-      : { endpoint: 'medical-articles' }
-  )
+  const { contents } = await getAllArticles({
+    endpoint: 'medical-articles',
+    categoryId,
+    tagIds: tagIds && tagIds.length > 0 ? tagIds : undefined,
+  })
   const [categoriesRes, tagsRes] = await Promise.all([
     getCategories(),
     getTags(),
