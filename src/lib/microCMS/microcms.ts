@@ -37,6 +37,10 @@ type GetArticlesParams = ArticleListParams & {
   endpoint?: Endpoint
 }
 
+type GetAllArticlesParams = Omit<GetArticlesParams, 'limit' | 'offset'>
+
+const MICROCMS_MAX_LIST_LIMIT = 100
+
 /** サイドバー用データ */
 export type SidebarData = {
   latestArticles: ArticleWithEndpoint[]
@@ -148,7 +152,34 @@ export async function getArticles(params?: GetArticlesParams) {
   //   offset: generalRes.offset,
   // }
 }
+/**
+ * 条件に合う記事を全件取得
+ * microCMS の一覧取得は未指定だと 10 件、上限 100 件のため offset で分割取得する
+ */
+export async function getAllArticles(params?: GetAllArticlesParams) {
+  const contents: ArticleWithEndpoint[] = []
+  let totalCount = 0
+  let offset = 0
 
+  do {
+    const data = await getArticles({
+      ...params,
+      limit: MICROCMS_MAX_LIST_LIMIT,
+      offset,
+    })
+
+    contents.push(...data.contents)
+    totalCount = data.totalCount
+    offset += MICROCMS_MAX_LIST_LIMIT
+  } while (contents.length < totalCount)
+
+  return {
+    contents,
+    totalCount,
+    limit: MICROCMS_MAX_LIST_LIMIT,
+    offset: 0,
+  }
+}
 /**
  * ID 指定で記事を1件取得
  * endpoint は必須（URLで分かるので呼び出し側で必ず渡す）
