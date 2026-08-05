@@ -50,19 +50,41 @@ export type SidebarData = {
 // Internal helpers
 // ============================================================
 
+/**
+ * microCMS の部分一致条件（contains / not_contains）で指定できる
+ * 検索文字列の上限（2026-08-05 の仕様変更で導入）。
+ * 上限を超えると API が 400 Bad Request を返すため、
+ * 事前に弾いてリクエスト全体が失敗しないようにする。
+ * 文字数は microCMS と同様に URL デコード後の UTF-16 コード単位で数える
+ * （一部の漢字・絵文字は見た目より多く数えられる）。
+ * @see https://document.microcms.io/content-api/get-list-contents
+ */
+const PARTIAL_MATCH_MAX_LENGTH = 2000
+
+/**
+ * 部分一致条件に使える文字列か（上限内か）を判定。
+ * tags の値は URL クエリ由来でユーザーが操作できるため、
+ * 不正に長い値を API に渡さないよう防御的にチェックする。
+ */
+function isWithinPartialMatchLimit(value: string): boolean {
+  return value.length <= PARTIAL_MATCH_MAX_LENGTH
+}
+
 function buildFilters(params?: ArticleListParams): string | undefined {
   const filters: string[] = []
 
   if (params?.categoryId) {
     filters.push(`category[equals]${params.categoryId}`)
   }
-  if (params?.tagIds && params.tagIds.length > 0) {
-    params.tagIds.forEach((tagId) => {
-      filters.push(`tags[contains]${tagId}`)
-    })
-  } else if (params?.tagId) {
-    filters.push(`tags[contains]${params.tagId}`)
-  }
+  const tagIds =
+    params?.tagIds && params.tagIds.length > 0
+      ? params.tagIds
+      : params?.tagId
+        ? [params.tagId]
+        : []
+  tagIds.filter(isWithinPartialMatchLimit).forEach((tagId) => {
+    filters.push(`tags[contains]${tagId}`)
+  })
   if (params?.isFeatured) {
     filters.push('isFeatured[equals]true')
   }
