@@ -1,25 +1,16 @@
 // app/llm.txt/route.ts
 // LLM向けサイト概要（要約版）。全文は /llm-full.txt を参照。
-import { client } from '@/lib/microCMS/microcms'
-import type {
-  ArticleResponse,
-  CategoryResponse,
-  TagResponse,
-} from '@/types/microcms'
+import { client, getArticles } from '@/lib/microCMS/microcms'
+import type { CategoryResponse, TagResponse } from '@/types/microcms'
 
 const BASE_URL = process.env.BASE_URL ?? 'https://www.ishatohaisha.com'
 
 export async function GET() {
   // general 系廃止により medical-articles のみ取得
   const [medicalRes, categoriesRes, tagsRes] = await Promise.all([
-    // client.get<ArticleResponse>({
-    //   endpoint: 'general',
-    //   queries: { limit: 100, orders: '-publishedAt' },
-    // }),
-    client.get<ArticleResponse>({
-      endpoint: 'medical-articles',
-      queries: { limit: 100, orders: '-publishedAt' },
-    }),
+    // getArticles({ endpoint: 'general' }),
+    // limit 省略で全件取得（getArticles 内部で 100 件ずつページング）
+    getArticles({ endpoint: 'medical-articles' }),
     client.get<CategoryResponse>({
       endpoint: 'categories',
       queries: { limit: 100 },

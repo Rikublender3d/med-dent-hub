@@ -30,6 +30,8 @@ type ArticleListParams = {
   tagId?: string
   tagIds?: string[]
   isFeatured?: boolean
+  /** 参照フィールドの展開深度（未指定時は microCMS 既定の 1） */
+  depth?: 0 | 1 | 2 | 3
 }
 
 type GetArticlesParams = ArticleListParams & {
@@ -142,6 +144,7 @@ async function fetchFromEndpoint(
         offset: baseOffset + contents.length,
         filters,
         orders: '-publishedAt',
+        depth: params?.depth,
       },
     })
 
