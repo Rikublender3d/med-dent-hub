@@ -92,20 +92,68 @@ function buildFilters(params?: ArticleListParams): string | undefined {
   return filters.length > 0 ? filters.join('[and]') : undefined
 }
 
+/**
+ * microCMS の 1 リクエストあたりの取得上限。
+ * これを超える limit を指定しても API 側で 100 件に丸められる。
+ * @see https://document.microcms.io/content-api/get-list-contents#h71a0b2e2a3
+ */
+const MICROCMS_MAX_LIMIT = 100
+
+/**
+ * ページング時の最大リクエスト回数（暴走防止）。
+ * MICROCMS_MAX_LIMIT * MAX_PAGES 件までしか取得しない。
+ */
+const MAX_PAGES = 20
+
+/**
+ * 記事一覧を取得。
+ * limit 省略時は「全件」を意味し、100 件ずつページングして totalCount まで取得する。
+ * （microCMS の limit 既定値は 10 なので、省略したまま渡すと 10 件で打ち切られる）
+ * limit 指定時はその件数になるまで（必要なら複数回に分けて）取得する。
+ */
 async function fetchFromEndpoint(
   endpoint: Endpoint,
   params?: ArticleListParams
 ): Promise<ArticleResponse> {
-  return client.get<ArticleResponse>({
-    endpoint,
-    queries: {
-      q: params?.q,
-      limit: params?.limit,
-      offset: params?.offset,
-      filters: buildFilters(params),
-      orders: '-publishedAt',
-    },
-  })
+  const baseOffset = params?.offset ?? 0
+  const desired = params?.limit
+  const filters = buildFilters(params)
+
+  const contents: Article[] = []
+  let totalCount = 0
+
+  for (let page = 0; page < MAX_PAGES; page++) {
+    const remaining =
+      desired === undefined
+        ? MICROCMS_MAX_LIMIT
+        : Math.min(MICROCMS_MAX_LIMIT, desired - contents.length)
+    if (remaining <= 0) break
+
+    const res = await client.get<ArticleResponse>({
+      endpoint,
+      queries: {
+        q: params?.q,
+        limit: remaining,
+        offset: baseOffset + contents.length,
+        filters,
+        orders: '-publishedAt',
+      },
+    })
+
+    totalCount = res.totalCount
+    contents.push(...res.contents)
+
+    // これ以上取得できない（最後のページ or 空レスポンス）
+    if (res.contents.length === 0) break
+    if (baseOffset + contents.length >= totalCount) break
+  }
+
+  return {
+    contents,
+    totalCount,
+    limit: desired ?? contents.length,
+    offset: baseOffset,
+  }
 }
 
 function withEndpoint(
@@ -123,6 +171,7 @@ function withEndpoint(
  * 記事一覧を取得
  * - endpoint 指定時: そのエンドポイントのみ
  * - endpoint 省略時: medical-articles のみ（general は廃止）
+ * - limit 省略時: 全件（内部で 100 件ずつページング）
  */
 export async function getArticles(params?: GetArticlesParams) {
   const { endpoint, ...rest } = params ?? {}
