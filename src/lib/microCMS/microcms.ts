@@ -93,9 +93,9 @@ function buildFilters(params?: ArticleListParams): string | undefined {
 }
 
 /**
- * microCMS の 1 リクエストあたりの取得上限。
- * これを超える limit を指定しても API 側で 100 件に丸められる。
- * @see https://document.microcms.io/content-api/get-list-contents#h71a0b2e2a3
+ * microCMS の 1 リクエストあたりの取得上限（2023-10-02 以降に作成された
+ * サービスで有効化）。101 件以上は offset をずらして分割取得する必要がある。
+ * @see https://help.microcms.io/ja/knowledge/get-over-100-contents
  */
 const MICROCMS_MAX_LIMIT = 100
 
@@ -110,6 +110,11 @@ const MAX_PAGES = 20
  * limit 省略時は「全件」を意味し、100 件ずつページングして totalCount まで取得する。
  * （microCMS の limit 既定値は 10 なので、省略したまま渡すと 10 件で打ち切られる）
  * limit 指定時はその件数になるまで（必要なら複数回に分けて）取得する。
+ *
+ * SDK の client.getAllContents() は全件取得専用で totalCount を返さず、
+ * ページ間に 1 秒の待機を挟む実装のため、任意件数の取得と
+ * totalCount が必要な本関数では公式ドキュメントの「独自実装」方式を採る。
+ * @see https://help.microcms.io/ja/knowledge/get-over-100-contents
  */
 async function fetchFromEndpoint(
   endpoint: Endpoint,
