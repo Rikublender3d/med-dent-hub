@@ -14,17 +14,17 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "@google-analytics/data": "^5.2.1",
+    "@google-analytics/data": "^7.0.0",
     "framer-motion": "^12.25.0",
     "hamburger-react": "^2.5.2",
     "isomorphic-dompurify": "^2.28.0",
-    "knip": "^5.72.0",
+    "knip": "^6.5.0",
     "microcms-js-sdk": "^3.2.0",
-    "next": "^16.1.6",
+    "next": "^16.1.7",
     "react": "19.1.2",
     "react-dom": "19.1.2",
     "react-icons": "^5.5.0",
-    "resend": "^6.9.1"
+    "resend": "^6.9.2"
   },
   "engines": {
     "node": "22.x"
